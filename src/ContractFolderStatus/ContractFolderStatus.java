@@ -1,13 +1,15 @@
 package ContractFolderStatus;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import procurementProject.ProcurementProject;
+import tenderResult.TenderResult;
 
 public class ContractFolderStatus {
 	private String contractFolderID, contractFolderStatusCode;
 	private ProcurementProject procurementProject;
-//	private TenderResult[] tenderResultList;
+	private TenderResult[] tenderResultList;
 //	private LegalDocumentReference legalDocumenteReference;
 //	private TechnicalDocumentReference technicalDocumentReference;
 //	private AdditionalDocumentReference[] additionalDocumentReference;
@@ -18,57 +20,83 @@ public class ContractFolderStatus {
 //	private ValidNoticeInfo[] validNoticeInfoList;
 //	private GeneralDocument[] generalDocumentList;
 	
+	public void readAttributes(Element cfs, int POS_UNICO_ELEMENTO){
+		this.contractFolderID = null;
+		this.contractFolderStatusCode = null;
+		
+		//Inicializamos todas las variables que deberá contener el ContractFolderStatus
+		Element contractFolderIDNode = (Element) cfs.getElementsByTagName("cbc:ContractFolderID").item(POS_UNICO_ELEMENTO);
+		Element contractFolderStatusCodeNode = (Element) cfs.getElementsByTagName("cbc-place-ext:ContractFolderStatusCode").item(POS_UNICO_ELEMENTO);
+		
+		// Compruebo la existencia del ContractFolderID, si no existe se queda a null y mandamos mensaje
+		if (contractFolderIDNode != null){
+			this.contractFolderID = contractFolderIDNode.getTextContent();
+		}else{
+			System.err.print("ERROR FATAL: ContractFolderStatus -> CONTRACT FOLDER ID no existe\n");
+		}
+		
+		// Compruebo la existencia del ContractFolderID, si no existe se queda a null y mandamos mensaje
+		if (contractFolderStatusCodeNode != null){
+			this.contractFolderStatusCode = contractFolderStatusCodeNode.getTextContent();
+		}else{
+			System.err.print("ERROR FATAL: ContractFolderStatus -> CONTRACT FOLDER STATUS CODE no existe\n");
+		}	
+	}
+	
 	public void readProcurementProject(Element cfs, int POS_UNICO_ELEMENTO){
 		this.procurementProject = null;
 		
 		//Dentro del ContractFolderStatus, buscamos el <cac:ProcurementProject>
 		Element pp = (Element) cfs.getElementsByTagName("cac:ProcurementProject").item(POS_UNICO_ELEMENTO);
 		
-		//Si su padre con es ContractFolderStatus -> No existe
-		if (pp != null && pp.getParentNode().getNodeName() != "cac-place-ext:ContractFolderStatus"){
+		//Si su padre no es ContractFolderStatus -> No existe
+		if (pp == null || pp.getParentNode().getNodeName() != "cac-place-ext:ContractFolderStatus"){
 			System.err.print("ERROR FATAL: ContractFolderStatus -> PROCUREMENT PROJECT no existe\n");
 		}else{
 			this.procurementProject = new ProcurementProject();
 			
-			//Inicializamos todas las variables que deberá contener el ProcurementProject
-			String name = null;
-			int typeCode = 0, subTypeCode = 0;
-			
-			Element nameNode = null, typeCodeNode = null, subTypeCodeNode = null;
-			
-			/* 
-				-> Si los de cardinal 1 faltan, lanzamos un mensaje de error
-				-> Si los de cardinal [0..1] o [0..*] faltan, se pone a null dentro de la clase padre, pero no se detiene la ejecución
-			*/
-			
-			// Compruebo la existencia del Name, si no existe se queda a null y mandamos mensaje
-			nameNode = (Element) pp.getElementsByTagName("cbc:Name").item(POS_UNICO_ELEMENTO);
-			if (nameNode != null) {
-				name = nameNode.getTextContent();
-				this.procurementProject.setName(name);
-			}else{
-				System.err.print("ERROR FATAL: ProcurementProject -> NAME no existe\n");
-			}
-			
-			// Compruebo la existencia del TypeCode, si no existe se queda a null y mandamos mensaje
-			typeCodeNode = (Element) pp.getElementsByTagName("cbc:TypeCode").item(POS_UNICO_ELEMENTO);
-			if (typeCodeNode != null){
-				typeCode = Integer.parseInt(typeCodeNode.getTextContent());
-				this.procurementProject.setTypeCode(typeCode);
-			}
-					
-			// Compruebo la existencia del SubTypeCode, si no existe se queda a null y mandamos mensaje
-			subTypeCodeNode = (Element) pp.getElementsByTagName("cbc:SubTypeCode").item(POS_UNICO_ELEMENTO);	
-			if (subTypeCodeNode != null){
-				subTypeCode = Integer.parseInt(subTypeCodeNode.getTextContent());
-				this.procurementProject.setSubTypeCode(subTypeCode);
-			}
-			
+			this.procurementProject.readAttributes(pp, POS_UNICO_ELEMENTO);
 			this.procurementProject.readBudgetAmount(pp, POS_UNICO_ELEMENTO);
 			this.procurementProject.readRequiredCommodityClassification(pp, POS_UNICO_ELEMENTO);
 			this.procurementProject.readPlannedPeriod(pp, POS_UNICO_ELEMENTO);
 			this.procurementProject.readRealizedLocation(pp, POS_UNICO_ELEMENTO);
 			this.procurementProject.readContractExtension(pp, POS_UNICO_ELEMENTO);
+		}
+	}
+	
+	public void readTenderResult(Element cfs, int POS_UNICO_ELEMENTO){
+		this.tenderResultList = null;
+		
+		NodeList tenderResultNodeList = cfs.getElementsByTagName("cac:TenderResult");
+		if (tenderResultNodeList.getLength() > 0){
+			this.tenderResultList = new TenderResult[tenderResultNodeList.getLength()];
+			
+			for (int i = 0; i < tenderResultNodeList.getLength(); i++){
+				TenderResult tenderResult = new TenderResult();
+				Element tr = (Element) tenderResultNodeList.item(i);
+				
+				tenderResult.readAttributes(tr, POS_UNICO_ELEMENTO);
+				tenderResult.readContractList(tr, POS_UNICO_ELEMENTO);
+				tenderResult.readWinningParty(tr, POS_UNICO_ELEMENTO);
+				tenderResult.readAwardedTenderedProject(tr, POS_UNICO_ELEMENTO);
+				tenderResult.readSubcontractTerms(tr, POS_UNICO_ELEMENTO);
+				
+				this.tenderResultList[i] = tenderResult;
+			}
+		}else{
+			System.err.print("ERROR FATAL: ContractFolderStatus -> TENDER RESULT no existe");
+		}
+	}
+	
+	public void print(){
+		System.out.print("* CONTRACT FOLDER STATUS *\n" + 
+				 		 "-> Contract Folder ID: " + contractFolderID + "\n" + 
+						 "-> Contract Folder Status Code: " + contractFolderStatusCode + "\n" +
+						 "--------------------------------\n");
+		System.out.print("===============================================================\n");
+		this.procurementProject.print();
+		for (TenderResult td : tenderResultList){
+			td.print();
 		}
 	}
 	
@@ -135,16 +163,16 @@ public class ContractFolderStatus {
 	}
 
 
-//	public TenderResult[] getTenderResultList() {
-//		return tenderResultList;
-//	}
-//
-//
-//	public void setTenderResultList(TenderResult[] tenderResultList) {
-//		this.tenderResultList = tenderResultList;
-//	}
-//
-//
+	public TenderResult[] getTenderResultList() {
+		return tenderResultList;
+	}
+
+
+	public void setTenderResultList(TenderResult[] tenderResultList) {
+		this.tenderResultList = tenderResultList;
+	}
+
+
 //	public LegalDocumentReference getLegalDocumenteReference() {
 //		return legalDocumenteReference;
 //	}

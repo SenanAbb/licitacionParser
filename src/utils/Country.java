@@ -1,10 +1,31 @@
 package utils;
 
+import org.w3c.dom.Element;
+
 public class Country {
 	private String identificationCode, name;
 	// Atributos
 	private String identificationCodeLanguageID, identificationCodeName;
 
+	public void readAttributes(Element country, int POS_UNICO_ELEMENTO) {
+		this.identificationCode = null;
+		this.name = null;
+		this.identificationCodeLanguageID = null;
+		this.identificationCodeName = null;
+		
+		Element idCode = (Element) country.getElementsByTagName("cbc:IdentificationCode").item(POS_UNICO_ELEMENTO);
+		if (idCode != null){
+			this.identificationCode = idCode.getTextContent();
+			
+			Element countryName = (Element) country.getElementsByTagName("cbc:Name").item(POS_UNICO_ELEMENTO);
+			if (countryName != null){
+				this.name = countryName.getTextContent();
+			}	
+		}else{
+			System.err.print("ERROR FATAL: ProcurementProject -> RealizedLocation -> Address -> Country -> IDENTIFICATION CODE no existe\n");
+		}
+	}
+	
 	public void print() {
 		System.out.print("**** COUNTRY ****\n" +
 				"----> Identification Code: " + identificationCode + "\n" +
@@ -17,10 +38,7 @@ public class Country {
 	/******************/
 	
 	
-	public Country(String identificationCode) {
-		super();
-		this.identificationCode = identificationCode;
-	}
+	public Country() {}
 
 	
 	/***********************/

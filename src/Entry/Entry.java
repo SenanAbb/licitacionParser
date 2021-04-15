@@ -19,33 +19,23 @@ public class Entry {
 			System.exit(0);
 		}else{
 			this.cfs = new ContractFolderStatus();
-			String contractFolderID = null, contractFolderStatusCode = null;
 			
-			//Inicializamos todas las variables que deberá contener el ContractFolderStatus
-			Element contractFolderIDNode = (Element) cfs.getElementsByTagName("cbc:ContractFolderID").item(POS_UNICO_ELEMENTO);
-			Element contractFolderStatusCodeNode = (Element) cfs.getElementsByTagName("cbc-place-ext:ContractFolderStatusCode").item(POS_UNICO_ELEMENTO);
+			this.cfs.readAttributes(cfs, POS_UNICO_ELEMENTO);
 			
-			// Compruebo la existencia del ContractFolderID, si no existe se queda a null y mandamos mensaje
-			if (contractFolderIDNode != null){
-				contractFolderID = contractFolderIDNode.getTextContent();
-				this.cfs.setContractFolderID(contractFolderID);
-			}else{
-				System.err.print("ERROR FATAL: ContractFolderStatus -> CONTRACT FOLDER ID no existe\n");
-			}
-			
-			// Compruebo la existencia del ContractFolderID, si no existe se queda a null y mandamos mensaje
-			if (contractFolderStatusCodeNode != null){
-				contractFolderStatusCode = contractFolderStatusCodeNode.getTextContent();
-				this.cfs.setContractFolderStatusCode(contractFolderStatusCode);
-			}else{
-				System.err.print("ERROR FATAL: ContractFolderStatus -> CONTRACT FOLDER STATUS CODE no existe\n");
-			}	
-			
+			/* Read PROCUREMENT PROJECT */
 			this.cfs.readProcurementProject(cfs, POS_UNICO_ELEMENTO);
-			if (this.cfs.getProcurementProject() != null){
-				this.cfs.getProcurementProject().print();
-			}
+			this.cfs.readTenderResult(cfs, POS_UNICO_ELEMENTO);
 		}
+	}
+	
+	public void print(){
+		System.out.print("---------------- ENTRY " + id + "----------------\n" + 
+						 "Link: " + link + "\n" + 
+						 "Summary: " + summary + "\n" + 
+						 "Title: " + title + "\n" + 
+						 "Updated: " + updated + "\n");
+		System.out.print("===============================================================\n");
+		cfs.print();
 	}
 	
 	

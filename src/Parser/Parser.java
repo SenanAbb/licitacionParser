@@ -115,40 +115,42 @@ public class Parser {
 							idSplit = id.getTextContent().split("/");
 							entryId = idSplit[idSplit.length-1];
 						}else{
-							printError("ERROR FATAL: Entry -> ID no existe");
+							System.err.print("ERROR FATAL: Entry -> ID no existe\n");
 						}
 						
 						Element link = (Element) e.getElementsByTagName("link").item(POS_UNICO_ELEMENTO);
 						if (link != null){
 							entryLink = link.getAttributes().getNamedItem("href").getTextContent();
 						}else{
-							printError("ERROR FATAL: Entry -> LINK no existe");
+							System.err.print("ERROR FATAL: Entry -> LINK no existe\n");
 						}
 								
 						Element summary = (Element) e.getElementsByTagName("summary").item(POS_UNICO_ELEMENTO);		
 						if (summary != null){
 							entrySummary = summary.getTextContent();
 						}else{
-							printError("ERROR FATAL: Entry -> SUMMARY no existe");
+							System.err.print("ERROR FATAL: Entry -> SUMMARY no existe\n");
 						}
 						
 						Element title = (Element) e.getElementsByTagName("title").item(POS_UNICO_ELEMENTO);
 						if (title != null){
 							entryTitle = title.getTextContent();
 						}else{
-							printError("ERROR FATAL: Entry -> TITLE no existe");
+							System.err.print("ERROR FATAL: Entry -> TITLE no existe\n");
 						}
 										
 						Element update = (Element) e.getElementsByTagName("updated").item(POS_UNICO_ELEMENTO);
 						if (update != null){
 							entryUpdate = update.getTextContent();
 						}else{
-							printError("ERROR FATAL: Entry -> UPDATED no existe");
+							System.err.print("ERROR FATAL: Entry -> UPDATED no existe\n");
 						}
 						
 						Entry newEntry = new Entry(entryId, entryLink, entrySummary, entryTitle, entryUpdate);
 						
 						newEntry.readContractFolderStatus(e, POS_UNICO_ELEMENTO);
+						// PRINT ALL ENTRY DATE STRUCTURE
+						newEntry.print();
 						
 						entries.add(newEntry);				
 					}
@@ -157,100 +159,6 @@ public class Parser {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-	
-	@SuppressWarnings("null")
-	private ContractFolderStatus readContractFolderStatus(Element entry){
-		ContractFolderStatus contractFolderStatus = new ContractFolderStatus();
-		
-		//Dentro del ENTRY, buscamos el <cac-place-ext:ContractFolderStatus>
-		Element cfs = (Element) entry.getElementsByTagName("cac-place-ext:ContractFolderStatus").item(POS_UNICO_ELEMENTO);
-		
-		if (cfs == null){
-			printError("ERROR FATAL: CONTRACT FOLDER STATUS no existe");
-			System.exit(0);
-		}else{
-			String contractFolderID = null, contractFolderStatusCode = null;
-			
-			//Inicializamos todas las variables que deberá contener el ContractFolderStatus
-			Element contractFolderIDNode = (Element) cfs.getElementsByTagName("cbc:ContractFolderID").item(POS_UNICO_ELEMENTO);
-			Element contractFolderStatusCodeNode = (Element) cfs.getElementsByTagName("cbc-place-ext:ContractFolderStatusCode").item(POS_UNICO_ELEMENTO);
-			
-			// Compruebo la existencia del ContractFolderID, si no existe se queda a null y mandamos mensaje
-			if (contractFolderIDNode != null){
-				contractFolderID = contractFolderIDNode.getTextContent();
-				contractFolderStatus.setContractFolderID(contractFolderID);
-			}else{
-				printError("ERROR FATAL: ContractFolderStatus -> CONTRACT FOLDER ID no existe");
-			}
-			
-			// Compruebo la existencia del ContractFolderID, si no existe se queda a null y mandamos mensaje
-			if (contractFolderStatusCodeNode != null){
-				contractFolderStatusCode = contractFolderStatusCodeNode.getTextContent();
-				contractFolderStatus.setContractFolderStatusCode(contractFolderStatusCode);
-			}else{
-				printError("ERROR FATAL: ContractFolderStatus -> CONTRACT FOLDER STATUS CODE no existe");
-			}	
-			
-			contractFolderStatus.setProcurementProject(readProcurementProject(cfs));
-			contractFolderStatus.getProcurementProject().print();
-		}
-		return contractFolderStatus;
-	}
-	
-	@SuppressWarnings({ "null", "deprecation" })
-	private ProcurementProject readProcurementProject(Element cfs){
-		ProcurementProject procurementProject = new ProcurementProject();
-		
-		//Dentro del ContractFolderStatus, buscamos el <cac:ProcurementProject>
-		Element pp = (Element) cfs.getElementsByTagName("cac:ProcurementProject").item(POS_UNICO_ELEMENTO);
-		
-		//Si su padre con es ContractFolderStatus -> No existe
-		if (pp.getParentNode().getNodeName() != "cac-place-ext:ContractFolderStatus"){
-			printError("ERROR FATAL: ContractFolderStatus -> PROCUREMENT PROJECT no existe");
-		}else{
-			Element nameNode = null, typeCodeNode = null, subTypeCodeNode = null;
-			
-			//Inicializamos todas las variables que deberá contener el ProcurementProject
-			String name = null;
-			int typeCode = 0, subTypeCode = 0;
-			
-			/* 
-				-> Si los de cardinal 1 faltan, lanzamos un mensaje de error
-				-> Si los de cardinal [0..1] o [0..*] faltan, se pone a null dentro de la clase padre, pero no se detiene la ejecución
-			*/
-			
-			// Compruebo la existencia del Name, si no existe se queda a null y mandamos mensaje
-			nameNode = (Element) pp.getElementsByTagName("cbc:Name").item(POS_UNICO_ELEMENTO);
-			if (nameNode != null) {
-				name = nameNode.getTextContent();
-				procurementProject.setName(name);
-			}else{
-				printError("ERROR FATAL: ProcurementProject -> NAME no existe");
-			}
-			
-			// Compruebo la existencia del TypeCode, si no existe se queda a null y mandamos mensaje
-			typeCodeNode = (Element) pp.getElementsByTagName("cbc:TypeCode").item(POS_UNICO_ELEMENTO);
-			if (typeCodeNode != null){
-				typeCode = Integer.parseInt(typeCodeNode.getTextContent());
-				procurementProject.setTypeCode(typeCode);
-			}
-					
-			// Compruebo la existencia del SubTypeCode, si no existe se queda a null y mandamos mensaje
-			subTypeCodeNode = (Element) pp.getElementsByTagName("cbc:SubTypeCode").item(POS_UNICO_ELEMENTO);	
-			if (subTypeCodeNode != null){
-				subTypeCode = Integer.parseInt(subTypeCodeNode.getTextContent());
-				procurementProject.setSubTypeCode(subTypeCode);
-			}
-			
-			procurementProject.readBudgetAmount(pp, POS_UNICO_ELEMENTO);
-			procurementProject.readRequiredCommodityClassification(pp, POS_UNICO_ELEMENTO);
-			procurementProject.readPlannedPeriod(pp, POS_UNICO_ELEMENTO);
-			procurementProject.readRealizedLocation(pp, POS_UNICO_ELEMENTO);
-			procurementProject.readContractExtension(pp, POS_UNICO_ELEMENTO);
-		}
-		
-		return procurementProject;
 	}
 
 	
@@ -269,10 +177,6 @@ public class Parser {
 	/** AUXILIARY METHODS**/
 	/**********************/
 	
-	
-	private void printError(String msg){
-		System.err.println(msg);
-	}
 	
 	/* Comprobación del identificador (NIF) del entry, para ver si es válido o no */
 	private String getEntryPartyID(Element e){
