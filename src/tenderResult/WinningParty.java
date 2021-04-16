@@ -46,10 +46,9 @@ public class WinningParty {
 	public void print(){
 		System.out.print("*** WINNING PARTY ***\n");
 		for (PartyIdentification p : partyIdentificationList){
-			System.out.print("----> Party Identification: " + p.getId() + " " + "(" + p.getSchemeName() + ")" + "\n");
+			p.print();
 		}
-		System.out.print("----> Party Name: " + partyName.getName() + "\n" +
-				"--------------------------------\n");
+		partyName.print();
 	}
 	
 	/******************/

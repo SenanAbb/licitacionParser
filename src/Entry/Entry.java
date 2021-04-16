@@ -4,6 +4,15 @@ import org.w3c.dom.Element;
 
 import ContractFolderStatus.ContractFolderStatus;
 
+/**
+ * @params
+ *		id: String[1]
+ *		link: String[1]
+ *		summary: String[1]
+ *		title: String[1]
+ *		updated: Date[1]
+ *		cfs: ContractFolderStatus[1]
+ */
 public class Entry {
 	private String id, link, summary, title, updated;
 	private ContractFolderStatus cfs;
@@ -22,9 +31,9 @@ public class Entry {
 			
 			this.cfs.readAttributes(cfs, POS_UNICO_ELEMENTO);
 			
-			/* Read PROCUREMENT PROJECT */
 			this.cfs.readProcurementProject(cfs, POS_UNICO_ELEMENTO);
 			this.cfs.readTenderResult(cfs, POS_UNICO_ELEMENTO);
+			this.cfs.readLocatedContractingParty(cfs, POS_UNICO_ELEMENTO);
 		}
 	}
 	

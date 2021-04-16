@@ -20,6 +20,17 @@ import utils.Country;
 import ContractFolderStatus.ContractFolderStatus;
 import Entry.Entry;
 
+/**
+ * @params
+ * 		const POS_UNICO_ELEMENTO: int[1]
+ * 		NIF: String[1]
+ *		ULR: File[1]
+ *		updated: Date[1]
+ *		selfLink: String[1]
+ *		nextLink: String[1]
+ *		entryCont: int[0..1]
+ *		entries: Entry[] [0..*]
+ */
 public class Parser {
 	private static final int POS_UNICO_ELEMENTO = 0; 
 	
@@ -105,7 +116,6 @@ public class Parser {
 					
 					//Compruebo el PartyID para saber si es un Entry válido o no
 					String result = getEntryPartyID(e);
-					
 					if (result.compareTo(NIF) == 0){
 						String[] idSplit = null;
 						String entryId = null, entryLink = null, entrySummary = null, entryTitle = null, entryUpdate = null;
@@ -122,33 +132,34 @@ public class Parser {
 						if (link != null){
 							entryLink = link.getAttributes().getNamedItem("href").getTextContent();
 						}else{
-							System.err.print("ERROR FATAL: Entry -> LINK no existe\n");
+							System.err.print("ERROR FATAL: Entry " + entryId + " -> LINK no existe\n");
 						}
 								
 						Element summary = (Element) e.getElementsByTagName("summary").item(POS_UNICO_ELEMENTO);		
 						if (summary != null){
 							entrySummary = summary.getTextContent();
 						}else{
-							System.err.print("ERROR FATAL: Entry -> SUMMARY no existe\n");
+							System.err.print("ERROR FATAL: Entry " + entryId + " -> SUMMARY no existe\n");
 						}
 						
 						Element title = (Element) e.getElementsByTagName("title").item(POS_UNICO_ELEMENTO);
 						if (title != null){
 							entryTitle = title.getTextContent();
 						}else{
-							System.err.print("ERROR FATAL: Entry -> TITLE no existe\n");
+							System.err.print("ERROR FATAL: Entry " + entryId + " -> TITLE no existe\n");
 						}
 										
 						Element update = (Element) e.getElementsByTagName("updated").item(POS_UNICO_ELEMENTO);
 						if (update != null){
 							entryUpdate = update.getTextContent();
 						}else{
-							System.err.print("ERROR FATAL: Entry -> UPDATED no existe\n");
+							System.err.print("ERROR FATAL: Entry " + entryId + " -> UPDATED no existe\n");
 						}
 						
 						Entry newEntry = new Entry(entryId, entryLink, entrySummary, entryTitle, entryUpdate);
 						
 						newEntry.readContractFolderStatus(e, POS_UNICO_ELEMENTO);
+						
 						// PRINT ALL ENTRY DATE STRUCTURE
 						newEntry.print();
 						

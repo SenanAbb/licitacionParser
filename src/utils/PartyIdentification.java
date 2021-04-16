@@ -14,9 +14,14 @@ public class PartyIdentification {
 			this.id = id.getTextContent();
 			this.schemeName = id.getAttributes().getNamedItem("schemeName").getTextContent();
 		}else{
-			System.err.print("ERROR FATAL: TenderResult -> WinningParty -> PartyIdentification -> ID no existe\n");
+			System.err.print("ERROR FATAL: PartyIdentification -> ID no existe\n");
 		}
 	}
+	
+	public void print(){
+		System.out.print("----> Party Identification: " + id + " " + "(" + schemeName + ")" + "\n");
+	}
+	
 	
 	
 	/******************/

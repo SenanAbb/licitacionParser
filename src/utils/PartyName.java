@@ -16,20 +16,17 @@ public class PartyName {
 		}
 	}
 	
+	public void print(){
+		System.out.print("**** PARTY NAME ****\n" +
+						 "----> Party Name: " + name + "\n" +
+						 "--------------------------------\n");
+	}
+	
+	
 	/******************/
 	/** CONSTRUCTORS **/
 	/******************/
 	
 	
 	public PartyName(){}
-	
-	
-	/*************************/
-	/** GETTERS AND SETTERS **/
-	/*************************/
-	
-	
-	public String getName(){
-		return name;
-	}
 }

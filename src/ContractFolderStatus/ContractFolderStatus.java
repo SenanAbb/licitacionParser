@@ -1,5 +1,7 @@
 package ContractFolderStatus;
 
+import locatedContractingParty.LocatedContractingParty;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -15,7 +17,7 @@ public class ContractFolderStatus {
 //	private AdditionalDocumentReference[] additionalDocumentReference;
 //	private TenderingProcess tenderingProcess;
 //	private TenderingTerms tenderingTerms;
-//	private LocatedContractingParty locatedContractingParty;
+	private LocatedContractingParty locatedContractingParty;
 //	private ContractModification contractModification;
 //	private ValidNoticeInfo[] validNoticeInfoList;
 //	private GeneralDocument[] generalDocumentList;
@@ -88,12 +90,27 @@ public class ContractFolderStatus {
 		}
 	}
 	
+	public void readLocatedContractingParty(Element cfs, int POS_UNICO_ELEMENTO) {
+		this.locatedContractingParty = null;
+		
+		Element lcp = (Element) cfs.getElementsByTagName("cac-place-ext:LocatedContractingParty").item(POS_UNICO_ELEMENTO);
+		if (lcp != null){
+			this.locatedContractingParty = new LocatedContractingParty();
+			this.locatedContractingParty.readAttributes(lcp, POS_UNICO_ELEMENTO);
+			this.locatedContractingParty.readParentLocatedParty(lcp, POS_UNICO_ELEMENTO);
+			this.locatedContractingParty.readParty(lcp, POS_UNICO_ELEMENTO);
+		}else{
+			System.err.print("ERROR FATAL: ContractFolderStatus -> LOCATED CONTRACTING PARTY no existe");
+		}
+	}
+	
 	public void print(){
 		System.out.print("* CONTRACT FOLDER STATUS *\n" + 
 				 		 "-> Contract Folder ID: " + contractFolderID + "\n" + 
 						 "-> Contract Folder Status Code: " + contractFolderStatusCode + "\n" +
 						 "--------------------------------\n");
 		System.out.print("===============================================================\n");
+		this.locatedContractingParty.print();
 		this.procurementProject.print();
 		for (TenderResult td : tenderResultList){
 			td.print();
@@ -171,7 +188,6 @@ public class ContractFolderStatus {
 	public void setTenderResultList(TenderResult[] tenderResultList) {
 		this.tenderResultList = tenderResultList;
 	}
-
 
 //	public LegalDocumentReference getLegalDocumenteReference() {
 //		return legalDocumenteReference;

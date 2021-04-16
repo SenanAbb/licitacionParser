@@ -1,15 +1,7 @@
 package procurementProject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import utils.Address;
-import utils.Country;
 
 public class ProcurementProject {
 	private String name;

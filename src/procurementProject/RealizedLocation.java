@@ -3,7 +3,6 @@ package procurementProject;
 import org.w3c.dom.Element;
 
 import utils.Address;
-import utils.Country;
 
 public class RealizedLocation {
 	private String countrySubentity, countrySubentityCode;

@@ -102,7 +102,7 @@ public class TenderResult {
 		/* ABNORMALLY LOW TENDER INDICATOR */
 		Element alti = (Element) tr.getElementsByTagName("cbc:AbnormallyLowTendersIndicator").item(POS_UNICO_ELEMENTO);
 		if(alti != null){
-			this.SMEAwardedIndicator = Boolean.parseBoolean(alti.getTextContent());
+			this.abnormallyLowTenderIndicator = Boolean.parseBoolean(alti.getTextContent());
 		}
 		
 		/* START DATE */

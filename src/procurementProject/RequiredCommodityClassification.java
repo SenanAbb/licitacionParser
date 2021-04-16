@@ -1,7 +1,6 @@
 package procurementProject;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 public class RequiredCommodityClassification {
 	private int itemClassificationCode;
