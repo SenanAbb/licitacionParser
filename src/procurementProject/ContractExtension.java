@@ -24,7 +24,7 @@ public class ContractExtension {
 	
 	public void print(){
 		System.out.print("*** CONTRACT EXTENSION ***\n" +
-				"---> Options Description: " + optionsDescription + "\n");
+						 "---> Options Description: " + optionsDescription + "\n");
 		if (optionValidityPeriod != null){
 			optionValidityPeriod.print();
 		}else{

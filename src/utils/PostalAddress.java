@@ -8,6 +8,7 @@ public class PostalAddress {
 	private String cityName, postalZone;
 	private Country country;
 	
+	// Obligatorio nos dice si los campos AddressLine, CityName, PostalZone y Country debes ser o no obligatorios
 	public void readAttributes(Element pa, int POS_UNICO_ELEMENTO, boolean obligatorio) {
 		this.addressFormatCode = -1;
 		this.cityName = null;

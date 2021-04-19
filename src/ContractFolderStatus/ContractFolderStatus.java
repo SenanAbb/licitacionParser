@@ -7,18 +7,35 @@ import org.w3c.dom.NodeList;
 
 import procurementProject.ProcurementProject;
 import tenderResult.TenderResult;
+import tenderingTerms.TenderingTerms;
 
+/**
+ * @params
+ * 		contractFolderID: String[1]
+ * 		contractFolderStatusCode: String[1]
+ * 		locatedContractingParty: LocatedContractingParty[1]
+ * 		procurementProject: ProcurementProject[1]
+ *		tenderResultList: TenderResult[] [1..*]
+ *		tenderingTerms: TenderingTerms[1]
+ *		tenderingProcess: TenderingProcess[1]
+ *		legalDocumentReference: LegalDocumentReference[0..1]
+ *		technicalDocumentReference: TechnicalDocumentReference[0..1]
+ *		additionalDocumentReferenceList: AdditionalDocumentReference[] [0..*]
+ *		validNoticeInfoList: ValidNoticeInfo[] [0..*]
+ *		generalDocumentList: GeneralDocument[] [0..*]
+ *		contractModificationList: ContractModification[] [0..*]
+ */
 public class ContractFolderStatus {
 	private String contractFolderID, contractFolderStatusCode;
+	private LocatedContractingParty locatedContractingParty;
 	private ProcurementProject procurementProject;
 	private TenderResult[] tenderResultList;
+	private TenderingTerms tenderingTerms;
 //	private LegalDocumentReference legalDocumenteReference;
 //	private TechnicalDocumentReference technicalDocumentReference;
-//	private AdditionalDocumentReference[] additionalDocumentReference;
+//	private AdditionalDocumentReference[] additionalDocumentReferenceList;
 //	private TenderingProcess tenderingProcess;
-//	private TenderingTerms tenderingTerms;
-	private LocatedContractingParty locatedContractingParty;
-//	private ContractModification contractModification;
+//	private ContractModification contractModificationList;
 //	private ValidNoticeInfo[] validNoticeInfoList;
 //	private GeneralDocument[] generalDocumentList;
 	
@@ -43,6 +60,20 @@ public class ContractFolderStatus {
 		}else{
 			System.err.print("ERROR FATAL: ContractFolderStatus -> CONTRACT FOLDER STATUS CODE no existe\n");
 		}	
+	}
+	
+	public void readLocatedContractingParty(Element cfs, int POS_UNICO_ELEMENTO) {
+		this.locatedContractingParty = null;
+		
+		Element lcp = (Element) cfs.getElementsByTagName("cac-place-ext:LocatedContractingParty").item(POS_UNICO_ELEMENTO);
+		if (lcp != null){
+			this.locatedContractingParty = new LocatedContractingParty();
+			this.locatedContractingParty.readAttributes(lcp, POS_UNICO_ELEMENTO);
+			this.locatedContractingParty.readParentLocatedParty(lcp, POS_UNICO_ELEMENTO);
+			this.locatedContractingParty.readParty(lcp, POS_UNICO_ELEMENTO);
+		}else{
+			System.err.print("ERROR FATAL: ContractFolderStatus -> LOCATED CONTRACTING PARTY no existe");
+		}
 	}
 	
 	public void readProcurementProject(Element cfs, int POS_UNICO_ELEMENTO){
@@ -89,18 +120,26 @@ public class ContractFolderStatus {
 			System.err.print("ERROR FATAL: ContractFolderStatus -> TENDER RESULT no existe");
 		}
 	}
-	
-	public void readLocatedContractingParty(Element cfs, int POS_UNICO_ELEMENTO) {
-		this.locatedContractingParty = null;
+
+	public void readTenderingTerms(Element cfs, int POS_UNICO_ELEMENTO){
+		this.tenderingTerms = null;
 		
-		Element lcp = (Element) cfs.getElementsByTagName("cac-place-ext:LocatedContractingParty").item(POS_UNICO_ELEMENTO);
-		if (lcp != null){
-			this.locatedContractingParty = new LocatedContractingParty();
-			this.locatedContractingParty.readAttributes(lcp, POS_UNICO_ELEMENTO);
-			this.locatedContractingParty.readParentLocatedParty(lcp, POS_UNICO_ELEMENTO);
-			this.locatedContractingParty.readParty(lcp, POS_UNICO_ELEMENTO);
+		Element tt = (Element) cfs.getElementsByTagName("cac:TenderingTerms").item(POS_UNICO_ELEMENTO);
+		if (tt != null){
+			this.tenderingTerms = new TenderingTerms();
+			
+			this.tenderingTerms.readAttributes(tt, POS_UNICO_ELEMENTO);
+			this.tenderingTerms.readAllowedSubcontractTerms(tt, POS_UNICO_ELEMENTO);
+			this.tenderingTerms.readProcurementLegislationDocumentReference(tt, POS_UNICO_ELEMENTO);
+			this.tenderingTerms.readRequiredFinancialGuarantee(tt, POS_UNICO_ELEMENTO);
+			this.tenderingTerms.readAwardingTerms(tt, POS_UNICO_ELEMENTO);
+			this.tenderingTerms.readTendererQualificationRequest(tt, POS_UNICO_ELEMENTO);
+			this.tenderingTerms.readDocumentProviderParty(tt, POS_UNICO_ELEMENTO);
+			this.tenderingTerms.readDocumentAvailabilityPeriod(tt, POS_UNICO_ELEMENTO);
+			
+			this.tenderingTerms.readLanguage(tt, POS_UNICO_ELEMENTO);
 		}else{
-			System.err.print("ERROR FATAL: ContractFolderStatus -> LOCATED CONTRACTING PARTY no existe");
+			System.err.print("ERROR FATAL: ContractFolderStatus -> TENDERING TERMS no existe\n");
 		}
 	}
 	
@@ -115,6 +154,7 @@ public class ContractFolderStatus {
 		for (TenderResult td : tenderResultList){
 			td.print();
 		}
+		this.tenderingTerms.print();
 	}
 	
 	
