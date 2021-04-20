@@ -12,16 +12,16 @@ import org.w3c.dom.Element;
  *		endDate: Date[0..1]
  *		endTime: Time[0..1]
  */
-public class DocumentAvailabilityPeriod {
+public class PresentationPeriod {
 	private Date endDate;
 	private Time endTime;
 	
-	public void readAttributes(Element dap, int POS_UNICO_ELEMENTO) {
+	public void readAttributes(Element pp, int POS_UNICO_ELEMENTO) {
 		this.endDate = null;
 		this.endTime = null;
 		
 		/* END DATE */
-		Element ed = (Element) dap.getElementsByTagName("cbc:EndDate").item(POS_UNICO_ELEMENTO);
+		Element ed = (Element) pp.getElementsByTagName("cbc:EndDate").item(POS_UNICO_ELEMENTO);
 		if(ed != null){
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			Date endDate = null;
@@ -31,13 +31,12 @@ public class DocumentAvailabilityPeriod {
 				e.printStackTrace();
 			}
 			this.endDate = endDate;
-			System.out.println(this.endDate);
 		}
 		
 		/* END TIME */
-		Element et = (Element) dap.getElementsByTagName("cbc:EndTime").item(POS_UNICO_ELEMENTO);
+		Element et = (Element) pp.getElementsByTagName("cbc:EndTime").item(POS_UNICO_ELEMENTO);
 		if (et != null){
-			SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+			SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss");
 			Date date = null;
 			Time endTime = null;
 			try {
@@ -51,10 +50,9 @@ public class DocumentAvailabilityPeriod {
 	}
 	
 	public void print(){
-		System.out.print("*** DOCUMENT AVAILABILITY PERIOD ***\n" +
-				 "--> End Date: " + endDate + "\n" +
-				 "--> End Time: " + endTime + "\n" +
+		System.out.print("**** PRESENTATION PERIOD ****\n" +
+				 "----> End Date: " + endDate + "\n" +
+				 "----> End Time: " + endTime + "\n" +
 				 "--------------------------------\n");
 	}
-
 }

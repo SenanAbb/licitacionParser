@@ -35,6 +35,7 @@ public class Entry {
 			this.cfs.readTenderResult(cfs, POS_UNICO_ELEMENTO);
 			this.cfs.readLocatedContractingParty(cfs, POS_UNICO_ELEMENTO);
 			this.cfs.readTenderingTerms(cfs, POS_UNICO_ELEMENTO);
+			this.cfs.readTenderingProcess(cfs, POS_UNICO_ELEMENTO);
 		}
 	}
 	

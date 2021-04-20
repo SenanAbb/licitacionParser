@@ -7,6 +7,7 @@ import org.w3c.dom.NodeList;
 
 import procurementProject.ProcurementProject;
 import tenderResult.TenderResult;
+import tenderingProcess.TenderingProcess;
 import tenderingTerms.TenderingTerms;
 
 /**
@@ -31,11 +32,11 @@ public class ContractFolderStatus {
 	private ProcurementProject procurementProject;
 	private TenderResult[] tenderResultList;
 	private TenderingTerms tenderingTerms;
+	private TenderingProcess tenderingProcess;
 //	private LegalDocumentReference legalDocumenteReference;
 //	private TechnicalDocumentReference technicalDocumentReference;
 //	private AdditionalDocumentReference[] additionalDocumentReferenceList;
-//	private TenderingProcess tenderingProcess;
-//	private ContractModification contractModificationList;
+//	private ContractModification[] contractModificationList;
 //	private ValidNoticeInfo[] validNoticeInfoList;
 //	private GeneralDocument[] generalDocumentList;
 	
@@ -136,10 +137,32 @@ public class ContractFolderStatus {
 			this.tenderingTerms.readTendererQualificationRequest(tt, POS_UNICO_ELEMENTO);
 			this.tenderingTerms.readDocumentProviderParty(tt, POS_UNICO_ELEMENTO);
 			this.tenderingTerms.readDocumentAvailabilityPeriod(tt, POS_UNICO_ELEMENTO);
-			
+			this.tenderingTerms.readTenderRecipientParty(tt, POS_UNICO_ELEMENTO);
+			this.tenderingTerms.readAdditionalInformationParty(tt, POS_UNICO_ELEMENTO);
+			this.tenderingTerms.readAppealTerms(tt, POS_UNICO_ELEMENTO);
+			this.tenderingTerms.readTenderPreparation(tt, POS_UNICO_ELEMENTO);
 			this.tenderingTerms.readLanguage(tt, POS_UNICO_ELEMENTO);
 		}else{
 			System.err.print("ERROR FATAL: ContractFolderStatus -> TENDERING TERMS no existe\n");
+		}
+	}
+	
+	public void readTenderingProcess(Element cfs, int POS_UNICO_ELEMENTO){
+		this.tenderingProcess = null;
+		
+		Element tp = (Element) cfs.getElementsByTagName("cac:TenderingProcess").item(POS_UNICO_ELEMENTO);
+		if(tp != null){
+			this.tenderingProcess = new TenderingProcess();
+			
+			this.tenderingProcess.readAttributes(tp, POS_UNICO_ELEMENTO);
+			this.tenderingProcess.readAuctionTerms(tp, POS_UNICO_ELEMENTO);
+			this.tenderingProcess.readTenderSubmissionDeadlinePeriod(tp, POS_UNICO_ELEMENTO);
+			this.tenderingProcess.readEconomicOperatorShortList(tp, POS_UNICO_ELEMENTO);
+			this.tenderingProcess.readProcessJustification(tp, POS_UNICO_ELEMENTO);
+			this.tenderingProcess.readParticipationRequestReceptionPeriod(tp, POS_UNICO_ELEMENTO);
+			this.tenderingProcess.readDocumentAvailabilityPeriod(tp, POS_UNICO_ELEMENTO);
+		}else{
+			System.err.print("ERROR FATAL: ContractFolderStatus -> TENDERING PROCESS no existe\n");
 		}
 	}
 	
@@ -155,6 +178,7 @@ public class ContractFolderStatus {
 			td.print();
 		}
 		this.tenderingTerms.print();
+		this.tenderingProcess.print();
 	}
 	
 	

@@ -3,6 +3,8 @@ package tenderingTerms;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import utils.DocumentAvailabilityPeriod;
+
 /**
  * @params
  * 		requiredCurriculaIndicator: bool[0..1]
@@ -33,10 +35,10 @@ public class TenderingTerms {
 	private TendererQualificationRequest tendererQualificationRequest;
 	private DocumentProviderParty documentProviderParty;
 	private DocumentAvailabilityPeriod documentAvailabilityPeriod;
-//	private TenderRecipientParty tenderRecipientParty;
-//	private AdditionalInformationParty additionalInformationParty;
-//	private AppealTerms appealTerms;
-//	private TenderPreparation[] tenderPreparationList;
+	private TenderRecipientParty tenderRecipientParty;
+	private AdditionalInformationParty additionalInformationParty;
+	private AppealTerms appealTerms;
+	private TenderPreparation[] tenderPreparationList;
 	private Language[] languageList;
 	
 	public void readAttributes(Element tt, int POS_UNICO_ELEMENTO) {
@@ -147,7 +149,63 @@ public class TenderingTerms {
 		}
 	}
 	
+	public void readTenderRecipientParty(Element tt, int POS_UNICO_ELEMENTO){
+		this.tenderRecipientParty = null;
+		
+		Element trp = (Element) tt.getElementsByTagName("cac:TenderRecipientParty").item(POS_UNICO_ELEMENTO);
+		if(trp != null){
+			this.tenderRecipientParty = new TenderRecipientParty();
+			
+			this.tenderRecipientParty.readAttributes(trp, POS_UNICO_ELEMENTO);
+			this.tenderRecipientParty.readPartyName(trp, POS_UNICO_ELEMENTO);
+			this.tenderRecipientParty.readPostalAddress(trp, POS_UNICO_ELEMENTO);
+		}
+	}
 	
+	public void readAdditionalInformationParty(Element tt, int POS_UNICO_ELEMENTO){
+		this.additionalInformationParty = null;
+		
+		Element aip = (Element) tt.getElementsByTagName("cac:AdditionalInformationParty").item(POS_UNICO_ELEMENTO);
+		if (aip != null){
+			this.additionalInformationParty = new AdditionalInformationParty();
+			
+			this.additionalInformationParty.readAttributes(aip, POS_UNICO_ELEMENTO);
+			this.additionalInformationParty.readPartyName(aip, POS_UNICO_ELEMENTO);
+			this.additionalInformationParty.readPostalAddress(aip, POS_UNICO_ELEMENTO);
+		}
+	}
+	
+	public void readAppealTerms(Element tt, int POS_UNICO_ELEMENTO){
+		this.appealTerms = null;
+		
+		Element at = (Element) tt.getElementsByTagName("cac:AppealTerms").item(POS_UNICO_ELEMENTO);
+		if (at != null){
+			this.appealTerms = new AppealTerms();
+			
+			this.appealTerms.readAppealReceiverParty(at, POS_UNICO_ELEMENTO);
+			this.appealTerms.readAppealInformationParty(at, POS_UNICO_ELEMENTO);
+			this.appealTerms.readPresentationPeriod(at, POS_UNICO_ELEMENTO);
+			this.appealTerms.readMediationParty(at, POS_UNICO_ELEMENTO);
+		}
+	}
+	
+	public void readTenderPreparation(Element tt, int POS_UNICO_ELEMENTO){
+		this.tenderPreparationList = null;
+		
+		NodeList tplNodeList = tt.getElementsByTagName("cac:TenderPreparation");
+		if (tplNodeList.getLength() > 0){
+			this.tenderPreparationList = new TenderPreparation[tplNodeList.getLength()];
+			
+			for(int i = 0; i < tplNodeList.getLength(); i++){
+				TenderPreparation tpl = new TenderPreparation();
+				
+				Element tplElement = (Element) tplNodeList.item(i);
+				tpl.readAttributes(tplElement, POS_UNICO_ELEMENTO);
+				
+				this.tenderPreparationList[i] = tpl;
+			}
+		}
+	}
 	
 	public void readLanguage(Element tt, int POS_UNICO_ELEMENTO){
 		this.languageList = null;
@@ -233,7 +291,39 @@ public class TenderingTerms {
 	 		 		 		 "--------------------------------\n");
 		}
 		
+		/* TENDER RECIPIENT PARTY */
+		if(tenderRecipientParty != null){
+			tenderRecipientParty.print();
+		}else{
+			System.out.print("*** TENDER RECIPIENT PARTY: null ***\n" +
+	 		 		 		 "--------------------------------\n");
+		}	
 		
+		/* ADDITIONAL INFORMATION PARTY */
+		if(additionalInformationParty != null){
+			additionalInformationParty.print();
+		}else{
+			System.out.print("*** ADDITIONAL INFORMATION PARTY: null ***\n" +
+	 		 		 		 "--------------------------------\n");
+		}
+		
+		/* APPEAL TERMS */
+		if(appealTerms != null){
+			appealTerms.print();
+		}else{
+			System.out.print("*** APPEAL TERMS: null ***\n" +
+					 		 "--------------------------------\n");
+		}
+		
+		/* TENDER PREPARATION */
+		if(tenderPreparationList != null){
+			for (TenderPreparation tp : tenderPreparationList){
+				tp.print();
+			}
+		}else{
+			System.out.print("*** TENDER PREPARATION: null ***\n" +
+							 "--------------------------------\n");
+		}
 		
 		/* LANGUAGE */
 		if(languageList != null){

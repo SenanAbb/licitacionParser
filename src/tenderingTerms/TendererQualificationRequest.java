@@ -147,7 +147,7 @@ public class TendererQualificationRequest {
 				str.print();
 			}
 		}else{
-			System.out.println("**** SPECIFIC TENDERER REQUIREMENT: null ****\n");
+			System.out.print("**** SPECIFIC TENDERER REQUIREMENT: null ****\n");
 		}
 		
 		/* FINANCIAL EVALUATION CRITERIA */
@@ -156,7 +156,7 @@ public class TendererQualificationRequest {
 				fec.print();
 			}
 		}else{
-			System.out.println("**** FINANCIAL EVALUATION CRITERIA: null ****\n");
+			System.out.print("**** FINANCIAL EVALUATION CRITERIA: null ****\n");
 		}
 		
 		/* TECHNICAL EVALUATION CRITERIA */
@@ -165,15 +165,17 @@ public class TendererQualificationRequest {
 				tec.print();
 			}
 		}else{
-			System.out.println("**** TECHNICAL EVALUATION CRITERIA: null ****\n");
+			System.out.print("**** TECHNICAL EVALUATION CRITERIA: null ****\n");
 		}
 		
 		/* REQUIRED BUSINESS CLASSIFICATION SCHEME */
 		if(requiredBusinessClassificationScheme != null){
 			requiredBusinessClassificationScheme.print();
 		}else{
-			System.out.println("**** REQUIRED BUSINESS CLASSIFICATION SCHEME: null ****\n");
+			System.out.print("**** REQUIRED BUSINESS CLASSIFICATION SCHEME: null ****\n");
 		}
+		
+		System.out.print("--------------------------------\n");
 	}
 	
 	
