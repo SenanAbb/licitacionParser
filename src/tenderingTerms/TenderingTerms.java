@@ -336,11 +336,4 @@ public class TenderingTerms {
 		}
 		System.out.print("===============================================================\n");
 	}
-	
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-
-	public TenderingTerms(){}
 }

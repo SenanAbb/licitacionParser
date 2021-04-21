@@ -36,6 +36,12 @@ public class Entry {
 			this.cfs.readLocatedContractingParty(cfs, POS_UNICO_ELEMENTO);
 			this.cfs.readTenderingTerms(cfs, POS_UNICO_ELEMENTO);
 			this.cfs.readTenderingProcess(cfs, POS_UNICO_ELEMENTO);
+			this.cfs.readContractModification(cfs, POS_UNICO_ELEMENTO);
+			this.cfs.readLegalDocumentReference(cfs, POS_UNICO_ELEMENTO);
+			this.cfs.readTechnicalDocumentReference(cfs, POS_UNICO_ELEMENTO);
+			this.cfs.readAdditionalDocumentReference(cfs, POS_UNICO_ELEMENTO);
+			this.cfs.readValidNoticeInfo(cfs, POS_UNICO_ELEMENTO);
+			this.cfs.readGeneralDocument(cfs, POS_UNICO_ELEMENTO);
 		}
 	}
 	
