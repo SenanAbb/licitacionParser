@@ -2,6 +2,10 @@ package utils;
 
 import org.w3c.dom.Element;
 
+/**
+ * @params
+ *		line: String [1]
+ */
 public class AddressLine {
 	private String line;
 

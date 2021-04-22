@@ -6,6 +6,12 @@ import java.util.Date;
 
 import org.w3c.dom.Element;
 
+/**
+ * @params	
+ *		startDate: Date [0..1]
+ *		endDate: Date [0..1]
+ *		description: String [0..1]
+ */
 public class ContractFormalizationPeriod {
 	private Date startDate, endDate;
 	private String description;
@@ -45,31 +51,10 @@ public class ContractFormalizationPeriod {
 		}
 	}
 	
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	
-	public ContractFormalizationPeriod(){}
-
-
-	/*************************/
-	/** GETTERS AND SETTERS **/
-	/*************************/
-	
-	
-	public Date getStartDate() {
-		return startDate;
-	}
-
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-
-	public String getDescription() {
-		return description;
+	public void print() {
+		System.out.print("**** CONTRACT FORMALIZATION PERIOD ****\n" + 
+				 "----> Start Date: " + startDate + "\n" +
+				 "----> End Date: " + endDate + "\n" +
+				 "----> Description Date: " + description + "\n");
 	}
 }

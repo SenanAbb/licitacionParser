@@ -2,6 +2,13 @@ package utils;
 
 import org.w3c.dom.Element;
 
+/**
+ * @params
+ * 		idenfiticationCode: String [1]
+ * 		name: String [0..1]
+ * 		identificationCodeLanguageID: String [0..1]
+ *		identificationCodeName: String [0..1]
+ */
 public class Country {
 	private String identificationCode, name;
 	// Atributos

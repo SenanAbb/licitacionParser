@@ -2,6 +2,11 @@ package utils;
 
 import org.w3c.dom.Element;
 
+/**
+ * @params
+ *		id: String [1]
+ *		schemeName: String[1]
+ */
 public class PartyIdentification {
 	private String id, schemeName;
 

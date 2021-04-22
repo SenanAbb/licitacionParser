@@ -45,11 +45,4 @@ public class RequiredFinancialGuarantee {
 						 "---> Liability Amount: " + liabilityAmount + "\n" +
 					 	 "--------------------------------\n");
 	}
-	
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	public RequiredFinancialGuarantee(){}
 }

@@ -2,6 +2,14 @@ package utils;
 
 import org.w3c.dom.Element;
 
+/**
+ * @params
+ *		addressFormatCode: int [0..1]/[1]
+ *		cityName: String [0..1]/[1]	
+ *		postalZone: String [0..1]/[1]
+ *		addressLine: AddressLine [0..1]/[1]
+ *		country: Country [0..1]/[1]
+ */
 public class PostalAddress {
 	private int addressFormatCode;
 	private AddressLine addressLine;

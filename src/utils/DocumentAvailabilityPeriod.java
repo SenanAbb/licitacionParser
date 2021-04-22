@@ -55,5 +55,4 @@ public class DocumentAvailabilityPeriod {
 				 "---> End Time: " + endTime + "\n" +
 				 "--------------------------------\n");
 	}
-
 }

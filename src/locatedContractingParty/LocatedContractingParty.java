@@ -64,7 +64,4 @@ public class LocatedContractingParty {
 		}
 		System.out.print("===============================================================\n");
 	}
-	
-	
-	public LocatedContractingParty(){}
 }

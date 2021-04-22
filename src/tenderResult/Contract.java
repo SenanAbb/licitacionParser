@@ -6,6 +6,11 @@ import java.util.Date;
 
 import org.w3c.dom.Element;
 
+/**
+ * @params
+ *		id: String [0..1]
+ *		issueDate: Date [0..1]
+ */
 public class Contract {
 	private String id;
 	private Date issueDate;
@@ -38,12 +43,4 @@ public class Contract {
 				"---> Issue Date: " + issueDate + "\n" +
 				"--------------------------------\n");
 	}
-	
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	
-	public Contract(){}
 }

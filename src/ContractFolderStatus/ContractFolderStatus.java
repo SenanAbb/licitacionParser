@@ -22,7 +22,7 @@ import tenderingTerms.TenderingTerms;
  * 		contractFolderStatusCode: String[1]
  * 		locatedContractingParty: LocatedContractingParty[1]
  * 		procurementProject: ProcurementProject[1]
- *		tenderResultList: TenderResult[] [1..*]
+ *		tenderResultList: TenderResult[] [0..*]
  *		tenderingTerms: TenderingTerms[1]
  *		tenderingProcess: TenderingProcess[1]
  *		legalDocumentReference: LegalDocumentReference[0..1]
@@ -69,7 +69,7 @@ public class ContractFolderStatus {
 		}	
 	}
 	
-	public void readLocatedContractingParty(Element cfs, int POS_UNICO_ELEMENTO) {
+	public void readLocatedContractingParty(Element cfs, int POS_UNICO_ELEMENTO){
 		this.locatedContractingParty = null;
 		
 		Element lcp = (Element) cfs.getElementsByTagName("cac-place-ext:LocatedContractingParty").item(POS_UNICO_ELEMENTO);
@@ -123,8 +123,6 @@ public class ContractFolderStatus {
 				
 				this.tenderResultList[i] = tenderResult;
 			}
-		}else{
-			System.err.print("ERROR FATAL: ContractFolderStatus -> TENDER RESULT no existe");
 		}
 	}
 
@@ -278,9 +276,14 @@ public class ContractFolderStatus {
 		System.out.print("===============================================================\n");
 		this.locatedContractingParty.print();
 		this.procurementProject.print();
-		for (TenderResult td : tenderResultList){
-			td.print();
+		if (tenderResultList != null){
+			for (TenderResult td : tenderResultList){
+				td.print();
+			}
+		}else{
+			System.out.print("** TENDER RESULT: null **\n");
 		}
+		
 		this.tenderingTerms.print();
 		this.tenderingProcess.print();
 		 
@@ -334,169 +337,4 @@ public class ContractFolderStatus {
 			System.out.print("** GENERAL DOCUMENT: null **\n");
 		}
 	}
-	
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	
-	public ContractFolderStatus(){}
-	
-	public ContractFolderStatus(String contractFolderID,
-			String contractFolderStatusCode,
-			ProcurementProject procurementProject)
-//			TenderResult[] tenderResultList, 
-//			TenderingProcess tenderingProcess,
-//			TenderingTerms tenderingTerms,
-//			LocatedContractingParty locatedContractingParty,
-//			ContractModification contractModification) 
-	{
-		this.contractFolderID = contractFolderID;
-		this.contractFolderStatusCode = contractFolderStatusCode;
-		this.procurementProject = procurementProject;
-//		this.tenderResultList = tenderResultList;
-//		this.tenderingProcess = tenderingProcess;
-//		this.tenderingTerms = tenderingTerms;
-//		this.locatedContractingParty = locatedContractingParty;
-//		this.contractModification = contractModification;
-	}
-	
-	
-	/*************************/
-	/** GETTERS AND SETTERS **/
-	/*************************/
-
-
-	public String getContractFolderID() {
-		return contractFolderID;
-	}
-
-
-	public void setContractFolderID(String contractFolderID) {
-		this.contractFolderID = contractFolderID;
-	}
-
-
-	public String getContractFolderStatusCode() {
-		return contractFolderStatusCode;
-	}
-
-
-	public void setContractFolderStatusCode(String contractFolderStatusCode) {
-		this.contractFolderStatusCode = contractFolderStatusCode;
-	}
-
-
-	public ProcurementProject getProcurementProject() {
-		return procurementProject;
-	}
-
-
-	public void setProcurementProject(ProcurementProject procurementProject) {
-		this.procurementProject = procurementProject;
-	}
-
-
-	public TenderResult[] getTenderResultList() {
-		return tenderResultList;
-	}
-
-
-	public void setTenderResultList(TenderResult[] tenderResultList) {
-		this.tenderResultList = tenderResultList;
-	}
-
-//	public LegalDocumentReference getLegalDocumenteReference() {
-//		return legalDocumenteReference;
-//	}
-//
-//
-//	public void setLegalDocumenteReference(
-//			LegalDocumentReference legalDocumenteReference) {
-//		this.legalDocumenteReference = legalDocumenteReference;
-//	}
-//
-//
-//	public TechnicalDocumentReference getTechnicalDocumentReference() {
-//		return technicalDocumentReference;
-//	}
-//
-//
-//	public void setTechnicalDocumentReference(
-//			TechnicalDocumentReference technicalDocumentReference) {
-//		this.technicalDocumentReference = technicalDocumentReference;
-//	}
-//
-//
-//	public AdditionalDocumentReference[] getAdditionalDocumentReference() {
-//		return additionalDocumentReference;
-//	}
-//
-//
-//	public void setAdditionalDocumentReference(
-//			AdditionalDocumentReference[] additionalDocumentReference) {
-//		this.additionalDocumentReference = additionalDocumentReference;
-//	}
-//
-//
-//	public TenderingProcess getTenderingProcess() {
-//		return tenderingProcess;
-//	}
-//
-//
-//	public void setTenderingProcess(TenderingProcess tenderingProcess) {
-//		this.tenderingProcess = tenderingProcess;
-//	}
-//
-//
-//	public TenderingTerms getTenderingTerms() {
-//		return tenderingTerms;
-//	}
-//
-//
-//	public void setTenderingTerms(TenderingTerms tenderingTerms) {
-//		this.tenderingTerms = tenderingTerms;
-//	}
-//
-//
-//	public LocatedContractingParty getLocatedContractingParty() {
-//		return locatedContractingParty;
-//	}
-//
-//
-//	public void setLocatedContractingParty(
-//			LocatedContractingParty locatedContractingParty) {
-//		this.locatedContractingParty = locatedContractingParty;
-//	}
-//
-//
-//	public ContractModification getContractModification() {
-//		return contractModification;
-//	}
-//
-//
-//	public void setContractModification(ContractModification contractModification) {
-//		this.contractModification = contractModification;
-//	}
-//
-//
-//	public ValidNoticeInfo[] getValidNoticeInfoList() {
-//		return validNoticeInfoList;
-//	}
-//
-//
-//	public void setValidNoticeInfoList(ValidNoticeInfo[] validNoticeInfoList) {
-//		this.validNoticeInfoList = validNoticeInfoList;
-//	}
-//
-//
-//	public GeneralDocument[] getGeneralDocumentList() {
-//		return generalDocumentList;
-//	}
-//
-//
-//	public void setGeneralDocumentList(GeneralDocument[] generalDocumentList) {
-//		this.generalDocumentList = generalDocumentList;
-//	}
 }

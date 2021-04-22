@@ -2,6 +2,13 @@ package utils;
 
 import org.w3c.dom.Element;
 
+/**
+ * @params
+ *		name: String [0..1]
+ *		electronicMail: String [0..1]
+ *		telephone: String [0..1]
+ *		telefax: String [0..1]
+ */
 public class Contact {
 	private String name, electronicMail, telephone, telefax; 
 	

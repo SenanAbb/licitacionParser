@@ -4,6 +4,10 @@ import org.w3c.dom.Element;
 
 import utils.PartyName;
 
+/**
+ * @params
+ *		partyName: PartyName[0..1]
+ */
 public class ParentLocatedParty {
 	private PartyName partyName;
 	

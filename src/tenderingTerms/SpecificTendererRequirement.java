@@ -23,11 +23,4 @@ public class SpecificTendererRequirement {
 						 "----> Requirement Type Code: " + requirementTypeCode + "\n" +
 						 "--------------------------------\n");
 	}
-	
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	public SpecificTendererRequirement(){}
 }

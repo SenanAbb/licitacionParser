@@ -183,7 +183,7 @@ public class TenderResult {
 				"--> SME Awarded Indicator: " + SMEAwardedIndicator + "\n" +
 				"--> Abnormally Low Tenders Indicator: " + abnormallyLowTenderIndicator + "\n" +
 				"--------------------------------\n");
-		if (contractList.length > 0){
+		if (contractList != null){
 			for (Contract c : contractList){
 				c.print();
 			}
@@ -214,12 +214,4 @@ public class TenderResult {
 		}
 		System.out.print("===============================================================\n");
 	}
-	
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	
-	public TenderResult(){}
 }

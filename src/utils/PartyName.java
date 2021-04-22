@@ -2,6 +2,10 @@ package utils;
 
 import org.w3c.dom.Element;
 
+/**
+ * @params
+ *		name: String[1]
+ */
 public class PartyName {
 	private String name;
 	
@@ -21,12 +25,4 @@ public class PartyName {
 						 "----> Party Name: " + name + "\n" +
 						 "--------------------------------\n");
 	}
-	
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	
-	public PartyName(){}
 }

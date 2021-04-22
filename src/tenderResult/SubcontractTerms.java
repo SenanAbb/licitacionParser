@@ -2,6 +2,12 @@ package tenderResult;
 
 import org.w3c.dom.Element;
 
+/**
+ * @params
+ *		rate: double [0..1]
+ *		amount: double [0..1]
+ *		description: String [0..1]
+ */
 public class SubcontractTerms {
 	private double rate, amount;
 	private String description;

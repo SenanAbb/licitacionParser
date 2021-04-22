@@ -2,6 +2,14 @@ package utils;
 
 import org.w3c.dom.Element;
 
+/**
+ * @params
+ * 		addressFormatCode: int [0..1]
+ * 		cityName: String [0..1]
+ * 		postalZone: String [0..1]
+ * 		addressLine: String [0..1]
+ * 		country: Country [0..1]
+ */
 public class Address {
 	private int addressFormatCode;
 	private String cityName, postalZone, addressLine;
@@ -54,67 +62,5 @@ public class Address {
 				"----> Postal Zone: " + postalZone + "\n" +
 				"----> AddressLine: " + addressLine + "\n");
 				country.print();
-	}
-	
-	/******************/
-	/** CONTRUCTORES **/
-	/******************/
-	
-	
-	public Address(){}
-
-
-	/***********************/
-	/** GETTERS Y SETTERS **/
-	/***********************/
-	
-	
-	public int getAddressFormatCode() {
-		return addressFormatCode;
-	}
-
-
-	public void setAddressFormatCode(int addressFormatCode) {
-		this.addressFormatCode = addressFormatCode;
-	}
-
-
-	public String getCityName() {
-		return cityName;
-	}
-
-
-	public void setCityName(String cityName) {
-		this.cityName = cityName;
-	}
-
-
-	public String getPostalZone() {
-		return postalZone;
-	}
-
-
-	public void setPostalZone(String postalZone) {
-		this.postalZone = postalZone;
-	}
-
-
-	public String getAddressLine() {
-		return addressLine;
-	}
-
-
-	public void setAddressLine(String addressLine) {
-		this.addressLine = addressLine;
-	}
-
-
-	public Country getCountry() {
-		return country;
-	}
-
-
-	public void setCountry(Country country) {
-		this.country = country;
 	}
 }

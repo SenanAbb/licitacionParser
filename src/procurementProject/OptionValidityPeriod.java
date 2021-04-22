@@ -2,6 +2,10 @@ package procurementProject;
 
 import org.w3c.dom.Element;
 
+/**
+ * @params
+ * 		descrtiption: String [0..1]
+ */
 public class OptionValidityPeriod {
 	private String description;
 	
@@ -18,26 +22,5 @@ public class OptionValidityPeriod {
 		System.out.print("**** OPTION VALIDITY PERIOD ****\n" +
 				"----> Options Description: " + description + "\n" +
 				"--------------------------------\n");
-	}
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	
-	public OptionValidityPeriod(){}
-
-	
-	/*************************/
-	/** GETTERS AND SETTERS **/
-	/*************************/
-	
-	
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 }

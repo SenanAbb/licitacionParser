@@ -1,10 +1,7 @@
 package Parser;
 
 import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,10 +11,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import procurementProject.*;
-import utils.Address;
-import utils.Country;
-import ContractFolderStatus.ContractFolderStatus;
 import Entry.Entry;
 
 /**
@@ -180,6 +173,10 @@ public class Parser {
 	
 	public Parser(String URL, String NIF){
 		this.URL = new File(URL);
+		this.NIF = NIF;
+	}
+	
+	public Parser(String NIF){
 		this.NIF = NIF;
 	}
 	

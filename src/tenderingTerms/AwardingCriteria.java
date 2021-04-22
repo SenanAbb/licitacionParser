@@ -36,11 +36,4 @@ public class AwardingCriteria {
 				 "---> Weight Numeric: " + weightNumeric + "\n" +
 				 "--------------------------------\n");
 	}
-	
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	public AwardingCriteria(){}
 }

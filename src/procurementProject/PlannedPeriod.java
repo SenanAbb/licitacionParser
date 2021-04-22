@@ -6,6 +6,13 @@ import java.util.Date;
 
 import org.w3c.dom.Element;
 
+/**
+ * @params
+ *		durationMeasure: double [0..1]
+ *		durationMeasureUnitCode: String [0..1]
+ *		startDate: Date [0..1]
+ *		endDate: Date [0..1]
+ */
 public class PlannedPeriod {
 	private double durationMeasure;
 	private Date startDate, endDate;
@@ -60,53 +67,19 @@ public class PlannedPeriod {
 				"--------------------------------\n");
 	}
 	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	
-	public PlannedPeriod(){}
-	
-	
 	/*************************/
 	/** GETTERS AND SETTERS **/
 	/*************************/
 	
-	
-	public String getDurationMeasureUnitCode(){
-		return durationMeasureUnitCode;
-	}
-	
-	public void setUnitCode(String durationMeasureUnitCode){
-		this.durationMeasureUnitCode = durationMeasureUnitCode;
-	}
-
 	public double getDurationMeasure() {
 		return durationMeasure;
 	}
-
-
-	public void setDurationMeasure(double durationMeasure) {
-		this.durationMeasure = durationMeasure;
-	}
-
 
 	public Date getStartDate() {
 		return startDate;
 	}
 
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-
 	public Date getEndDate() {
 		return endDate;
-	}
-
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
 	}
 }

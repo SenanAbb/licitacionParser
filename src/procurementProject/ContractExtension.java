@@ -2,6 +2,11 @@ package procurementProject;
 
 import org.w3c.dom.Element;
 
+/**
+ * @params
+ *		optionsDescription: String [0..1]
+ *		optionValidityPeriod: OptionValidityPeriod [0..1]
+ */
 public class ContractExtension {
 	private String optionsDescription;
 	private OptionValidityPeriod optionValidityPeriod;
@@ -30,34 +35,5 @@ public class ContractExtension {
 		}else{
 			System.out.print("**** OPTION VALIDITY PERIOD: null ****\n");
 		}
-	}
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	
-	public ContractExtension() {}
-
-
-	/*************************/
-	/** GETTERS AND SETTERS **/
-	/*************************/
-	
-	
-	public String getOptionsDescription() {
-		return optionsDescription;
-	}
-	
-	public void setOptionsDescription(String optionsDescription) {
-		this.optionsDescription = optionsDescription;
-	}
-
-	public OptionValidityPeriod getOptionValidityPeriod() {
-		return optionValidityPeriod;
-	}
-
-	public void setOptionValidityPeriod(OptionValidityPeriod optionValidityPeriod) {
-		this.optionValidityPeriod = optionValidityPeriod;
 	}
 }

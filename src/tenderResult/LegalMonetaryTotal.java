@@ -2,6 +2,13 @@ package tenderResult;
 
 import org.w3c.dom.Element;
 
+/**
+ * @params
+ *		taxExclusiveAmount: double [1]
+ *		taxExclusiveAmountCurrencyID: String [1]
+ *		payableAmount: double [1]
+ *		payableAmountCurrencyID: String [1]
+ */
 public class LegalMonetaryTotal {
 	private double taxExclusiveAmount, payableAmount;
 	private String taxExclusiveAmountCurrencyID, payableAmountCurrencyID;
@@ -28,34 +35,9 @@ public class LegalMonetaryTotal {
 			System.err.print("ERROR FATAL: TenderResult -> AwardedTenderedProject -> LegalMonetaryTotal -> PAYABLE AMOUNT no existe\n");
 		}
 	}
-
 	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	
-	public LegalMonetaryTotal(){}
-	
-	
-	/*************************/
-	/** GETTERS AND SETTERS **/
-	/*************************/
-	
-	
-	public double getTaxExclusiveAmount() {
-		return taxExclusiveAmount;
-	}
-
-	public double getPayableAmount() {
-		return payableAmount;
-	}
-
-	public String getTaxExclusiveAmountCurrencyID() {
-		return taxExclusiveAmountCurrencyID;
-	}
-
-	public String getPayableAmountCurrencyID() {
-		return payableAmountCurrencyID;
+	public void print(){
+		System.out.print("----> Tax Exclusive Amount: " + taxExclusiveAmount + " " + "(" + taxExclusiveAmountCurrencyID + ")\n");
+		System.out.print("----> Tax Exclusive Amount: " + payableAmount + " " + "(" + payableAmountCurrencyID + ")\n");
 	}
 }

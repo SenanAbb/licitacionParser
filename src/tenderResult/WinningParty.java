@@ -6,6 +6,11 @@ import org.w3c.dom.NodeList;
 import utils.PartyIdentification;
 import utils.PartyName;
 
+/**
+ * @author senan
+ *		partyIdentificationList: PartyIdentification[] [1..3]
+ *		partyName: PartyName [1]
+ */
 public class WinningParty {
 	private PartyIdentification[] partyIdentificationList;
 	private PartyName partyName;
@@ -24,7 +29,6 @@ public class WinningParty {
 				
 				this.partyIdentificationList[i] = p;
 			}
-			
 		}else{
 			System.err.print("ERROR FATAL: TenderResult -> WinningParty -> PARTY IDENTIFICATION no existe\n");
 		}
@@ -50,11 +54,4 @@ public class WinningParty {
 		}
 		partyName.print();
 	}
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	
-	public WinningParty(){}
 }

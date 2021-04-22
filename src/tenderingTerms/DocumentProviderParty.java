@@ -71,11 +71,4 @@ public class DocumentProviderParty {
 						"--------------------------------\n");
 		}
 	}
-	
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	public DocumentProviderParty(){}
 }

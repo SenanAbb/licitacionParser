@@ -23,11 +23,4 @@ public class ProcurementLegislationDocumentReference {
 				 "---> ID: " + id + "\n" +
 				 "--------------------------------\n");
 	}
-	
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	public ProcurementLegislationDocumentReference(){}
 }

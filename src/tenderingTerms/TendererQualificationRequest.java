@@ -177,12 +177,5 @@ public class TendererQualificationRequest {
 		
 		System.out.print("--------------------------------\n");
 	}
-	
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-
-	public TendererQualificationRequest(){}
 
 }

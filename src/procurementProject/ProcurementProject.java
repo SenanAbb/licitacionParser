@@ -3,6 +3,17 @@ package procurementProject;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+/**
+ * @params
+ *		name: String [1]
+ *		typeCode: int [0..1]
+ *		subTypeCode: int [0..1]
+ *		budgetAmount: BudgetAmount [0..1]
+ *		plannedPeriod: PlannedPeriod [1]
+ *		requiredCommodityClassificationList: RequiredCommodityClassification [0..*]
+ *		realizedLocation: RealizedLocation [0..1]
+ *		contractExtension: ContractExtension [0..1]
+ */
 public class ProcurementProject {
 	private String name;
 	private int typeCode, subTypeCode;
@@ -159,103 +170,5 @@ public class ProcurementProject {
 							 "--------------------------------\n");
 		}
 		System.out.print("===============================================================\n");
-	}
-	
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	
-	public ProcurementProject(){}
-	
-	public ProcurementProject(String name, PlannedPeriod plannedPeriod) {
-		this.name = name;
-		this.plannedPeriod = plannedPeriod;
-	}
-
-	/*************************/
-	/** GETTERS AND SETTERS **/
-	/*************************/
-
-	
-	public String getName() {
-		return name;
-	}
-
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-
-	public int getTypeCode() {
-		return typeCode;
-	}
-
-
-	public void setTypeCode(int typeCode) {
-		this.typeCode = typeCode;
-	}
-
-
-	public int getSubTypeCode() {
-		return subTypeCode;
-	}
-
-
-	public void setSubTypeCode(int subTypeCode) {
-		this.subTypeCode = subTypeCode;
-	}
-
-
-	public BudgetAmount getBudgetAmount() {
-		return budgetAmount;
-	}
-
-
-	public void setBudgetAmount(BudgetAmount budgetAmount) {
-		this.budgetAmount = budgetAmount;
-	}
-
-
-	public PlannedPeriod getPlannedPeriod() {
-		return plannedPeriod;
-	}
-
-
-	public void setPlannedPeriod(PlannedPeriod plannedPeriod) {
-		this.plannedPeriod = plannedPeriod;
-	}
-
-
-	public RequiredCommodityClassification[] getRequiredCommodityClassificationList() {
-		return requiredCommodityClassificationList;
-	}
-
-
-	public void setRequiredCommodityClassificationList(
-			RequiredCommodityClassification[] requiredCommodityClassificationList) {
-		this.requiredCommodityClassificationList = requiredCommodityClassificationList;
-	}
-
-
-	public RealizedLocation getRealizedLocation() {
-		return realizedLocation;
-	}
-
-
-	public void setRealizedLocation(RealizedLocation realizedLocation) {
-		this.realizedLocation = realizedLocation;
-	}
-
-
-	public ContractExtension getContractExtension() {
-		return contractExtension;
-	}
-
-
-	public void setContractExtension(ContractExtension contractExtension) {
-		this.contractExtension = contractExtension;
 	}
 }

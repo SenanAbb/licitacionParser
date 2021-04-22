@@ -2,6 +2,10 @@ package procurementProject;
 
 import org.w3c.dom.Element;
 
+/**
+ * @author senan
+ *		itemClassificationCode: int [0..1]
+ */
 public class RequiredCommodityClassification {
 	private int itemClassificationCode;
 	
@@ -17,29 +21,4 @@ public class RequiredCommodityClassification {
 		System.out.print("--->Item Clas. Code: " + itemClassificationCode + "\n");
 		System.out.print("--------------------------------\n");
 	}
-	
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	
-	public RequiredCommodityClassification(){}
-
-	
-	/*************************/
-	/** GETTERS AND SETTERS **/
-	/*************************/
-	
-	
-	public int getItemClassificationCode() {
-		return itemClassificationCode;
-	}
-	
-	public void setItemClassificationCode(int itemClassificationCode) {
-		this.itemClassificationCode = itemClassificationCode;
-	}
-
-
-	
 }

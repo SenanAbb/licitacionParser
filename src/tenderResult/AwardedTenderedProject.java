@@ -3,6 +3,11 @@ package tenderResult;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+/**
+ * @params
+ * 		legalMonetaryTotalList: LegalMonetaryTotal[] [0..*]
+ *		contractFormalizationPeriod: ContractFormalizationPeriod [0..1]
+ */
 public class AwardedTenderedProject {
 	//private int procurementProjectLotID;
 	private LegalMonetaryTotal[] legalMonetaryTotalList;
@@ -38,33 +43,20 @@ public class AwardedTenderedProject {
 		System.out.print("*** AWARDED TENDERED PROJECT ***\n");
 //				"--> Procurement Project Lot ID: " + procurementProjectLotID + "\n" +
 		
-		if (legalMonetaryTotalList.length > 0){
+		if (legalMonetaryTotalList != null){
 			System.out.print("**** LEGAL MONETARY TOTAL ****\n");
-			for(LegalMonetaryTotal lmt : legalMonetaryTotalList){
-				System.out.print("----> Tax Exclusive Amount: " + lmt.getTaxExclusiveAmount() + " " + "(" + lmt.getTaxExclusiveAmountCurrencyID() + ")\n");
-				System.out.print("----> Tax Exclusive Amount: " + lmt.getPayableAmount() + " " + "(" + lmt.getPayableAmountCurrencyID() + ")\n");
+			for (LegalMonetaryTotal l : legalMonetaryTotalList){
+				l.print();
 			}
 		}else{
 			System.out.print("**** LEGAL MONETARY TOTAL: null ****\n");
 		}
 		
 		if (contractFormalizationPeriod != null){
-			System.out.print("**** CONTRACT FORMALIZATION PERIOD ****\n" + 
-							 "----> Start Date: " + contractFormalizationPeriod.getStartDate() + "\n" +
-							 "----> End Date: " + contractFormalizationPeriod.getEndDate() + "\n" +
-							 "----> Description Date: " + contractFormalizationPeriod.getDescription() + "\n");
+			contractFormalizationPeriod.print();
 		}else{
 			System.out.print("**** CONTRACT FORMALIZATION PERIOD: null ****\n");
 		}
 		System.out.print("--------------------------------\n");
 	}
-	
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	
-	public AwardedTenderedProject(){}
-	
 }

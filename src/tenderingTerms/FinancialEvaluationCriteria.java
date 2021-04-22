@@ -46,12 +46,5 @@ public class FinancialEvaluationCriteria {
 						 "----> Description: " + description + "\n" +
 						 "--------------------------------\n");
 	}
-	
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	public FinancialEvaluationCriteria(){}
 
 }

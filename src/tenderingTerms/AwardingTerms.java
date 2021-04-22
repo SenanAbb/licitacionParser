@@ -34,11 +34,4 @@ public class AwardingTerms {
 			ac.print();
 		}
 	}
-	
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	public AwardingTerms(){}
 }
