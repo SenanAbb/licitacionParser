@@ -20,18 +20,18 @@ public class LegalMonetaryTotal {
 		this.payableAmountCurrencyID = null;
 		
 		Element taxExclusiveAmount = (Element) lmt.getElementsByTagName("cbc:TaxExclusiveAmount").item(POS_UNICO_ELEMENTO);
-		if (taxExclusiveAmount != null){
+		try {
 			this.taxExclusiveAmount = Double.parseDouble(taxExclusiveAmount.getTextContent());
 			this.taxExclusiveAmountCurrencyID = taxExclusiveAmount.getAttributes().getNamedItem("currencyID").getTextContent();
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: TenderResult -> AwardedTenderedProject -> LegalMonetaryTotal -> TAX EXCLUSIVE AMOUNT no existe\n");
 		}
 		
 		Element payableAmount = (Element) lmt.getElementsByTagName("cbc:PayableAmount").item(POS_UNICO_ELEMENTO);
-		if (payableAmount != null){
+		try {
 			this.payableAmount = Double.parseDouble(payableAmount.getTextContent());
 			this.payableAmountCurrencyID = payableAmount.getAttributes().getNamedItem("currencyID").getTextContent();
-		}else{
+		} catch (NullPointerException e) {
 			System.err.print("ERROR FATAL: TenderResult -> AwardedTenderedProject -> LegalMonetaryTotal -> PAYABLE AMOUNT no existe\n");
 		}
 	}

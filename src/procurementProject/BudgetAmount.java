@@ -8,7 +8,6 @@ import org.w3c.dom.Node;
  * 		estimatedOverallContractAmount: double [1]
  * 		totalAmount: double [1]
  * 		taxExclusiveAmount: double [1]
- *
  */
 public class BudgetAmount {
 	private double estimatedOverallContractAmount, totalAmount, taxExclusiveAmount;
@@ -32,34 +31,36 @@ public class BudgetAmount {
 			-> Si no existen: Lanzamos error
 		*/
 		estimatedOverallContractAmountNode = budgetAmount.getElementsByTagName("cbc:EstimatedOverallContractAmount").item(POS_UNICO_ELEMENTO);
-		if (estimatedOverallContractAmountNode != null){
+		try{
 			estimatedOverallContractAmount = Double.parseDouble(estimatedOverallContractAmountNode.getTextContent());
 			estimatedOverallContractAmountCurrencyID = estimatedOverallContractAmountNode.getAttributes().getNamedItem("currencyID").getTextContent();
 			
 			this.estimatedOverallContractAmount = estimatedOverallContractAmount;
 			this.estimatedOverallContractAmountCurrencyID = estimatedOverallContractAmountCurrencyID;
-		}else{
+		}catch (NullPointerException e){
 			System.err.println("ERROR FATAL: ProcurementProject -> BudgetAmount -> ESTIMATED OVERALL CONTRACT AMOUNT no existe");
 		}
 		
 		totalAmountNode = budgetAmount.getElementsByTagName("cbc:TotalAmount").item(POS_UNICO_ELEMENTO);
-		if (totalAmountNode != null){
+		try{
 			totalAmount = Double.parseDouble(totalAmountNode.getTextContent());
 			totalAmountCurrencyID = totalAmountNode.getAttributes().getNamedItem("currencyID").getTextContent();
 			
 			this.totalAmount = totalAmount;
 			this.totalAmountCurrencyID = totalAmountCurrencyID;
-		}else{
+		}catch (NullPointerException e){
 			System.err.println("ERROR FATAL: ProcurementProject -> BudgetAmount -> TOTAL AMOUNT no existe");
 		}
 		
 		taxExclusiveAmountNode = budgetAmount.getElementsByTagName("cbc:TaxExclusiveAmount").item(POS_UNICO_ELEMENTO);
-		if (taxExclusiveAmountNode != null){
+		try{
 			taxExclusiveAmount = Double.parseDouble(taxExclusiveAmountNode.getTextContent());
 			taxExclusiveAmountCurrencyID = taxExclusiveAmountNode.getAttributes().getNamedItem("currencyID").getTextContent();
 			
 			this.taxExclusiveAmount = taxExclusiveAmount;
 			this.taxExclusiveAmountCurrencyID = taxExclusiveAmountCurrencyID;
+		}catch (NullPointerException e){
+			System.err.println("ERROR FATAL: ProcurementProject -> BudgetAmount -> TAX EXCLUSIVE AMOUNT no existe");
 		}
 	}
 	

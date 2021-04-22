@@ -54,17 +54,16 @@ public class ContractFolderStatus {
 		Element contractFolderIDNode = (Element) cfs.getElementsByTagName("cbc:ContractFolderID").item(POS_UNICO_ELEMENTO);
 		Element contractFolderStatusCodeNode = (Element) cfs.getElementsByTagName("cbc-place-ext:ContractFolderStatusCode").item(POS_UNICO_ELEMENTO);
 		
-		// Compruebo la existencia del ContractFolderID, si no existe se queda a null y mandamos mensaje
-		if (contractFolderIDNode != null){
+		// Si el elemento se ha quedado a null, es decir, no se ha encontrado ese elemento en el ATOM, capturamos la excepcion y mandamos un mensaje por pantalla
+		try{
 			this.contractFolderID = contractFolderIDNode.getTextContent();
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: ContractFolderStatus -> CONTRACT FOLDER ID no existe\n");
 		}
 		
-		// Compruebo la existencia del ContractFolderID, si no existe se queda a null y mandamos mensaje
-		if (contractFolderStatusCodeNode != null){
+		try{
 			this.contractFolderStatusCode = contractFolderStatusCodeNode.getTextContent();
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: ContractFolderStatus -> CONTRACT FOLDER STATUS CODE no existe\n");
 		}	
 	}
@@ -73,12 +72,13 @@ public class ContractFolderStatus {
 		this.locatedContractingParty = null;
 		
 		Element lcp = (Element) cfs.getElementsByTagName("cac-place-ext:LocatedContractingParty").item(POS_UNICO_ELEMENTO);
-		if (lcp != null){
+		
+		try{
 			this.locatedContractingParty = new LocatedContractingParty();
 			this.locatedContractingParty.readAttributes(lcp, POS_UNICO_ELEMENTO);
 			this.locatedContractingParty.readParentLocatedParty(lcp, POS_UNICO_ELEMENTO);
 			this.locatedContractingParty.readParty(lcp, POS_UNICO_ELEMENTO);
-		}else{
+		}catch(NullPointerException e){
 			System.err.print("ERROR FATAL: ContractFolderStatus -> LOCATED CONTRACTING PARTY no existe");
 		}
 	}
@@ -89,18 +89,25 @@ public class ContractFolderStatus {
 		//Dentro del ContractFolderStatus, buscamos el <cac:ProcurementProject>
 		Element pp = (Element) cfs.getElementsByTagName("cac:ProcurementProject").item(POS_UNICO_ELEMENTO);
 		
-		//Si su padre no es ContractFolderStatus -> No existe
-		if (pp == null || pp.getParentNode().getNodeName() != "cac-place-ext:ContractFolderStatus"){
+		try{
+			if(pp.getParentNode().getNodeName() == "cac-place-ext:ContractFolderStatus"){
+				this.procurementProject = new ProcurementProject();
+				
+				this.procurementProject.readAttributes(pp, POS_UNICO_ELEMENTO);
+				this.procurementProject.readBudgetAmount(pp, POS_UNICO_ELEMENTO);
+				this.procurementProject.readRequiredCommodityClassification(pp, POS_UNICO_ELEMENTO);
+				this.procurementProject.readPlannedPeriod(pp, POS_UNICO_ELEMENTO);
+				this.procurementProject.readRealizedLocation(pp, POS_UNICO_ELEMENTO);
+				this.procurementProject.readContractExtension(pp, POS_UNICO_ELEMENTO);
+	
+			// Si existe pero su padre no es Contract Folder Status
+			}else{
+				throw new Exception();
+			}
+		}catch(NullPointerException e){
 			System.err.print("ERROR FATAL: ContractFolderStatus -> PROCUREMENT PROJECT no existe\n");
-		}else{
-			this.procurementProject = new ProcurementProject();
-			
-			this.procurementProject.readAttributes(pp, POS_UNICO_ELEMENTO);
-			this.procurementProject.readBudgetAmount(pp, POS_UNICO_ELEMENTO);
-			this.procurementProject.readRequiredCommodityClassification(pp, POS_UNICO_ELEMENTO);
-			this.procurementProject.readPlannedPeriod(pp, POS_UNICO_ELEMENTO);
-			this.procurementProject.readRealizedLocation(pp, POS_UNICO_ELEMENTO);
-			this.procurementProject.readContractExtension(pp, POS_UNICO_ELEMENTO);
+		}catch(Exception e){
+			System.err.print("ERROR FATAL: ContractFolderStatus -> PROCUREMENT PROJECT no existe\n");
 		}
 	}
 	
@@ -130,7 +137,7 @@ public class ContractFolderStatus {
 		this.tenderingTerms = null;
 		
 		Element tt = (Element) cfs.getElementsByTagName("cac:TenderingTerms").item(POS_UNICO_ELEMENTO);
-		if (tt != null){
+		try{
 			this.tenderingTerms = new TenderingTerms();
 			
 			this.tenderingTerms.readAttributes(tt, POS_UNICO_ELEMENTO);
@@ -146,7 +153,7 @@ public class ContractFolderStatus {
 			this.tenderingTerms.readAppealTerms(tt, POS_UNICO_ELEMENTO);
 			this.tenderingTerms.readTenderPreparation(tt, POS_UNICO_ELEMENTO);
 			this.tenderingTerms.readLanguage(tt, POS_UNICO_ELEMENTO);
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: ContractFolderStatus -> TENDERING TERMS no existe\n");
 		}
 	}
@@ -155,7 +162,8 @@ public class ContractFolderStatus {
 		this.tenderingProcess = null;
 		
 		Element tp = (Element) cfs.getElementsByTagName("cac:TenderingProcess").item(POS_UNICO_ELEMENTO);
-		if(tp != null){
+		
+		try{
 			this.tenderingProcess = new TenderingProcess();
 			
 			this.tenderingProcess.readAttributes(tp, POS_UNICO_ELEMENTO);
@@ -165,7 +173,7 @@ public class ContractFolderStatus {
 			this.tenderingProcess.readProcessJustification(tp, POS_UNICO_ELEMENTO);
 			this.tenderingProcess.readParticipationRequestReceptionPeriod(tp, POS_UNICO_ELEMENTO);
 			this.tenderingProcess.readDocumentAvailabilityPeriod(tp, POS_UNICO_ELEMENTO);
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: ContractFolderStatus -> TENDERING PROCESS no existe\n");
 		}
 	}

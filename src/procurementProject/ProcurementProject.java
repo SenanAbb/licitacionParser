@@ -38,9 +38,9 @@ public class ProcurementProject {
 		
 		// Compruebo la existencia del Name, si no existe se queda a null y mandamos mensaje
 		nameNode = (Element) pp.getElementsByTagName("cbc:Name").item(POS_UNICO_ELEMENTO);
-		if (nameNode != null) {
+		try{
 			this.name = nameNode.getTextContent();
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: ProcurementProject -> NAME no existe\n");
 		}
 		
@@ -94,9 +94,9 @@ public class ProcurementProject {
 		this.plannedPeriod = new PlannedPeriod();
 		
 		Element pPeriod = (Element) pp.getElementsByTagName("cac:PlannedPeriod").item(POS_UNICO_ELEMENTO);
-		if (pPeriod != null){
+		try{
 			plannedPeriod.readAttributes(pPeriod, POS_UNICO_ELEMENTO);
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: ProcurementProject -> PLANNED PERIOD no existe\n");
 		}
 	}

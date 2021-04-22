@@ -46,10 +46,10 @@ public class Party {
 		
 		/* Party Name */
 		Element pn = (Element) p.getElementsByTagName("cac:PartyName").item(POS_UNICO_ELEMENTO);
-		if (pn != null){
+		try{
 			this.partyName = new PartyName();
 			this.partyName.readAttributes(pn, POS_UNICO_ELEMENTO);
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: LocatedContractingParty -> Party -> PARTY NAME no existe\n");
 		}
 		

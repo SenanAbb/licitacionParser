@@ -46,9 +46,9 @@ public class TenderResult {
 		
 		/* RESULT CODE */
 		Element resultCode = (Element) tr.getElementsByTagName("cbc:ResultCode").item(POS_UNICO_ELEMENTO);
-		if(resultCode != null){
+		try{
 			this.resultCode = Integer.parseInt(resultCode.getTextContent());
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: TenderResult -> RESULT CODE no existe\n");
 		}
 		
@@ -60,7 +60,7 @@ public class TenderResult {
 		
 		/* AWARD DATE */
 		Element awDate = (Element) tr.getElementsByTagName("cbc:AwardDate").item(POS_UNICO_ELEMENTO);
-		if (awDate != null){
+		try{
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			Date awardDate = null;
 			try {
@@ -69,15 +69,15 @@ public class TenderResult {
 				e.printStackTrace();
 			}
 			this.awardDate = awardDate;
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: TenderResult -> AWARD DATE no existe\n");
 		}
 		
 		/* RECEIVED TENDER QUANTITY */
 		Element rtq = (Element) tr.getElementsByTagName("cbc:ReceivedTenderQuantity").item(POS_UNICO_ELEMENTO);
-		if(rtq != null){
+		try {
 			this.receivedTenderQuantity = Integer.parseInt(rtq.getTextContent());
-		}else{
+		} catch (NullPointerException e) {
 			System.err.print("ERROR FATAL: TenderResult -> RECEIVED TENDER QUANTITY no existe\n");
 		}
 		
@@ -141,11 +141,11 @@ public class TenderResult {
 		this.winningParty = null;
 		
 		Element wp = (Element) tr.getElementsByTagName("cac:WinningParty").item(POS_UNICO_ELEMENTO);
-		if (wp != null){
+		try {
 			this.winningParty = new WinningParty();
 			this.winningParty.readPartyName(wp, POS_UNICO_ELEMENTO);
 			this.winningParty.readPartyIdentificationList(wp, POS_UNICO_ELEMENTO);
-		}else{
+		} catch (NullPointerException e) {
 			System.err.print("ERROR FATAL: TenderResult -> WINNING PARTY no existe\n");
 		}
 	}

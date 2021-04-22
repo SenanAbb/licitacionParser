@@ -11,12 +11,12 @@ public class PartyName {
 	
 	public void readAttributes(Element pn, int POS_UNICO_ELEMENTO){
 		this.name = null;
-		
 		Element name = (Element) pn.getElementsByTagName("cbc:Name").item(POS_UNICO_ELEMENTO);
-		if (name != null){
+		
+		try{
 			this.name = name.getTextContent();
-		}else{
-			System.err.print("ERROR FATAL: TenderResult -> WinningParty -> PartyName -> NAME no existe\n");
+		}catch (NullPointerException e){
+			System.err.print("ERROR FATAL: PartyName -> NAME no existe\n");
 		}
 	}
 	

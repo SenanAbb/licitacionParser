@@ -15,18 +15,18 @@ public class LocatedContractingParty {
 	
 	public void readAttributes(Element lcp, int POS_UNICO_ELEMENTO){
 		this.contractingPartyTypeCode = -1;
-		this.parentLocatedParty = null;
-		this.party = null;
 		
 		Element contractingPartyTypeCode = (Element) lcp.getElementsByTagName("cbc:ContractingPartyTypeCode").item(POS_UNICO_ELEMENTO);
-		if (contractingPartyTypeCode != null){
+		try{
 			this.contractingPartyTypeCode = Integer.parseInt(contractingPartyTypeCode.getTextContent());
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: ContractFolderStatus -> LocatedContractingParty -> CONTRACTING PARTY TYPE CODE no existe\n");
 		}
 	}
 	
 	public void readParentLocatedParty(Element lcp, int POS_UNICO_ELEMENTO){
+		this.parentLocatedParty = null;
+		
 		Element parentLocatedParty = (Element) lcp.getElementsByTagName("cac:ParentLocatedParty").item(POS_UNICO_ELEMENTO);
 		if (parentLocatedParty != null){
 			this.parentLocatedParty = new ParentLocatedParty();
@@ -35,11 +35,13 @@ public class LocatedContractingParty {
 	}
 	
 	public void readParty(Element lcp, int POS_UNICO_ELEMENTO){
+		this.party = null;
+		
 		Element party = (Element) lcp.getElementsByTagName("cac:Party").item(POS_UNICO_ELEMENTO);
-		if (party != null){
+		try{	
 			this.party = new Party();
 			this.party.readAttributes(party, POS_UNICO_ELEMENTO);
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: ContractFolderStatus -> LocatedContractingParty -> PARTY no existe\n");
 		}
 	}

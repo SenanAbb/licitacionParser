@@ -19,7 +19,7 @@ public class WinningParty {
 		this.partyIdentificationList = null;
 		
 		NodeList piNodeList = wp.getElementsByTagName("cac:PartyIdentification");
-		if (piNodeList.getLength() > 0){
+		try {
 			this.partyIdentificationList = new PartyIdentification[piNodeList.getLength()];
 			
 			for (int i = 0; i < piNodeList.getLength(); i++){
@@ -29,20 +29,19 @@ public class WinningParty {
 				
 				this.partyIdentificationList[i] = p;
 			}
-		}else{
+		} catch (Exception e) { // <<<<<<<<<<------------------------- CAMBIAR ESTA EXCEPCION
 			System.err.print("ERROR FATAL: TenderResult -> WinningParty -> PARTY IDENTIFICATION no existe\n");
 		}
-		
 	}
 	
 	public void readPartyName(Element wp, int POS_UNICO_ELEMENTO){
 		this.partyName = null;
 		
 		Element pn = (Element) wp.getElementsByTagName("cac:PartyName").item(POS_UNICO_ELEMENTO);
-		if (pn != null){
+		try {
 			this.partyName = new PartyName();
 			this.partyName.readAttributes(pn, POS_UNICO_ELEMENTO);
-		}else{
+		} catch (NullPointerException e) {
 			System.err.print("ERROR FATAL: TenderResult -> WinningParty -> PARTY NAME no existe\n");
 		}
 	}
