@@ -49,17 +49,17 @@ public class TenderingProcess {
 		
 		/* PROCEDURE CODE */
 		Element pc = (Element) tp.getElementsByTagName("cbc:ProcedureCode").item(POS_UNICO_ELEMENTO);
-		if (pc != null){
+		try{
 			this.procedureCode = Integer.parseInt(pc.getTextContent());
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: ContractingFolderStatus -> TenderingProcess -> PROCEDURE CODE no existe\n");
 		}
 		
 		/* CONTRACTING SYSTEM CODE */
 		Element csc = (Element) tp.getElementsByTagName("cbc:ContractingSystemCode").item(POS_UNICO_ELEMENTO);
-		if (csc != null){
+		try{
 			this.contractingSystemCode = Integer.parseInt(csc.getTextContent());
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: ContractingFolderStatus -> TenderingProcess -> CONTRACTING SYSTEM CODE no existe\n");
 		}
 		

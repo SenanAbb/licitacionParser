@@ -19,9 +19,9 @@ public class RequiredFinancialGuarantee {
 		
 		/* GUARANTEE TYPE CODE */
 		Element gtc = (Element) rfg.getElementsByTagName("cbc:GuaranteeTypeCode").item(POS_UNICO_ELEMENTO);
-		if (gtc != null){
+		try {
 			this.guaranteeTypeCode = Integer.parseInt(gtc.getTextContent());
-		}else{
+		} catch (NullPointerException e) {
 			System.err.print("ERROR FATAL: TenderingTerms -> RequiredFinancialGuarantee -> ID no existe\n");
 		}
 		
@@ -32,7 +32,7 @@ public class RequiredFinancialGuarantee {
 		}
 
 		/* LIABILITY AMOUNT */
-		Element lr = (Element) rfg.getElementsByTagName("cbc:LiabilityRate").item(POS_UNICO_ELEMENTO);
+		Element lr = (Element) rfg.getElementsByTagName("cbc:LiabilityAmount").item(POS_UNICO_ELEMENTO);
 		if (lr != null){
 			this.liabilityAmount = Double.parseDouble(lr.getTextContent());
 		}

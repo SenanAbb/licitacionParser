@@ -21,17 +21,17 @@ public class TenderPreparation {
 		
 		/* TENDER ENVELOPE ID */
 		Element teid = (Element) tpl.getElementsByTagName("cbc:TenderEnvelopeID").item(POS_UNICO_ELEMENTO);
-		if (teid != null){
+		try{
 			this.tenderEnvelopeID = teid.getTextContent();
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: TenderingTerms -> TenderPreparation -> TENDER ENVELOPE ID no existe\n");
 		}
 		
 		/* TENDER ENVELOPE TYPE CODE */
 		Element tetc = (Element) tpl.getElementsByTagName("cbc:TenderEnvelopeTypeCode").item(POS_UNICO_ELEMENTO);
-		if (tetc != null){
+		try{
 			this.tenderEnvelopeTypeCode = Integer.parseInt(tetc.getTextContent());
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: TenderingTerms -> TenderPreparation -> TENDER ENVELOPE TYPE CODE no existe\n");
 		}
 		

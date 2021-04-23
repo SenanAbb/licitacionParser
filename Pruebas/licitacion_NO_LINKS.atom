@@ -1,0 +1,645 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:cbc-place-ext="urn:dgpe:names:draft:codice-place-ext:schema:xsd:CommonBasicComponents-2" xmlns:cac-place-ext="urn:dgpe:names:draft:codice-place-ext:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:dgpe:names:draft:codice:schema:xsd:CommonBasicComponents-2" xmlns:cac="urn:dgpe:names:draft:codice:schema:xsd:CommonAggregateComponents-2" xmlns:ns1="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2">
+    <author>
+        <name>Plataforma de Contratación del Sector Público</name>
+        <uri>https://contrataciondelestado.es</uri>
+        <email>contrataciondelestado@minhap.es</email>
+    </author>
+    <id>https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom</id>
+    <!--<link href="licitacionesPerfilesContratanteCompleto3_20210104_150033_1.atom" rel="self"/>
+    <link href="licitacionesPerfilesContratanteCompleto3.atom" rel="first"/>
+    <link href="licitacionesPerfilesContratanteCompleto3_20210104_150033.atom" rel="prev"/>
+    <link href="licitacionesPerfilesContratanteCompleto3_20201231_173132.atom" rel="next"/>-->
+    <title>Licitaciones publicadas en la Plataforma de Contratación del Sector Público: licitacionesPerfilesContratanteCompleto v3</title>
+    <updated>2021-01-04T15:00:33.373+01:00</updated>
+    <entry>
+        <id>https://contrataciondelestado.es/sindicacion/licitacionesPerfilContratante/5947346</id>
+        <link href="https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&amp;idEvl=%2FZW6sgpqWGQBPRBxZ4nJ%2Fg%3D%3D"/>
+        <summary type="text">Id licitación: SUM.- 005/2019; Órgano de Contratación: Presidencia de la Diputación Provincial de Málaga; Importe: 210289.23 EUR; Estado: ADJ</summary>
+        <title>Suministro de material de limpieza respetuoso con el medioambiente con destino a Centros y Servicios de la Diputación Provincial de Málaga, dividido en 4 lotes.</title>
+        <updated>2020-12-31T09:33:33.473+01:00</updated>
+        <cac-place-ext:ContractFolderStatus>
+            <cbc:ContractFolderID>SUM.- 005/2019</cbc:ContractFolderID>
+            <cbc-place-ext:ContractFolderStatusCode languageID="es" listURI="https://contrataciondelestado.es/codice/cl/2.04/SyndicationContractFolderStatusCode-2.04.gc">ADJ</cbc-place-ext:ContractFolderStatusCode>
+            
+            
+            <cac-place-ext:LocatedContractingParty>
+                <cbc:ContractingPartyTypeCode listURI="http://contrataciondelestado.es/codice/cl/1.04/ContractingAuthorityCode-1.04.gc">3</cbc:ContractingPartyTypeCode>
+                <cac:ParentLocatedParty>
+                    <cac:PartyName>
+                        <cbc:Name>ParentLocatedParty-NAME-TEST</cbc:Name>
+                    </cac:PartyName>
+                </cac:ParentLocatedParty>
+                <cac:Party>
+                    <cbc:WebsiteURI>http://www.malaga.es</cbc:WebsiteURI>
+                    <cbc:BuyerProfileURIID>BuyerProfileURIID-TEST</cbc:BuyerProfileURIID>
+                    <cac:PartyIdentification>
+                        <cbc:ID schemeName="DIR3">L02000029</cbc:ID>
+                    </cac:PartyIdentification>
+                    <cac:PartyIdentification>
+                        <cbc:ID schemeName="NIF">P2900000G</cbc:ID>
+                    </cac:PartyIdentification>
+                    <cac:PartyName>
+                        <cbc:Name>Presidencia de la Diputación Provincial de Málaga</cbc:Name>
+                    </cac:PartyName>
+                    <cac:PostalAddress>
+                        <cbc:AddressFormatCode>1</cbc:AddressFormatCode>
+                        <cbc:CityName>Málaga</cbc:CityName>
+                        <cbc:PostalZone>29004</cbc:PostalZone>
+                        <cac:AddressLine>
+                            <cbc:Line>Pacífico, 54</cbc:Line>
+                        </cac:AddressLine>
+                        <cac:Country>
+                            <cbc:IdentificationCode listURI="http://docs.oasis-open.org/ubl/os-ubl-2.0/cl/gc/default/CountryIdentificationCode-2.0.gc">ES</cbc:IdentificationCode>
+                            <cbc:Name>España</cbc:Name>
+                        </cac:Country>
+                    </cac:PostalAddress>
+                    <cac:Contact>
+                        <cbc:Name>Presidencia de la Diputación Provincial de Málaga</cbc:Name>
+                        <cbc:ElectronicMail>perfil.del.contratante@malaga.es</cbc:ElectronicMail>
+                        <cbc:Telephone>TELEPHONE-TEST</cbc:Telephone>
+                        <cbc:Telefax>TELEFAX-TEST</cbc:Telefax>
+                    </cac:Contact>
+                </cac:Party>
+            </cac-place-ext:LocatedContractingParty>
+            
+            
+            <cac:ProcurementProject>
+                <cbc:Name>Suministro de material de limpieza respetuoso con el medioambiente con destino a Centros y Servicios de la Diputación Provincial de Málaga, dividido en 4 lotes.</cbc:Name>
+                <cbc:TypeCode listURI="http://contrataciondelestado.es/codice/cl/2.08/ContractCode-2.08.gc">1</cbc:TypeCode>
+                <cbc:SubTypeCode listURI="http://contrataciondelestado.es/codice/cl/1.04/GoodsContractCode-1.04.gc">2</cbc:SubTypeCode>
+                <cac:BudgetAmount>
+                    <cbc:EstimatedOverallContractAmount currencyID="EUR">462636.31</cbc:EstimatedOverallContractAmount>
+                    <cbc:TotalAmount currencyID="EUR">254449.97</cbc:TotalAmount>
+                    <cbc:TaxExclusiveAmount currencyID="EUR">210289.23</cbc:TaxExclusiveAmount>
+                </cac:BudgetAmount>
+                <cac:RequiredCommodityClassification>
+                    <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/1.04/CPV2007-1.04.gc">39830000</cbc:ItemClassificationCode>
+                </cac:RequiredCommodityClassification>
+                <cac:RealizedLocation>
+                    <cbc:CountrySubentity>Málaga</cbc:CountrySubentity>
+                    <cbc:CountrySubentityCode listURI="http://contrataciondelestado.es/codice/cl/2.06/NUTS-2016.gc">ES617</cbc:CountrySubentityCode>
+                    <cac:Address>
+                        <cbc:AddressFormatCode>1</cbc:AddressFormatCode>
+                        <cbc:CityName>Málaga</cbc:CityName>
+                        <cbc:PostalZone>29004</cbc:PostalZone>
+                        <cac:AddressLine>
+                            <cbc:Line>Pacífico, 54</cbc:Line>
+                        </cac:AddressLine>
+                        <cac:Country>
+                            <cbc:IdentificationCode listURI="http://docs.oasis-open.org/ubl/os-ubl-2.0/cl/gc/default/CountryIdentificationCode-2.0.gc">ES</cbc:IdentificationCode>
+                            <cbc:Name>España</cbc:Name>
+                        </cac:Country>
+                    </cac:Address>
+                </cac:RealizedLocation>
+                <cac:PlannedPeriod>
+                    <cbc:DurationMeasure unitCode="ANN">2</cbc:DurationMeasure>
+                </cac:PlannedPeriod>
+                <cac:ContractExtension>
+                    <cbc:OptionsDescription>OptionsDescription-TEST</cbc:OptionsDescription>
+                    <cac:OptionValidityPeriod>
+                        <cbc:Description>Se contemplan dos prórrogas de un año cada una</cbc:Description>
+                    </cac:OptionValidityPeriod>
+                </cac:ContractExtension>
+            </cac:ProcurementProject>
+            
+            
+            <cac:ProcurementProjectLot>
+                <cbc:ID schemeName="ID_LOTE">1</cbc:ID>
+                <cac:ProcurementProject>
+                    <cbc:Name>Lote 1: Artículos de limpieza</cbc:Name>
+                    <cac:BudgetAmount>
+                        <cbc:TotalAmount currencyID="EUR">101150</cbc:TotalAmount>
+                        <cbc:TaxExclusiveAmount currencyID="EUR">83595.04</cbc:TaxExclusiveAmount>
+                    </cac:BudgetAmount>
+                    <cac:RequiredCommodityClassification>
+                        <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/1.04/CPV2007-1.04.gc">39830000</cbc:ItemClassificationCode>
+                    </cac:RequiredCommodityClassification>
+                    <cac:RequiredCommodityClassification>
+                        <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/1.04/CPV2007-1.04.gc">39222100</cbc:ItemClassificationCode>
+                    </cac:RequiredCommodityClassification>
+                    <cac:RequiredCommodityClassification>
+                        <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/1.04/CPV2007-1.04.gc">33760000</cbc:ItemClassificationCode>
+                    </cac:RequiredCommodityClassification>
+                    <cac:RequiredCommodityClassification>
+                        <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/1.04/CPV2007-1.04.gc">39291000</cbc:ItemClassificationCode>
+                    </cac:RequiredCommodityClassification>
+                    <cac:RealizedLocation>
+                        <cbc:CountrySubentity>Málaga</cbc:CountrySubentity>
+                        <cbc:CountrySubentityCode listURI="http://contrataciondelestado.es/codice/cl/2.06/NUTS-2016.gc">ES617</cbc:CountrySubentityCode>
+                        <cac:Address>
+                            <cac:Country>
+                                <cbc:IdentificationCode listURI="http://docs.oasis-open.org/ubl/os-ubl-2.0/cl/gc/default/CountryIdentificationCode-2.0.gc">ES</cbc:IdentificationCode>
+                                <cbc:Name>España</cbc:Name>
+                            </cac:Country>
+                        </cac:Address>
+                    </cac:RealizedLocation>
+                </cac:ProcurementProject>
+            </cac:ProcurementProjectLot>
+            <cac:ProcurementProjectLot>
+                <cbc:ID schemeName="ID_LOTE">2</cbc:ID>
+                <cac:ProcurementProject>
+                    <cbc:Name>Lote 2: Artículos de celulosa</cbc:Name>
+                    <cac:BudgetAmount>
+                        <cbc:TotalAmount currencyID="EUR">88200</cbc:TotalAmount>
+                        <cbc:TaxExclusiveAmount currencyID="EUR">72892.56</cbc:TaxExclusiveAmount>
+                    </cac:BudgetAmount>
+                    <cac:RequiredCommodityClassification>
+                        <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/1.04/CPV2007-1.04.gc">39222100</cbc:ItemClassificationCode>
+                    </cac:RequiredCommodityClassification>
+                    <cac:RequiredCommodityClassification>
+                        <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/1.04/CPV2007-1.04.gc">33760000</cbc:ItemClassificationCode>
+                    </cac:RequiredCommodityClassification>
+                    <cac:RequiredCommodityClassification>
+                        <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/1.04/CPV2007-1.04.gc">39291000</cbc:ItemClassificationCode>
+                    </cac:RequiredCommodityClassification>
+                    <cac:RequiredCommodityClassification>
+                        <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/1.04/CPV2007-1.04.gc">39830000</cbc:ItemClassificationCode>
+                    </cac:RequiredCommodityClassification>
+                    <cac:RealizedLocation>
+                        <cbc:CountrySubentity>Málaga</cbc:CountrySubentity>
+                        <cbc:CountrySubentityCode listURI="http://contrataciondelestado.es/codice/cl/2.06/NUTS-2016.gc">ES617</cbc:CountrySubentityCode>
+                        <cac:Address>
+                            <cac:Country>
+                                <cbc:IdentificationCode listURI="http://docs.oasis-open.org/ubl/os-ubl-2.0/cl/gc/default/CountryIdentificationCode-2.0.gc">ES</cbc:IdentificationCode>
+                                <cbc:Name>España</cbc:Name>
+                            </cac:Country>
+                        </cac:Address>
+                    </cac:RealizedLocation>
+                </cac:ProcurementProject>
+            </cac:ProcurementProjectLot>
+            <cac:ProcurementProjectLot>
+                <cbc:ID schemeName="ID_LOTE">3</cbc:ID>
+                <cac:ProcurementProject>
+                    <cbc:Name>Lote 3: Artículos de lavandería</cbc:Name>
+                    <cac:BudgetAmount>
+                        <cbc:TotalAmount currencyID="EUR">52400</cbc:TotalAmount>
+                        <cbc:TaxExclusiveAmount currencyID="EUR">43305.79</cbc:TaxExclusiveAmount>
+                    </cac:BudgetAmount>
+                    <cac:RequiredCommodityClassification>
+                        <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/1.04/CPV2007-1.04.gc">39830000</cbc:ItemClassificationCode>
+                    </cac:RequiredCommodityClassification>
+                    <cac:RequiredCommodityClassification>
+                        <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/1.04/CPV2007-1.04.gc">39222100</cbc:ItemClassificationCode>
+                    </cac:RequiredCommodityClassification>
+                    <cac:RequiredCommodityClassification>
+                        <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/1.04/CPV2007-1.04.gc">39291000</cbc:ItemClassificationCode>
+                    </cac:RequiredCommodityClassification>
+                    <cac:RequiredCommodityClassification>
+                        <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/1.04/CPV2007-1.04.gc">33760000</cbc:ItemClassificationCode>
+                    </cac:RequiredCommodityClassification>
+                    <cac:RealizedLocation>
+                        <cbc:CountrySubentity>Málaga</cbc:CountrySubentity>
+                        <cbc:CountrySubentityCode listURI="http://contrataciondelestado.es/codice/cl/2.06/NUTS-2016.gc">ES617</cbc:CountrySubentityCode>
+                        <cac:Address>
+                            <cac:Country>
+                                <cbc:IdentificationCode listURI="http://docs.oasis-open.org/ubl/os-ubl-2.0/cl/gc/default/CountryIdentificationCode-2.0.gc">ES</cbc:IdentificationCode>
+                                <cbc:Name>España</cbc:Name>
+                            </cac:Country>
+                        </cac:Address>
+                    </cac:RealizedLocation>
+                </cac:ProcurementProject>
+            </cac:ProcurementProjectLot>
+            <cac:ProcurementProjectLot>
+                <cbc:ID schemeName="ID_LOTE">4</cbc:ID>
+                <cac:ProcurementProject>
+                    <cbc:Name>Lote 4: Artículos de bazar</cbc:Name>
+                    <cac:BudgetAmount>
+                        <cbc:TotalAmount currencyID="EUR">12699.97</cbc:TotalAmount>
+                        <cbc:TaxExclusiveAmount currencyID="EUR">10495.84</cbc:TaxExclusiveAmount>
+                    </cac:BudgetAmount>
+                    <cac:RequiredCommodityClassification>
+                        <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/1.04/CPV2007-1.04.gc">33760000</cbc:ItemClassificationCode>
+                    </cac:RequiredCommodityClassification>
+                    <cac:RequiredCommodityClassification>
+                        <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/1.04/CPV2007-1.04.gc">39222100</cbc:ItemClassificationCode>
+                    </cac:RequiredCommodityClassification>
+                    <cac:RequiredCommodityClassification>
+                        <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/1.04/CPV2007-1.04.gc">39291000</cbc:ItemClassificationCode>
+                    </cac:RequiredCommodityClassification>
+                    <cac:RequiredCommodityClassification>
+                        <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/1.04/CPV2007-1.04.gc">39830000</cbc:ItemClassificationCode>
+                    </cac:RequiredCommodityClassification>
+                    <cac:RealizedLocation>
+                        <cbc:CountrySubentity>Málaga</cbc:CountrySubentity>
+                        <cbc:CountrySubentityCode listURI="http://contrataciondelestado.es/codice/cl/2.06/NUTS-2016.gc">ES617</cbc:CountrySubentityCode>
+                        <cac:Address>
+                            <cac:Country>
+                                <cbc:IdentificationCode listURI="http://docs.oasis-open.org/ubl/os-ubl-2.0/cl/gc/default/CountryIdentificationCode-2.0.gc">ES</cbc:IdentificationCode>
+                                <cbc:Name>España</cbc:Name>
+                            </cac:Country>
+                        </cac:Address>
+                    </cac:RealizedLocation>
+                </cac:ProcurementProject>
+            </cac:ProcurementProjectLot>
+           
+
+            <!-- SOLO HAY UN TENDER RESULT -->
+            <cac:TenderResult>
+                <cbc:ResultCode listURI="http://contrataciondelestado.es/codice/cl/2.02/TenderResultCode-2.02.gc">8</cbc:ResultCode>
+                <cbc:Description>Al resultar la mejor oferta en relación calidad-precio</cbc:Description>
+                <cbc:AwardDate>2020-11-18</cbc:AwardDate>
+                <cbc:StartDate>2000-01-01</cbc:StartDate>
+                <cbc:ReceivedTenderQuantity>5</cbc:ReceivedTenderQuantity>
+                <cbc:LowerTenderAmount currencyID="EUR">83595.04</cbc:LowerTenderAmount>
+                <cbc:HigherTenderAmount currencyID="EUR">83595.04</cbc:HigherTenderAmount>
+                <cbc:SMEAwardedIndicator>true</cbc:SMEAwardedIndicator>
+                <cbc:AbnormallyLowTendersIndicator>false</cbc:AbnormallyLowTendersIndicator>
+                <cac:Contract>
+                    <cbc:ID>055/2020</cbc:ID>
+                    <cbc:IssueDate>2020-12-21</cbc:IssueDate>
+                </cac:Contract>
+                <cac:WinningParty>
+                    <cac:PartyIdentification>
+                        <cbc:ID schemeName="NIF">B04173944</cbc:ID>
+                    </cac:PartyIdentification>
+                    <cac:PartyName>
+                        <cbc:Name>INDALIM SL</cbc:Name>
+                    </cac:PartyName>
+                </cac:WinningParty>
+                <cac:AwardedTenderedProject>
+                    <cbc:ProcurementProjectLotID>1</cbc:ProcurementProjectLotID>
+                    <cac:LegalMonetaryTotal>
+                        <cbc:TaxExclusiveAmount currencyID="EUR">83595.04</cbc:TaxExclusiveAmount>
+                        <cbc:PayableAmount currencyID="EUR">101150</cbc:PayableAmount>
+                    </cac:LegalMonetaryTotal>
+                    <cac:ContractFormalizationPeriod>
+                        <cbc:StartDate>2001-01-01</cbc:StartDate>
+                        <cbc:EndDate>2001-01-01</cbc:EndDate>
+                        <cbc:Description>TEST</cbc:Description>
+                    </cac:ContractFormalizationPeriod>
+                </cac:AwardedTenderedProject>
+                <cac:SubcontractTerms>
+                    <cbc:Rate>0.1</cbc:Rate>
+                    <cbc:Amount>1.0</cbc:Amount>
+                    <cbc:Description>TEST</cbc:Description>
+                </cac:SubcontractTerms>
+            </cac:TenderResult>
+
+
+            <cac:TenderingTerms>
+                <cbc:RequiredCurriculaIndicator>false</cbc:RequiredCurriculaIndicator>
+                <cbc:VariantConstraintIndicator>false</cbc:VariantConstraintIndicator>
+                <cbc:PriceRevisionFormulaDescription>TEST</cbc:PriceRevisionFormulaDescription>
+                <cac:AllowedSubcontractTerms>
+                    <cbc:Description>Ver cláusula 26 del PCAP.</cbc:Description>
+                    <cbc:Amount>false</cbc:Amount>
+                    <cbc:Rate>0.1</cbc:Rate>
+                    <cbc:MinimumRate>0.1</cbc:MinimumRate>
+                    <cbc:MaximumRate>0.1</cbc:MaximumRate>
+                    <cbc:SubcontractTerms>1</cbc:SubcontractTerms>
+                </cac:AllowedSubcontractTerms>
+                <cac:ProcurementLegislationDocumentReference>
+                    <cbc:ID>2014/24/EU</cbc:ID>
+                </cac:ProcurementLegislationDocumentReference>
+                <cac:RequiredFinancialGuarantee>
+                    <cbc:GuaranteeTypeCode listURI="http://contrataciondelestado.es/codice/cl/1.04/GuaranteeTypeCode-1.04.gc">2</cbc:GuaranteeTypeCode>
+                    <cbc:LiabilityAmount>0.1</cbc:LiabilityAmount>
+                    <cbc:AmountRate>0.1</cbc:AmountRate>
+                </cac:RequiredFinancialGuarantee>
+                <cac:AwardingTerms>
+                    <cac:AwardingCriteria>
+                        <cbc:Description>PRECIO</cbc:Description>
+                        <cbc:WeightNumeric>55</cbc:WeightNumeric>
+                    </cac:AwardingCriteria>
+                </cac:AwardingTerms>
+                <cac:TendererQualificationRequest>
+                    <cbc:SecurityConditions>TEST</cbc:SecurityConditions>
+                    <cbc:PersonalSituation>Ver Anexo nº 1, apartado V.- En caso de productos químicos, se exigirá la inscripción de los establecimientos que los comercializan en el Registro oficial de establecimiento y servicios biocidas de Andalucía de conformidad con el Decreto 60/2012 de 13 de marzo.</cbc:PersonalSituation>
+                    <cbc:Description>TEST</cbc:Description>
+                    <cbc:SecurityClearanceLimitDate>2001-01-01</cbc:SecurityClearanceLimitDate>
+                    <cac:TechnicalEvaluationCriteria>
+                        <cbc:EvaluationCriteriaTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.0/TechnicalCapabilityTypeCode-2.0.gc">OSR-COMPTASK</cbc:EvaluationCriteriaTypeCode>
+                        <cbc:Description>Ver Anexo nº 4 del Pliego de Cláusulas Administrativas Particulares (REQUISITOS Y MEDIOS DE ACREDITACIÓN DE SOLVENCIA, CUMPLIMIENTO DE NORMAS DE GARANTÍA DE LA CALIDAD Y/O DE NORMAS DE GESTIÓN AMBIENTAL) punto 4.2.- REQUISITOS Y MEDIOS MÍNIMOS DE ACREDITACIÓN DE SOLVENCIA TÉCNICA O PROFESIONAL.</cbc:Description>
+                        <cbc:ThresholdQuantity>0.1</cbc:ThresholdQuantity>
+                    </cac:TechnicalEvaluationCriteria>
+                    <cac:FinancialEvaluationCriteria>
+                        <cbc:EvaluationCriteriaTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.0/FinancialCapabilityTypeCode-2.0.gc">5</cbc:EvaluationCriteriaTypeCode>
+                        <cbc:Description>Ver Anexo nº 4 del Pliego de Cláusulas Administrativas Particulares (REQUISITOS Y MEDIOS DE ACREDITACIÓN DE SOLVENCIA, CUMPLIMIENTO DE NORMAS DE GARANTÍA DE LA CALIDAD Y/O DE NORMAS DE GESTIÓN AMBIENTAL) punto 4.1.- REQUISITOS Y MEDIOS MÍNIMOS DE ACREDITACIÓN DE SOLVENCIA ECONÓMICA Y FINANCIERA.</cbc:Description>
+                        <cbc:ThresholdQuantity>0.1</cbc:ThresholdQuantity>
+                    </cac:FinancialEvaluationCriteria>
+                    <cac:SpecificTendererRequirement>
+                        <cbc:RequirementTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.08/DeclarationTypeCode-2.08.gc">1</cbc:RequirementTypeCode>
+                    </cac:SpecificTendererRequirement>
+                    <cac:SpecificTendererRequirement>
+                        <cbc:RequirementTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.08/DeclarationTypeCode-2.08.gc">9</cbc:RequirementTypeCode>
+                    </cac:SpecificTendererRequirement>
+                    <cac:RequiredBusinessClassificationScheme>
+                        <cbc:ID>RequiredBusinessProfileCode</cbc:ID>
+                        <cbc:Name>TEST Name</cbc:Name>
+                        <cbc:AgencyName>TEST Agency Name</cbc:AgencyName>
+                        <cbc:VersionID>TEST VersionID</cbc:VersionID>
+                        <cbc:URI>TEST URI</cbc:URI>
+                        <cbc:SchemeURI>TEST Scheme URI</cbc:SchemeURI>
+                        <cbc:LanguageID>TEST LanguageID</cbc:LanguageID>
+                        <cac:ClassificationCategory>
+                            <cbc:Name>TEST Name</cbc:Name>
+                            <cbc:CodeValue>O2-5</cbc:CodeValue>
+                            <cbc:Description>TEST</cbc:Description>
+                        </cac:ClassificationCategory>
+                    </cac:RequiredBusinessClassificationScheme>
+                </cac:TendererQualificationRequest>
+                <cac:DocumentProviderParty>
+                    <cbc:WebsiteURI>TEST WebsiteURI</cbc:WebsiteURI>
+                    <cac:PartyName>
+                        <cbc:Name>TEST</cbc:Name>
+                    </cac:PartyName>
+                    <cac:PostalAddress>
+                        <cbc:AddressFormatCode>1</cbc:AddressFormatCode>
+                        <cbc:CityName>Málaga</cbc:CityName>
+                        <cbc:PostalZone>29004</cbc:PostalZone>
+                        <cac:AddressLine>
+                            <cbc:Line>Pacífico, 54</cbc:Line>
+                        </cac:AddressLine>
+                        <cac:Country>
+                            <cbc:IdentificationCode listURI="http://docs.oasis-open.org/ubl/os-ubl-2.0/cl/gc/default/CountryIdentificationCode-2.0.gc">ES</cbc:IdentificationCode>
+                            <cbc:Name>España</cbc:Name>
+                        </cac:Country>
+                    </cac:PostalAddress>
+                </cac:DocumentProviderParty>
+                <cac:DocumentAvailabilityPeriod>
+                    <cbc:EndDate>2020-06-10</cbc:EndDate>
+                    <cbc:EndTime>12:00:00</cbc:EndTime>
+                </cac:DocumentAvailabilityPeriod>
+                <cac:TenderRecipientParty>
+                    <cbc:WebsiteURI>TEST WebsiteURI</cbc:WebsiteURI>
+                    <cac:PartyName>
+                        <cbc:Name>TEST</cbc:Name>
+                    </cac:PartyName>
+                    <cac:PostalAddress>
+                        <cbc:AddressFormatCode>1</cbc:AddressFormatCode>
+                        <cbc:CityName>Málaga</cbc:CityName>
+                        <cbc:PostalZone>29004</cbc:PostalZone>
+                        <cac:AddressLine>
+                            <cbc:Line>Pacífico, 54</cbc:Line>
+                        </cac:AddressLine>
+                        <cac:Country>
+                            <cbc:IdentificationCode listURI="http://docs.oasis-open.org/ubl/os-ubl-2.0/cl/gc/default/CountryIdentificationCode-2.0.gc">ES</cbc:IdentificationCode>
+                            <cbc:Name>España</cbc:Name>
+                        </cac:Country>
+                    </cac:PostalAddress>
+                </cac:TenderRecipientParty>
+                <cac:AdditionalInformationParty>
+                    <cbc:WebsiteURI>TEST WebsiteURI</cbc:WebsiteURI>
+                    <cac:PartyName>
+                        <cbc:Name>TEST</cbc:Name>
+                    </cac:PartyName>
+                    <cac:PostalAddress>
+                        <cbc:AddressFormatCode>1</cbc:AddressFormatCode>
+                        <cbc:CityName>Málaga</cbc:CityName>
+                        <cbc:PostalZone>29004</cbc:PostalZone>
+                        <cac:AddressLine>
+                            <cbc:Line>Pacífico, 54</cbc:Line>
+                        </cac:AddressLine>
+                        <cac:Country>
+                            <cbc:IdentificationCode listURI="http://docs.oasis-open.org/ubl/os-ubl-2.0/cl/gc/default/CountryIdentificationCode-2.0.gc">ES</cbc:IdentificationCode>
+                            <cbc:Name>España</cbc:Name>
+                        </cac:Country>
+                    </cac:PostalAddress>
+                </cac:AdditionalInformationParty>
+                <cac:AppealTerms>
+                    <cac:AppealInformationParty>
+                        <cbc:WebsiteURI>TEST WebsiteURI</cbc:WebsiteURI>
+                        <cac:PartyName>
+                            <cbc:Name>TEST</cbc:Name>
+                        </cac:PartyName>
+                        <cac:PostalAddress>
+                            <cbc:AddressFormatCode>1</cbc:AddressFormatCode>
+                            <cbc:CityName>Málaga</cbc:CityName>
+                            <cbc:PostalZone>29004</cbc:PostalZone>
+                            <cac:AddressLine>
+                                <cbc:Line>Pacífico, 54</cbc:Line>
+                            </cac:AddressLine>
+                            <cac:Country>
+                                <cbc:IdentificationCode listURI="http://docs.oasis-open.org/ubl/os-ubl-2.0/cl/gc/default/CountryIdentificationCode-2.0.gc">ES</cbc:IdentificationCode>
+                                <cbc:Name>España</cbc:Name>
+                            </cac:Country>
+                        </cac:PostalAddress>
+                        <cac:Contact>
+                            <cbc:Name>Presidencia de la Diputación Provincial de Málaga</cbc:Name>
+                            <cbc:ElectronicMail>perfil.del.contratante@malaga.es</cbc:ElectronicMail>
+                            <cbc:Telephone>TELEPHONE-TEST</cbc:Telephone>
+                            <cbc:Telefax>TELEFAX-TEST</cbc:Telefax>
+                        </cac:Contact>
+                    </cac:AppealInformationParty>
+                    <cac:AppealReceiverParty>
+                        <cbc:WebsiteURI>TEST WebsiteURI</cbc:WebsiteURI>
+                        <cac:PartyName>
+                            <cbc:Name>TEST</cbc:Name>
+                        </cac:PartyName>
+                        <cac:PostalAddress>
+                            <cbc:AddressFormatCode>1</cbc:AddressFormatCode>
+                            <cbc:CityName>Málaga</cbc:CityName>
+                            <cbc:PostalZone>29004</cbc:PostalZone>
+                            <cac:AddressLine>
+                                <cbc:Line>Pacífico, 54</cbc:Line>
+                            </cac:AddressLine>
+                            <cac:Country>
+                                <cbc:IdentificationCode listURI="http://docs.oasis-open.org/ubl/os-ubl-2.0/cl/gc/default/CountryIdentificationCode-2.0.gc">ES</cbc:IdentificationCode>
+                                <cbc:Name>España</cbc:Name>
+                            </cac:Country>
+                        </cac:PostalAddress>
+                        <cac:Contact>
+                            <cbc:Name>Presidencia de la Diputación Provincial de Málaga</cbc:Name>
+                            <cbc:ElectronicMail>perfil.del.contratante@malaga.es</cbc:ElectronicMail>
+                            <cbc:Telephone>TELEPHONE-TEST</cbc:Telephone>
+                            <cbc:Telefax>TELEFAX-TEST</cbc:Telefax>
+                        </cac:Contact>
+                    </cac:AppealReceiverParty>
+                    <cac:PresentationPeriod>
+                        <cbc:EndDate>2001-01-01</cbc:EndDate>
+                        <cbc:EndTime>01:00:00</cbc:EndTime>
+                    </cac:PresentationPeriod>
+                    <cac:MediationParty>
+                        <cbc:WebsiteURI>TEST WebsiteURI</cbc:WebsiteURI>
+                        <cac:PartyName>
+                            <cbc:Name>TEST</cbc:Name>
+                        </cac:PartyName>
+                        <cac:PostalAddress>
+                            <cbc:AddressFormatCode>1</cbc:AddressFormatCode>
+                            <cbc:CityName>Málaga</cbc:CityName>
+                            <cbc:PostalZone>29004</cbc:PostalZone>
+                            <cac:AddressLine>
+                                <cbc:Line>Pacífico, 54</cbc:Line>
+                            </cac:AddressLine>
+                            <cac:Country>
+                                <cbc:IdentificationCode listURI="http://docs.oasis-open.org/ubl/os-ubl-2.0/cl/gc/default/CountryIdentificationCode-2.0.gc">ES</cbc:IdentificationCode>
+                                <cbc:Name>España</cbc:Name>
+                            </cac:Country>
+                        </cac:PostalAddress>
+                        <cac:Contact>
+                            <cbc:Name>Presidencia de la Diputación Provincial de Málaga</cbc:Name>
+                            <cbc:ElectronicMail>perfil.del.contratante@malaga.es</cbc:ElectronicMail>
+                            <cbc:Telephone>TELEPHONE-TEST</cbc:Telephone>
+                            <cbc:Telefax>TELEFAX-TEST</cbc:Telefax>
+                        </cac:Contact>
+                    </cac:MediationParty>
+                </cac:AppealTerms>
+                <cac:TenderPreparation>
+                    <cbc:TenderEnvelopeID>TEST</cbc:TenderEnvelopeID>
+                    <cbc:OpenEventID>TEST</cbc:OpenEventID>
+                    <cbc:Description>TEST</cbc:Description>
+                    <cbc:TenderEnvelopeTypeCode>1</cbc:TenderEnvelopeTypeCode>
+                </cac:TenderPreparation>
+                <cac:Language>
+                    <cbc:ID>es</cbc:ID>
+                </cac:Language>
+            </cac:TenderingTerms>
+
+            
+            <cac:TenderingProcess>
+                <cbc:ProcedureCode listURI="https://contrataciondelestado.es/codice/cl/2.07/SyndicationTenderingProcessCode-2.07.gc">1</cbc:ProcedureCode>
+                <cbc:UrgencyCode listURI="http://contrataciondelestado.es/codice/cl/1.04/DiligenceTypeCode-1.04.gc">1</cbc:UrgencyCode>
+                <cbc:PartPresentationCode listURI="http://contrataciondelestado.es/codice/cl/1.04/TenderPresentationCode-1.04.gc" name="A uno o varios lotes">3</cbc:PartPresentationCode>
+                <cbc:ContractingSystemCode listURI="http://contrataciondelestado.es/codice/cl/2.08/ContractingSystemTypeCode-2.08.gc">0</cbc:ContractingSystemCode>
+                <cbc:SubmissionMethodCode listURI="http://contrataciondelestado.es/codice/cl/1.04/TenderDeliveryCode-1.04.gc">1</cbc:SubmissionMethodCode>
+                <cbc:MaximumLotPresentationQuantity>4</cbc:MaximumLotPresentationQuantity>
+                <cbc:MaximumTendererAwardedLotsQuantity>4</cbc:MaximumTendererAwardedLotsQuantity>
+                <cbc:LotsCombinationContractingAuthorityRights>TEST</cbc:LotsCombinationContractingAuthorityRights>
+                <cbc:OverThresholdIndicator>false</cbc:OverThresholdIndicator>
+                <cac:AuctionTerms>
+                    <cbc:AuctionConstraintIndicator>false</cbc:AuctionConstraintIndicator>
+                </cac:AuctionTerms>
+                <cac:TenderSubmissionDeadlinePeriod>
+                    <cbc:EndDate>2020-06-29</cbc:EndDate>
+                    <cbc:EndTime>14:00:00</cbc:EndTime>
+                    <cbc:Description>Se recomienda descargar la herramienta de presentación de ofertas con tiempo suficiente y no esperar a presentar la oferta al último momento, para poder solventar, en su caso, cualquier problema técnico que pudiera surgir. Igualmente se recomienda leer la "Guía de los servicios de Licitación Electrónica para Empresas" que podrán encontrar en el siguiente enlace: https://contrataciondelestado.es/wps/portal/guiasAyuda
+                    </cbc:Description>
+                </cac:TenderSubmissionDeadlinePeriod>
+                <cac:OpenTenderEvent>
+                    <cbc:TypeCode>1</cbc:TypeCode>
+                    <cbc:IdentificationID>TEST</cbc:IdentificationID>
+                    <cbc:Description>TEST</cbc:Description>
+                    <cbc:OcurrenceDate>2001-01-01</cbc:OcurrenceDate>
+                    <cbc:OcurrenceTime>00:00</cbc:OcurrenceTime>
+                    <cac:OcurrenceLocation>
+                        <cbc:Description>TEST</cbc:Description>
+                        <cac:Address>
+                            <cbc:AddressFormatCode>1</cbc:AddressFormatCode>
+                            <cbc:CityName>Málaga</cbc:CityName>
+                            <cbc:PostalZone>29004</cbc:PostalZone>
+                            <cac:AddressLine>
+                                <cbc:Line>Pacífico, 54</cbc:Line>
+                            </cac:AddressLine>
+                            <cac:Country>
+                                <cbc:IdentificationCode listURI="http://docs.oasis-open.org/ubl/os-ubl-2.0/cl/gc/default/CountryIdentificationCode-2.0.gc">ES</cbc:IdentificationCode>
+                                <cbc:Name>España</cbc:Name>
+                            </cac:Country>
+                        </cac:Address>
+                    </cac:OcurrenceLocation>
+                </cac:OpenTenderEvent>
+                <cac:EconomicOperatorShortList>
+                    <cbc:LimitationDescription>Lo establecido en el cuadro-resumen y pliego.</cbc:LimitationDescription>
+                    <cbc:MaximumQuantity>5</cbc:MaximumQuantity>
+                    <cbc:ExpectedQuantity>1</cbc:ExpectedQuantity>
+                    <cbc:MinimumQuantity>1</cbc:MinimumQuantity>
+                </cac:EconomicOperatorShortList>
+                <cac:ProcessJustification>
+                    <cbc:ReasonCode>1</cbc:ReasonCode>
+                    <cbc:Description>TEST</cbc:Description>
+                </cac:ProcessJustification>
+                <cac:ParticipationRequestReceptionPeriod>
+                    <cbc:EndDate>2020-06-19</cbc:EndDate>
+                    <cbc:EndTime>12:00:00</cbc:EndTime>
+                    <cbc:Description>TEST</cbc:Description>
+                </cac:ParticipationRequestReceptionPeriod>
+                <cac:DocumentAvailabilityPeriod>
+                    <cbc:EndDate>2020-06-10</cbc:EndDate>
+                    <cbc:EndTime>12:00:00</cbc:EndTime>
+                </cac:DocumentAvailabilityPeriod>
+            </cac:TenderingProcess>
+            
+
+            <cac:ContractModification>
+                <cbc:ID>1</cbc:ID>
+                <cbc:Note>Modificación del contrato LICT/99/114/2018/0134/L1</cbc:Note>
+                <cbc:ContractID>LICT/99/114/2018/0134/L1</cbc:ContractID>
+                <cbc:ContractModificationDurationMeasure unitCode="ANN">
+                    4
+                </cbc:ContractModificationDurationMeasure>
+                <cbc:FinalDurationMeasure unitCode="ANN">
+                    4
+                </cbc:FinalDurationMeasure>
+                <cac:ContractModificationLegalMonetaryTotal>
+                    <cbc:TaxExclusiveAmount currencyID="EUR">7623</cbc:TaxExclusiveAmount>
+                </cac:ContractModificationLegalMonetaryTotal>
+                <cac:FinalLegalMonetaryTotal>
+                    <cbc:TaxExclusiveAmount currencyID="EUR">95341.4</cbc:TaxExclusiveAmount>
+                </cac:FinalLegalMonetaryTotal>
+            </cac:ContractModification>
+            
+
+            <cac:LegalDocumentReference>
+                <cbc:ID>PCAP_SUM_5_2019.pdf</cbc:ID>
+                <cac:Attachment>
+                    <cac:ExternalReference>
+                        <cbc:URI>https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?srv=cmpnt&amp;cmpntname=GetDocumentsById&amp;source=library&amp;DocumentIdParam=b15e9bd7-87c7-4d69-a17e-3bebaef98f4c</cbc:URI>
+                        <cbc:DocumentHash>5YoHeK93kIc5O3573jpQJOmSYWo=</cbc:DocumentHash>
+                        <cbc:FileName>TEST</cbc:FileName>
+                    </cac:ExternalReference>
+                </cac:Attachment>
+            </cac:LegalDocumentReference>
+
+
+            <cac:TechnicalDocumentReference>
+                <cbc:ID>PPT_MATERIAL_DE_LIMPIEZA SUM 5 2019.pdf</cbc:ID>
+                <cac:Attachment>
+                    <cac:ExternalReference>
+                        <cbc:URI>https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?srv=cmpnt&amp;cmpntname=GetDocumentsById&amp;source=library&amp;DocumentIdParam=ecc0c7a4-48fe-450e-b15f-e1894cb4e692</cbc:URI>
+                        <cbc:DocumentHash>2Hs4u/ILx+AeZIzJa72acq/5gpc=</cbc:DocumentHash>
+                        <cbc:FileName>TEST</cbc:FileName>
+                    </cac:ExternalReference>
+                </cac:Attachment>
+            </cac:TechnicalDocumentReference>
+
+
+            <cac:AdditionalDocumentReference>
+                <cbc:ID>ANEXOS SUM 5 2019.pdf</cbc:ID>
+                <cac:Attachment>
+                    <cac:ExternalReference>
+                        <cbc:URI>https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?srv=cmpnt&amp;cmpntname=GetDocumentsById&amp;source=library&amp;DocumentIdParam=1a2e0d3b-2b2e-4e15-8a30-f5cd675eb83b</cbc:URI>
+                        <cbc:DocumentHash>cmqyNcbu24gL7nN4sp7zb7eIDOM=</cbc:DocumentHash>
+                        <cbc:FileName>TEST</cbc:FileName>
+                    </cac:ExternalReference>
+                </cac:Attachment>
+            </cac:AdditionalDocumentReference>
+
+
+            <cac-place-ext:ValidNoticeInfo>
+                <cbc-place-ext:NoticeTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.04/TenderingNoticeTypeCode-2.04.gc">DOC_CN</cbc-place-ext:NoticeTypeCode>
+                <cac-place-ext:AdditionalPublicationStatus>
+                    <cbc-place-ext:PublicationMediaName>DOUE</cbc-place-ext:PublicationMediaName>
+                    <cac-place-ext:AdditionalPublicationDocumentReference>
+                        <cbc:IssueDate>2020-06-02</cbc:IssueDate>
+                        <cbc:DocumentTypeCode>TEST</cbc:DocumentTypeCode>
+                        <cac:Attachment>
+                            <cac:ExternalReference>
+                                <cbc:URI>https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?srv=cmpnt&amp;cmpntname=GetDocumentsById&amp;source=library&amp;DocumentIdParam=1a2e0d3b-2b2e-4e15-8a30-f5cd675eb83b</cbc:URI>
+                                <cbc:DocumentHash>cmqyNcbu24gL7nN4sp7zb7eIDOM=</cbc:DocumentHash>
+                                <cbc:FileName>TEST</cbc:FileName>
+                            </cac:ExternalReference>
+                        </cac:Attachment>
+                    </cac-place-ext:AdditionalPublicationDocumentReference>
+                    <cac-place-ext:AdditionalPublicationRequest>
+                        <cbc:AgencyID>DOUE</cbc:AgencyID>
+                        <cbc-place-ext:SendDate>2020-12-28+01:00</cbc-place-ext:SendDate>
+                    </cac-place-ext:AdditionalPublicationRequest>
+                </cac-place-ext:AdditionalPublicationStatus>
+            </cac-place-ext:ValidNoticeInfo>
+
+            
+            <cac-place-ext:GeneralDocument>
+                <cac-place-ext:GeneralDocumentDocumentReference>
+                    <cbc:ID>8a95ea45-4928-4ba4-920c-88dd275546f8</cbc:ID>
+                    <cac:Attachment>
+                        <cac:ExternalReference>
+                            <cbc:URI>https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?srv=cmpnt&amp;cmpntname=GetDocumentsById&amp;source=library&amp;DocumentIdParam=8a95ea45-4928-4ba4-920c-88dd275546f8</cbc:URI>
+                            <cbc:DocumentHash>TEST</cbc:DocumentHash>
+                            <cbc:FileName>REQUERIMIENTO JOSE NAJARRO ADMISION EXCLUSION</cbc:FileName>
+                        </cac:ExternalReference>
+                    </cac:Attachment>
+                </cac-place-ext:GeneralDocumentDocumentReference>
+            </cac-place-ext:GeneralDocument>
+        </cac-place-ext:ContractFolderStatus>
+    </entry>
+</feed>

@@ -17,9 +17,9 @@ public class OcurrenceLocation {
 		this.description = null;
 		
 		Element description = (Element) ol.getElementsByTagName("cbc:Description").item(POS_UNICO_ELEMENTO);
-		if (description != null){
+		try{
 			this.description = description.getTextContent();
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: TenderingProcess -> OpenTenderEvent -> OcurrenceLocation -> DESCRIPTION no existe\n");
 		}
 	}
@@ -28,10 +28,10 @@ public class OcurrenceLocation {
 		this.address = null;
 		
 		Element ad = (Element) ol.getElementsByTagName("cac:Address").item(POS_UNICO_ELEMENTO);
-		if (ad != null){
+		try{
 			this.address = new Address();
 			this.address.readAttributes(ad, POS_UNICO_ELEMENTO);
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: TenderingProcess -> OpenTenderEvent -> OcurrenceLocation -> ADDRESS no existe\n");
 		}
 	}

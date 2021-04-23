@@ -13,10 +13,10 @@ public class Attachment {
 		this.externalReference = null;
 		
 		Element er = (Element) att.getElementsByTagName("cac:ExternalReference").item(POS_UNICO_ELEMENTO);
-		if (er != null){
+		try{
 			this.externalReference = new ExternalReference();
 			this.externalReference.readAttributes(er, POS_UNICO_ELEMENTO);
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: Attachment -> EXTERNAL REFERENCE no existe\n");
 		}
 	}

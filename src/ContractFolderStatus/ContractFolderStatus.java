@@ -169,6 +169,7 @@ public class ContractFolderStatus {
 			this.tenderingProcess.readAttributes(tp, POS_UNICO_ELEMENTO);
 			this.tenderingProcess.readAuctionTerms(tp, POS_UNICO_ELEMENTO);
 			this.tenderingProcess.readTenderSubmissionDeadlinePeriod(tp, POS_UNICO_ELEMENTO);
+			this.tenderingProcess.readOpenTenderEvent(tp, POS_UNICO_ELEMENTO);
 			this.tenderingProcess.readEconomicOperatorShortList(tp, POS_UNICO_ELEMENTO);
 			this.tenderingProcess.readProcessJustification(tp, POS_UNICO_ELEMENTO);
 			this.tenderingProcess.readParticipationRequestReceptionPeriod(tp, POS_UNICO_ELEMENTO);
@@ -283,7 +284,15 @@ public class ContractFolderStatus {
 						 "--------------------------------\n");
 		System.out.print("===============================================================\n");
 		this.locatedContractingParty.print();
-		this.procurementProject.print();
+		
+		/* PROCUREMENT PROJECT */
+		if(this.procurementProject != null){
+			this.procurementProject.print();
+		}else{
+			System.out.print("** PROCUREMENT PROJECT: null **\n");
+		}
+		
+		/* TENDER RESULT */
 		if (tenderResultList != null){
 			for (TenderResult td : tenderResultList){
 				td.print();
@@ -292,8 +301,19 @@ public class ContractFolderStatus {
 			System.out.print("** TENDER RESULT: null **\n");
 		}
 		
-		this.tenderingTerms.print();
-		this.tenderingProcess.print();
+		/* TENDERING TERMS */
+		if(this.tenderingTerms != null){
+			this.tenderingTerms.print();
+		}else{
+			System.out.print("** TENDERING TERMS: null **\n");
+		}
+		
+		/* TENDERING PROCESS */
+		if(this.tenderingProcess != null){
+			this.tenderingProcess.print();
+		}else{
+			System.out.print("** TENDERING PROCESS: null **\n");
+		}
 		 
 		/* CONTRACT MODIFICATION */
 		if (this.contractModificationList != null){

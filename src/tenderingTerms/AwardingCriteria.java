@@ -17,9 +17,9 @@ public class AwardingCriteria {
 		
 		/* DESCRIPTION */
 		Element description = (Element) ac.getElementsByTagName("cbc:Description").item(POS_UNICO_ELEMENTO);
-		if (description != null){
+		try {
 			this.description = description.getTextContent();
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: TenderingTerms -> AwardingTerms -> AwardingCriteria -> DESCRIPTION no existe\n");
 		}
 		

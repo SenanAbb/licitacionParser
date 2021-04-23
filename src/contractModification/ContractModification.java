@@ -39,17 +39,17 @@ public class ContractModification {
 		
 		/* CONTRACT ID */
 		Element cid = (Element) cm.getElementsByTagName("cbc:ContractID").item(POS_UNICO_ELEMENTO);
-		if (cid != null){
+		try{
 			this.contractID = cid.getTextContent();
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: ContractFolderStatus -> ContractModification -> CONTRACT ID no existe\n");
 		}
 		
 		/* ID */
 		Element id = (Element) cm.getElementsByTagName("cbc:ID").item(POS_UNICO_ELEMENTO);
-		if (id != null){
+		try{
 			this.ID = id.getTextContent();
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: ContractFolderStatus -> ContractModification -> ID no existe\n");
 		}
 		

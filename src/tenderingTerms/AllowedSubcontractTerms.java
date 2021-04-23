@@ -15,12 +15,12 @@ public class AllowedSubcontractTerms {
 	private String description;
 	private boolean amount;
 	private double rate, minimumRate, maximumRate;
-	private int subcontractTermsCode;
+	private int subcontractTerms;
 	
 	public void readAttributes(Element ast, int POS_UNICO_ELEMENTO) {
 		this.description = null;
 		this.rate = -1;
-		this.subcontractTermsCode = -1;
+		this.subcontractTerms = -1;
 		this.minimumRate = -1;
 		this.maximumRate = -1;
 		
@@ -45,7 +45,7 @@ public class AllowedSubcontractTerms {
 		/* SUBCONTRACT TERMS */
 		Element sTerms = (Element) ast.getElementsByTagName("cbc:SubcontractTerms").item(POS_UNICO_ELEMENTO);
 		if (sTerms != null){
-			this.subcontractTermsCode = Integer.parseInt(sTerms.getTextContent());
+			this.subcontractTerms = Integer.parseInt(sTerms.getTextContent());
 		}
 		
 		/* MINIMUM RATE */
@@ -65,7 +65,7 @@ public class AllowedSubcontractTerms {
 		System.out.print("*** ALLOWED SUBCONTRACT TERMS ***\n" +
 						 "---> Description: " + description + "\n" +
 						 "---> Amount: " + amount + "\n" +
-						 "---> Subcontract Terms: " + subcontractTermsCode + "\n" +
+						 "---> Subcontract Terms: " + subcontractTerms + "\n" +
 						 "---> Rate: " + rate + "\n" +
 						 "---> Minimum Rate: " + minimumRate + "\n" +
 						 "---> Maximum Rate: " + maximumRate + "\n" +

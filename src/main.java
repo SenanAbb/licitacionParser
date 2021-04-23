@@ -1,11 +1,16 @@
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 import Parser.Parser;
 
 public class main {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
 //		Parser p = new Parser("P2900000G");
 //		String path = "C:/Users/senan/OneDrive/Escritorio/licitacionesPerfilesContratanteCompleto3_202101";
 //

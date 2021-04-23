@@ -68,35 +68,35 @@ public class PostalAddress {
 	private void readAttributesObligatorio(Element pa, int POS_UNICO_ELEMENTO){
 		/* City Name */
 		Element cn = (Element) pa.getElementsByTagName("cbc:CityName").item(POS_UNICO_ELEMENTO);
-		if (cn != null){
+		try{
 			this.cityName = cn.getTextContent();
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: Postal Address -> CITY NAME no existe\n");
 		}
 		
 		/* Postal Zone */
 		Element pz = (Element) pa.getElementsByTagName("cbc:PostalZone").item(POS_UNICO_ELEMENTO);
-		if (pz != null){
+		try{
 			this.postalZone = pz.getTextContent();
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: Postal Address -> POSTAL ZONE no existe\n");
 		}
 		
 		/* Address Line */
-		Element al = (Element) pa.getElementsByTagName("cac:AdressLine").item(POS_UNICO_ELEMENTO);
-		if (al != null){
+		Element al = (Element) pa.getElementsByTagName("cac:AddressLine").item(POS_UNICO_ELEMENTO);
+		try{
 			this.addressLine = new AddressLine();
 			this.addressLine.readAttributes(al, POS_UNICO_ELEMENTO);
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: Postal Address -> ADDRESS LINE no existe\n");
 		}
 		
 		/* Country */
 		Element country = (Element) pa.getElementsByTagName("cac:Country").item(POS_UNICO_ELEMENTO);
-		if (country != null){
+		try{
 			this.country = new Country();
 			this.country.readAttributes(country, POS_UNICO_ELEMENTO);
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: Postal Address -> COUNTRY no existe\n");
 		}
 	}
@@ -108,6 +108,7 @@ public class PostalAddress {
 				"----> Postal Zone: " + postalZone + "\n");
 				addressLine.print();
 				country.print();
+		System.out.print("--------------------------------\n");
 	}
 	
 	

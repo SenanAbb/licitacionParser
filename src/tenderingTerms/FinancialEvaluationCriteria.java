@@ -20,9 +20,9 @@ public class FinancialEvaluationCriteria {
 		
 		/* EVALUATION CRITERIA TYPE CODE */
 		Element ectc = (Element) ftr.getElementsByTagName("cbc:EvaluationCriteriaTypeCode").item(POS_UNICO_ELEMENTO);
-		if (ectc != null){
+		try {
 			this.evaluationCriteriaTypeCode = ectc.getTextContent();
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: TenderingTerms -> TendererQualificationRequest -> FinancialEvaluationCriteria -> EVALUATION CRITERIA TYPE CODE no existe\n");
 		}
 		

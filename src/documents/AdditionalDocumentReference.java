@@ -24,10 +24,10 @@ public class AdditionalDocumentReference {
 		this.attachment = null;
 		
 		Element att = (Element) adr.getElementsByTagName("cac:Attachment").item(POS_UNICO_ELEMENTO);
-		if (att != null){
+		try{
 			this.attachment = new Attachment();
 			this.attachment.readExternalReference(att, POS_UNICO_ELEMENTO);
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: ContractFolderStatus -> AdditionalDocumentReference -> ATTACHMENT no existe\n");
 		}
 	}

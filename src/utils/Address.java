@@ -7,12 +7,13 @@ import org.w3c.dom.Element;
  * 		addressFormatCode: int [0..1]
  * 		cityName: String [0..1]
  * 		postalZone: String [0..1]
- * 		addressLine: String [0..1]
+ * 		addressLine: AddressLine [0..1]
  * 		country: Country [0..1]
  */
 public class Address {
 	private int addressFormatCode;
-	private String cityName, postalZone, addressLine;
+	private String cityName, postalZone;
+	AddressLine addressLine;
 	private Country country;
 	
 	public void readAttributes(Element address, int POS_UNICO_ELEMENTO) {
@@ -41,9 +42,10 @@ public class Address {
 		}
 		
 		// ADDRESS LINE
-		Element al = (Element) address.getElementsByTagName("cbc:AdressLine").item(POS_UNICO_ELEMENTO);
+		Element al = (Element) address.getElementsByTagName("cac:AddressLine").item(POS_UNICO_ELEMENTO);
 		if (al != null){
-			this.addressLine = al.getTextContent();
+			this.addressLine = new AddressLine();
+			this.addressLine.readAttributes(al, POS_UNICO_ELEMENTO);
 		}
 		
 		// COUNTRY
@@ -59,8 +61,16 @@ public class Address {
 		System.out.print("**** ADDRESS ****\n" +
 				"----> Address Format Code: " + addressFormatCode + "\n" +
 				"----> City Name: " + cityName + "\n" +
-				"----> Postal Zone: " + postalZone + "\n" +
-				"----> AddressLine: " + addressLine + "\n");
-				country.print();
+				"----> Postal Zone: " + postalZone + "\n");
+		if (addressLine != null){
+			addressLine.print();
+		}else{
+			System.out.print("**** ADDRESS LINE: null ****\n");
+		}
+		if (country != null){
+			country.print();
+		}else{
+			System.out.print("**** COUNTRY: null ****\n");
+		}
 	}
 }

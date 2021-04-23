@@ -4,7 +4,7 @@ import org.w3c.dom.Element;
 
 /**
  * @params
- *		id: String
+ *		id: String [0..1]
  */
 public class Language {
 	private String id;

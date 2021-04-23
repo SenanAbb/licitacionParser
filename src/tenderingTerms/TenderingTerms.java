@@ -27,7 +27,7 @@ public class TenderingTerms {
 	private final static int MAX_REQUIRED_FINANCIAL_GUARANTEE = 3;
 	
 	private boolean requiredCurriculaIndicator, variantConstraintIndicator;
-	private String priceRevisionFormulaIndicator;
+	private String priceRevisionFormulaDescription;
 	private AllowedSubcontractTerms allowedSubcontractTerms;
 	private ProcurementLegislationDocumentReference procurementLegislationDocumentReference;
 	private RequiredFinancialGuarantee[] requiredFinancialGuaranteeList;
@@ -42,7 +42,7 @@ public class TenderingTerms {
 	private Language[] languageList;
 	
 	public void readAttributes(Element tt, int POS_UNICO_ELEMENTO) {
-		this.priceRevisionFormulaIndicator = null;
+		this.priceRevisionFormulaDescription = null;
 		
 		/* REQUIRED CURRICULA INDICATOR */
 		Element rci = (Element) tt.getElementsByTagName("cbc:RequiredCurriculaIndicator").item(POS_UNICO_ELEMENTO);
@@ -57,9 +57,9 @@ public class TenderingTerms {
 		}
 		
 		/* PRICE REVISION FORMULA INDICATOR */
-		Element prfi = (Element) tt.getElementsByTagName("cbc:PriceRevisionFormulaIndicator").item(POS_UNICO_ELEMENTO);
+		Element prfi = (Element) tt.getElementsByTagName("cbc:PriceRevisionFormulaDescription").item(POS_UNICO_ELEMENTO);
 		if (prfi != null){
-			this.priceRevisionFormulaIndicator = prfi.getTextContent();
+			this.priceRevisionFormulaDescription = prfi.getTextContent();
 		}
 	}
 	
@@ -230,7 +230,7 @@ public class TenderingTerms {
 		System.out.print("** TENDERING TERMS **\n" +
 				"--> Required Curricula Indicator: " + requiredCurriculaIndicator + "\n" +
 				"--> Variant Curricula Indicator: " + variantConstraintIndicator + "\n" +
-				"--> Price Revision Formula Indicator: " + priceRevisionFormulaIndicator + "\n" +
+				"--> Price Revision Formula Indicator: " + priceRevisionFormulaDescription + "\n" +
 				"--------------------------------\n");
 		
 		/* ALLOWED SUBCONTRACTS TERMS */

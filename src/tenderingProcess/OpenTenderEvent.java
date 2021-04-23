@@ -32,9 +32,9 @@ public class OpenTenderEvent {
 		
 		/* TYPE CODE */
 		Element tc = (Element) ote.getElementsByTagName("cbc:TypeCode").item(POS_UNICO_ELEMENTO);
-		if (tc != null){
+		try{
 			this.typeCode = Integer.parseInt(tc.getTextContent());
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: TenderingProcess -> OpenTenderEvent -> TYPE CODE no existe\n");
 		}
 		
@@ -83,17 +83,17 @@ public class OpenTenderEvent {
 		this.ocurrenceLocation = null;
 		
 		Element ol = (Element) ote.getElementsByTagName("cac:OcurrenceLocation").item(POS_UNICO_ELEMENTO);
-		if (ol != null){
+		try{
 			this.ocurrenceLocation = new OcurrenceLocation();
 			this.ocurrenceLocation.readAttributes(ol, POS_UNICO_ELEMENTO);
 			this.ocurrenceLocation.readAddress(ol, POS_UNICO_ELEMENTO);
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: TenderingProcess -> OpenTenderEvent -> OCURRENCE LOCATION no existe\n");
 		}
 	}
 	
 	public void print(){
-		System.out.print("*** TENDER SUBMISSION DEADLINE PERIOD ***\n" +
+		System.out.print("*** OPEN TENDER EVENT ***\n" +
 						 "---> Type Code: " + typeCode + "\n" +
 						 "---> Identification ID: " + identificationID + "\n" +
 						 "---> Description: " + description + "\n" +

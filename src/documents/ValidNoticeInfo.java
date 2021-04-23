@@ -15,9 +15,9 @@ public class ValidNoticeInfo {
 		this.noticeTypeCode = null;
 		
 		Element ntc = (Element) vni.getElementsByTagName("cbc-place-ext:NoticeTypeCode").item(POS_UNICO_ELEMENTO);
-		if (ntc != null){
+		try{
 			this.noticeTypeCode = ntc.getTextContent();
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: ValidNoticeInfo -> NOTICE TYPE CODE no existe\n");
 		}
 	}

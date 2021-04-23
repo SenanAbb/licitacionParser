@@ -24,10 +24,10 @@ public class LegalDocumentReference {
 		this.attachment = null;
 		
 		Element att = (Element) ldr.getElementsByTagName("cac:Attachment").item(POS_UNICO_ELEMENTO);
-		if (att != null){
+		try{
 			this.attachment = new Attachment();
 			this.attachment.readExternalReference(att, POS_UNICO_ELEMENTO);
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: ContractFolderStatus -> LegalDocumentReference -> ATTACHMENT no existe\n");
 		}
 	}

@@ -15,9 +15,9 @@ public class GeneralDocumentDocumentReference {
 		this.id = null;
 		
 		Element id = (Element) gddr.getElementsByTagName("cbc:ID").item(POS_UNICO_ELEMENTO);
-		if (id != null){
+		try{
 			this.id = id.getTextContent();
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: GeneralDocument -> GeneralDocumentDoumentReference -> ID no existe\n");
 		}
 	}
@@ -26,10 +26,10 @@ public class GeneralDocumentDocumentReference {
 		this.attachment = null;
 		
 		Element att = (Element) gddr.getElementsByTagName("cac:Attachment").item(POS_UNICO_ELEMENTO);
-		if (att != null){
+		try{
 			this.attachment = new Attachment();
 			this.attachment.readExternalReference(att, POS_UNICO_ELEMENTO);
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: GeneralDocument -> GeneralDocumentDoumentReference -> ATTACHMENT no existe\n");
 		}
 	}

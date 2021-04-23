@@ -32,10 +32,10 @@ public class MediationParty {
 		this.partyName = null;
 		
 		Element pn = (Element) mp.getElementsByTagName("cac:PartyName").item(POS_UNICO_ELEMENTO);
-		if(pn != null){
+		try{
 			this.partyName = new PartyName();
 			this.partyName.readAttributes(pn, POS_UNICO_ELEMENTO);
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: TenderingTerms -> AppealTerms -> AppealReceiverParty -> PARTY NAME no exsite\n");
 		}
 	}
@@ -44,13 +44,12 @@ public class MediationParty {
 		this.postalAddress = null;
 		
 		Element pa = (Element) mp.getElementsByTagName("cac:PostalAddress").item(POS_UNICO_ELEMENTO);
-		if(pa != null){
+		try{
 			this.postalAddress = new PostalAddress();
 			this.postalAddress.readAttributes(pa, POS_UNICO_ELEMENTO, true);
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: TenderingTerms -> AppealTerms -> AppealReceiverParty -> POSTAL ADDRESS no exsite\n");
 		}
-		
 	}
 
 	public void readContact(Element mp, int POS_UNICO_ELEMENTO){

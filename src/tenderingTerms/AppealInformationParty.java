@@ -32,10 +32,10 @@ public class AppealInformationParty {
 		this.partyName = null;
 		
 		Element pn = (Element) aip.getElementsByTagName("cac:PartyName").item(POS_UNICO_ELEMENTO);
-		if(pn != null){
+		try{
 			this.partyName = new PartyName();
 			this.partyName.readAttributes(pn, POS_UNICO_ELEMENTO);
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: TenderingTerms -> AppealTerms -> AppealInformationParty -> PARTY NAME no exsite\n");
 		}
 	}
@@ -44,13 +44,12 @@ public class AppealInformationParty {
 		this.postalAddress = null;
 		
 		Element pa = (Element) aip.getElementsByTagName("cac:PostalAddress").item(POS_UNICO_ELEMENTO);
-		if(pa != null){
+		try{
 			this.postalAddress = new PostalAddress();
 			this.postalAddress.readAttributes(pa, POS_UNICO_ELEMENTO, true);
-		}else{
+		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: TenderingTerms -> AppealTerms -> AppealInformationParty -> POSTAL ADDRESS no exsite\n");
 		}
-		
 	}
 
 	public void readContact(Element aip, int POS_UNICO_ELEMENTO){
