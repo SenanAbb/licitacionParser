@@ -33,12 +33,6 @@ public class ParserTest {
 		Parser p = new Parser(2);
 	}
 	
-	@Test (expected = FileNotFoundException.class)
-	public void testConstructorIncorrecto() throws FileNotFoundException, ParserConfigurationException, SAXException, IOException{
-		Parser p = new Parser("2", "2");
-		p.start();
-	}
-	
 	@Test (expected = SAXParseException.class)
 	public void testConstructorStringVacío() throws FileNotFoundException, ParserConfigurationException, SAXException, IOException{
 		Parser p = new Parser("", "");
