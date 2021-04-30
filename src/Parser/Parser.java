@@ -51,11 +51,110 @@ public class Parser {
 	private String selfLink, nextLink;
 	private int entryCont = 0;
 	private ArrayList<Entry> entries = new ArrayList<Entry>();
-	
-	/* Read:
-	 * 	-> File updated date
-	 * 	-> Self and Next links
-	 */
+
+	public void readAllEntries(){
+		try {
+    		//Iniciamos el DocumentBuilderFactory;
+			Document document = initDocumentBuilder();
+			
+			NodeList entriesNodes = document.getElementsByTagName("entry");
+			
+			if (entriesNodes.getLength() > 0){
+				entryCont += entriesNodes.getLength();
+				for (int i = 0; i < entriesNodes.getLength(); i++){
+					// Cojo el nodo actual
+					Node entry = entriesNodes.item(i);
+					// Compruebo si es un elemento
+					if (entry.getNodeType() == Node.ELEMENT_NODE){
+						// Lo transformo a element
+						Element e = (Element) entry;
+						
+						//Compruebo el PartyID para saber si es un Entry válido o no
+						String result = "";
+						try{
+							result = getEntryPartyID(e);
+						}catch (NullPointerException ex){
+							System.err.println(ex.getMessage());
+						}
+						if (result.compareTo(NIF) == 0){
+							// ----> PARSEO INIT <---- //
+							String[] idSplit = null;
+							String id = null, entryId = null, entryLink = null, entrySummary = null, entryTitle = null;
+							Timestamp entryUpdate = null;
+							
+							Element idElement = (Element) e.getElementsByTagName("id").item(POS_UNICO_ELEMENTO);
+							try{
+								id = idElement.getTextContent();
+								idSplit = idElement.getTextContent().split("/");
+								entryId = idSplit[idSplit.length-1];
+							}catch (NullPointerException exID){
+								System.err.print("ERROR FATAL: Entry -> ID no existe\n");
+							}
+							
+							Element link = (Element) e.getElementsByTagName("link").item(POS_UNICO_ELEMENTO);
+							try{
+								entryLink = link.getAttributes().getNamedItem("href").getTextContent();
+							}catch (NullPointerException exLINK){
+								System.err.print("ERROR FATAL: Entry " + entryId + " -> LINK no existe\n");
+							}
+									
+							Element summary = (Element) e.getElementsByTagName("summary").item(POS_UNICO_ELEMENTO);		
+							try{
+								entrySummary = summary.getTextContent();
+							}catch (NullPointerException exSUMMARY){
+								System.err.print("ERROR FATAL: Entry " + entryId + " -> SUMMARY no existe\n");
+							}
+							
+							Element title = (Element) e.getElementsByTagName("title").item(POS_UNICO_ELEMENTO);
+							try{
+								entryTitle = title.getTextContent();
+							}catch (NullPointerException exTITLE){
+								System.err.print("ERROR FATAL: Entry " + entryId + " -> TITLE no existe\n");
+							}
+											
+							Element update = (Element) e.getElementsByTagName("updated").item(POS_UNICO_ELEMENTO);
+							try{
+								// Quitamos los espacios y los caracteres que no queremos
+								String date = update.getTextContent().replace("T", " ");
+								date = date.substring(0, date.indexOf("+"));
+								
+								entryUpdate = Timestamp.valueOf(date);
+							}catch (NullPointerException exUPDATED){
+								System.err.print("ERROR FATAL: Entry " + entryId + " -> UPDATED no existe\n");
+							}
+							
+							Entry newEntry = new Entry(id, entryId, entryLink, entrySummary, entryTitle, entryUpdate);
+							newEntry.readContractFolderStatus(e, POS_UNICO_ELEMENTO);
+							//newEntry.print();
+							entries.add(newEntry);	
+							
+							// ----> PARSEO END <---- //
+							
+							// ----> CONEXION CON BD INIT <---- //
+							
+							/**
+							 * Vamos a insertar en la BD la entry:
+							 * 	1. Debemos crear un registro en tbl_ids para guardar la fecha en que se produjo esta lectura
+							 * 	2. Guardamos el ids generado automáticamente para linkearlo en tbl_entrys (FK)
+							 * 	3. Almacenamos los datos del entry
+							 * 	3.1. Creamos la conexion en la clase ConexionSQL
+							 * 	3.2. Le pasamos al entry el objeto sql para que pueda hacer la llamada a la creación de su sentencia, y ejecutarla
+							 */
+							
+							newEntry.writeData(ids);
+							
+							// ----> CONEXION CON BD END <---- //
+						}
+					}
+				}
+			}else{
+				throw new NullPointerException();
+			}
+		} catch (NullPointerException | ParserConfigurationException | SAXException | IOException e) {
+			System.err.println("No hay ninguna ENTRY en el documento, o el documento es inválido");
+		}
+	}
+
 	public void start() throws FileNotFoundException, ParserConfigurationException, SAXException, IOException{
 		readUpdateDate();
 		readLinks();
@@ -113,105 +212,6 @@ public class Parser {
 			}
 		}catch (NullPointerException e){
 			e.getStackTrace();
-		}
-	}
-
-	public void readAllEntries(){
-		try {
-    		//Iniciamos el DocumentBuilderFactory;
-			Document document = initDocumentBuilder();
-			
-			NodeList entriesNodes = document.getElementsByTagName("entry");
-			
-			if (entriesNodes.getLength() > 0){
-				entryCont += entriesNodes.getLength();
-				for (int i = 0; i < entriesNodes.getLength(); i++){
-					// Cojo el nodo actual
-					Node entry = entriesNodes.item(i);
-					// Compruebo si es un elemento
-					if (entry.getNodeType() == Node.ELEMENT_NODE){
-						// Lo transformo a element
-						Element e = (Element) entry;
-						
-						//Compruebo el PartyID para saber si es un Entry válido o no
-						String result = "";
-						try{
-							result = getEntryPartyID(e);
-						}catch (NullPointerException ex){
-							System.err.println(ex.getMessage());
-						}
-						if (result.compareTo(NIF) == 0){
-							String[] idSplit = null;
-							String id = null, entryId = null, entryLink = null, entrySummary = null, entryTitle = null;
-							Timestamp entryUpdate = null;
-							
-							Element idElement = (Element) e.getElementsByTagName("id").item(POS_UNICO_ELEMENTO);
-							try{
-								id = idElement.getTextContent();
-								idSplit = idElement.getTextContent().split("/");
-								entryId = idSplit[idSplit.length-1];
-							}catch (NullPointerException exID){
-								System.err.print("ERROR FATAL: Entry -> ID no existe\n");
-							}
-							
-							Element link = (Element) e.getElementsByTagName("link").item(POS_UNICO_ELEMENTO);
-							try{
-								entryLink = link.getAttributes().getNamedItem("href").getTextContent();
-							}catch (NullPointerException exLINK){
-								System.err.print("ERROR FATAL: Entry " + entryId + " -> LINK no existe\n");
-							}
-									
-							Element summary = (Element) e.getElementsByTagName("summary").item(POS_UNICO_ELEMENTO);		
-							try{
-								entrySummary = summary.getTextContent();
-							}catch (NullPointerException exSUMMARY){
-								System.err.print("ERROR FATAL: Entry " + entryId + " -> SUMMARY no existe\n");
-							}
-							
-							Element title = (Element) e.getElementsByTagName("title").item(POS_UNICO_ELEMENTO);
-							try{
-								entryTitle = title.getTextContent();
-							}catch (NullPointerException exTITLE){
-								System.err.print("ERROR FATAL: Entry " + entryId + " -> TITLE no existe\n");
-							}
-											
-							Element update = (Element) e.getElementsByTagName("updated").item(POS_UNICO_ELEMENTO);
-							try{
-								// Quitamos los espacios y los caracteres que no queremos
-								String date = update.getTextContent().replace("T", " ");
-								date = date.substring(0, date.indexOf("+"));
-								
-								entryUpdate = Timestamp.valueOf(date);
-							}catch (NullPointerException exUPDATED){
-								System.err.print("ERROR FATAL: Entry " + entryId + " -> UPDATED no existe\n");
-							}
-							
-							Entry newEntry = new Entry(id, entryId, entryLink, entrySummary, entryTitle, entryUpdate);
-							
-							/**
-							 * Vamos a insertar en la BD la entry:
-							 * 	1. Debemos crear un registro en tbl_ids para guardar la fecha en que se produjo esta lectura
-							 * 	2. Guardamos el ids generado automáticamente para linkearlo en tbl_entrys (FK)
-							 * 	3. Almacenamos los datos del entry, de lo cual se encarga la propia clase
-							 */
-							
-							newEntry.writeData(ids);
-							/*
-							newEntry.readContractFolderStatus(e, POS_UNICO_ELEMENTO);
-							
-							// PRINT ALL ENTRY DATE STRUCTURE
-							newEntry.print();
-							
-							entries.add(newEntry);	
-							*/			
-						}
-					}
-				}
-			}else{
-				throw new NullPointerException();
-			}
-		} catch (NullPointerException | ParserConfigurationException | SAXException | IOException e) {
-			System.err.println("No hay ninguna ENTRY en el documento, o el documento es inválido");
 		}
 	}
 

@@ -24,6 +24,7 @@ public class Entry {
 	private String id, id_num, link, summary, title;
 	private Timestamp updated;
 	private ContractFolderStatus cfs;
+	private int entrys;
 	
 	public void readContractFolderStatus(Element entry, int POS_UNICO_ELEMENTO){
 		this.cfs = null;
@@ -83,14 +84,20 @@ public class Entry {
 			sentencia.setInt("ids", ids);
 			
 			// Definimos los tipos de los params de salida del procedimiento almacenado
-			sentencia.registerOutParameter("entry_id", java.sql.Types.INTEGER);
+			sentencia.registerOutParameter("entrys", java.sql.Types.INTEGER);
 			
 			// Ejecutamos el procedimiento
 			sentencia.execute();
-			System.out.println(sentencia.getInt("entry_id"));
 			
 			// Se obtiene la salida (parametro nº 7)
+			this.entrys = sentencia.getInt("entrys");
 			
+			// Mandamos a ContractFolderStatus a grabar datos
+			this.cfs.writeData(entrys, conn);
+			
+			// COMMIT DE LAS INSTRUCCIONES
+			conn.commit(); 
+		
 		} catch (SQLException e){
 			System.out.println("[ENTRY] Error para rollback: " + e.getMessage());
 			e.printStackTrace();
@@ -143,6 +150,8 @@ public class Entry {
 	public Timestamp getUpdated() {
 		return updated;
 	}
+
+	
 }
 
 

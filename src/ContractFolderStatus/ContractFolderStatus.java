@@ -1,9 +1,16 @@
 package ContractFolderStatus;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import locatedContractingParty.LocatedContractingParty;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import Conexion.ConexionSQL;
+
+import com.mysql.cj.jdbc.CallableStatement;
 
 import contractModification.ContractModification;
 import documents.AdditionalDocumentReference;
@@ -45,6 +52,9 @@ public class ContractFolderStatus {
 	private AdditionalDocumentReference[] additionalDocumentReferenceList;
 	private ValidNoticeInfo[] validNoticeInfoList;
 	private GeneralDocument[] generalDocumentList;
+	
+	// Identificador de la BD
+	private int contract_folder_status;
 	
 	public void readAttributes(Element cfs, int POS_UNICO_ELEMENTO){
 		this.contractFolderID = null;
@@ -363,6 +373,45 @@ public class ContractFolderStatus {
 			}
 		}else{
 			System.out.print("** GENERAL DOCUMENT: null **\n");
+		}
+	}
+
+	public void writeData(int entry, Connection conn) {
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newContractFolderStatus(?, ?, ?, ?)}");
+			
+			// Parametros del procedimiento almacenado
+			sentencia.setString("contractFolderID", this.contractFolderID);
+			sentencia.setString("contractFolderStatusCode", this.contractFolderStatusCode);
+			sentencia.setInt("entry", entry);
+			
+			// Definimos los tipos de los params de salida del procedimiento almacenado
+			sentencia.registerOutParameter("contract_folder_status", java.sql.Types.INTEGER);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+			// Se obtiene la salida (parametro nº 7)
+			this.contract_folder_status = sentencia.getInt("contract_folder_status");
+
+			// Graban las subclases
+			//this.locatedContractingParty.writeData(contract_folder_status, conn);
+			
+		} catch (SQLException e){
+			System.out.println("[CFS] Error para rollback: " + e.getMessage());
+			e.printStackTrace();
+			
+			// Si algo ha fallado, hacemos rollback para deshacer todo y no grabar nada en la BD
+			if (conn != null){
+				try {
+					conn.rollback();
+				} catch (SQLException e1) {
+					System.out.println("[CFS] Error haciendo rollback: " + e.getMessage());
+					e1.printStackTrace();
+				}
+			}
 		}
 	}
 }
