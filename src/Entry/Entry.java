@@ -1,7 +1,14 @@
 package Entry;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+
 import org.w3c.dom.Element;
 
+import com.mysql.cj.jdbc.CallableStatement;
+
+import Conexion.ConexionSQL;
 import ContractFolderStatus.ContractFolderStatus;
 
 /**
@@ -14,7 +21,8 @@ import ContractFolderStatus.ContractFolderStatus;
  *		cfs: ContractFolderStatus[1]
  */
 public class Entry {
-	private String id, link, summary, title, updated;
+	private String id, id_num, link, summary, title;
+	private Timestamp updated;
 	private ContractFolderStatus cfs;
 	
 	public void readContractFolderStatus(Element entry, int POS_UNICO_ELEMENTO){
@@ -46,7 +54,7 @@ public class Entry {
 	}
 	
 	public void print(){
-		System.out.print("---------------- ENTRY " + id + "----------------\n" + 
+		System.out.print("---------------- ENTRY " + id_num + "----------------\n" + 
 						 "Link: " + link + "\n" + 
 						 "Summary: " + summary + "\n" + 
 						 "Title: " + title + "\n" + 
@@ -55,14 +63,67 @@ public class Entry {
 		cfs.print();
 	}
 	
+	public void writeData(int ids) {
+		ConexionSQL sql = new ConexionSQL();
+		Connection conn = sql.conectarMySQL();
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newEntry(?, ?, ?, ?, ?, ?, ?)}");
+			
+			// INICIAMOS LA TRANSACCIÓN
+			conn.setAutoCommit(false);
+			
+			// Parametros del procedimiento almacenado
+			sentencia.setString("id", this.id);
+			sentencia.setString("link", this.link);
+			sentencia.setString("summary", this.summary);
+			sentencia.setString("title", this.title);
+			sentencia.setTimestamp("updated", this.updated);
+			sentencia.setInt("ids", ids);
+			
+			// Definimos los tipos de los params de salida del procedimiento almacenado
+			sentencia.registerOutParameter("entry_id", java.sql.Types.INTEGER);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			System.out.println(sentencia.getInt("entry_id"));
+			
+			// Se obtiene la salida (parametro nº 7)
+			
+		} catch (SQLException e){
+			System.out.println("[ENTRY] Error para rollback: " + e.getMessage());
+			e.printStackTrace();
+			
+			// Si algo ha fallado, hacemos rollback para deshacer todo y no grabar nada en la BD
+			if (conn != null){
+				try {
+					conn.rollback();
+				} catch (SQLException e1) {
+					System.out.println("[ENTRY] Error haciendo rollback: " + e.getMessage());
+					e1.printStackTrace();
+				}
+			}
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	
 	/******************/
 	/** CONSTRUCTORS **/
 	/******************/
 	
 	
-	public Entry(String id, String link, String summary, String title, String updated) {
+	public Entry(String id, String id_num, String link, String summary, String title, Timestamp updated) {
 		this.id = id;
+		this.id_num = id_num;
 		this.link = link;
 		this.summary = summary;
 		this.title = title;
@@ -76,10 +137,10 @@ public class Entry {
 
 
 	public String getId() {
-		return id;
+		return id_num;
 	}
 
-	public String getUpdated() {
+	public Timestamp getUpdated() {
 		return updated;
 	}
 }

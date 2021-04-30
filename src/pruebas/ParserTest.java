@@ -19,6 +19,7 @@ public class ParserTest {
 	@Test (expected = Error.class)
 	public void testConstructorVacío() {
 		Parser p = new Parser();
+		assertNull(p);
 	}
 	
 	@Test 
@@ -31,6 +32,7 @@ public class ParserTest {
 	@Test (expected = Error.class)
 	public void testContructorStringInvalido(){
 		Parser p = new Parser(2);
+		assertNull(p);
 	}
 	
 	@Test (expected = SAXParseException.class)

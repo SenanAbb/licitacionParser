@@ -19,7 +19,7 @@ import org.w3c.dom.NodeList;
  *		startDate: Date[0..1]
  *		contractList: ContractList[] [0..*]
  *		awardedTenderedProject: AwardedTenderedProject[0..1]
- *		winningParty: WinningParty[1]
+ *		winningParty: WinningParty[0..1]
  *		SMEAwardedIndicator: bool[0..1]
  *		subcontractTerms: SubcontractTerms[0..1]
  */
@@ -141,12 +141,10 @@ public class TenderResult {
 		this.winningParty = null;
 		
 		Element wp = (Element) tr.getElementsByTagName("cac:WinningParty").item(POS_UNICO_ELEMENTO);
-		try {
+		if(wp != null){
 			this.winningParty = new WinningParty();
 			this.winningParty.readPartyName(wp, POS_UNICO_ELEMENTO);
 			this.winningParty.readPartyIdentificationList(wp, POS_UNICO_ELEMENTO);
-		} catch (NullPointerException e) {
-			System.err.print("ERROR FATAL: TenderResult -> WINNING PARTY no existe\n");
 		}
 	}
 	

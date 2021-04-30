@@ -3,6 +3,15 @@ package Parser;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -15,6 +24,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.mysql.cj.jdbc.CallableStatement;
+
+import Conexion.ConexionSQL;
 import Entry.Entry;
 
 /**
@@ -30,13 +42,14 @@ import Entry.Entry;
  */
 public class Parser {
 	private static final int POS_UNICO_ELEMENTO = 0; 
+	private static int ids;
 	
 	private String NIF = "";
 	private File URL;
 	
 	private String updated;
 	private String selfLink, nextLink;
-	private int entryCont;
+	private int entryCont = 0;
 	private ArrayList<Entry> entries = new ArrayList<Entry>();
 	
 	/* Read:
@@ -102,7 +115,7 @@ public class Parser {
 			e.getStackTrace();
 		}
 	}
-	
+
 	public void readAllEntries(){
 		try {
     		//Iniciamos el DocumentBuilderFactory;
@@ -111,7 +124,7 @@ public class Parser {
 			NodeList entriesNodes = document.getElementsByTagName("entry");
 			
 			if (entriesNodes.getLength() > 0){
-				entryCont = entriesNodes.getLength();
+				entryCont += entriesNodes.getLength();
 				for (int i = 0; i < entriesNodes.getLength(); i++){
 					// Cojo el nodo actual
 					Node entry = entriesNodes.item(i);
@@ -129,11 +142,13 @@ public class Parser {
 						}
 						if (result.compareTo(NIF) == 0){
 							String[] idSplit = null;
-							String entryId = null, entryLink = null, entrySummary = null, entryTitle = null, entryUpdate = null;
+							String id = null, entryId = null, entryLink = null, entrySummary = null, entryTitle = null;
+							Timestamp entryUpdate = null;
 							
-							Element id = (Element) e.getElementsByTagName("id").item(POS_UNICO_ELEMENTO);
+							Element idElement = (Element) e.getElementsByTagName("id").item(POS_UNICO_ELEMENTO);
 							try{
-								idSplit = id.getTextContent().split("/");
+								id = idElement.getTextContent();
+								idSplit = idElement.getTextContent().split("/");
 								entryId = idSplit[idSplit.length-1];
 							}catch (NullPointerException exID){
 								System.err.print("ERROR FATAL: Entry -> ID no existe\n");
@@ -162,19 +177,33 @@ public class Parser {
 											
 							Element update = (Element) e.getElementsByTagName("updated").item(POS_UNICO_ELEMENTO);
 							try{
-								entryUpdate = update.getTextContent();
+								// Quitamos los espacios y los caracteres que no queremos
+								String date = update.getTextContent().replace("T", " ");
+								date = date.substring(0, date.indexOf("+"));
+								
+								entryUpdate = Timestamp.valueOf(date);
 							}catch (NullPointerException exUPDATED){
 								System.err.print("ERROR FATAL: Entry " + entryId + " -> UPDATED no existe\n");
 							}
 							
-							Entry newEntry = new Entry(entryId, entryLink, entrySummary, entryTitle, entryUpdate);
+							Entry newEntry = new Entry(id, entryId, entryLink, entrySummary, entryTitle, entryUpdate);
 							
+							/**
+							 * Vamos a insertar en la BD la entry:
+							 * 	1. Debemos crear un registro en tbl_ids para guardar la fecha en que se produjo esta lectura
+							 * 	2. Guardamos el ids generado automáticamente para linkearlo en tbl_entrys (FK)
+							 * 	3. Almacenamos los datos del entry, de lo cual se encarga la propia clase
+							 */
+							
+							newEntry.writeData(ids);
+							/*
 							newEntry.readContractFolderStatus(e, POS_UNICO_ELEMENTO);
 							
 							// PRINT ALL ENTRY DATE STRUCTURE
 							newEntry.print();
 							
-							entries.add(newEntry);				
+							entries.add(newEntry);	
+							*/			
 						}
 					}
 				}
@@ -195,10 +224,12 @@ public class Parser {
 	public Parser(String URL, String NIF){
 		this.URL = new File(URL);
 		this.NIF = NIF;
+		this.ids = createIds();
 	}
 	
 	public Parser(String NIF){
 		this.NIF = NIF;
+		this.ids = createIds();
 	}
 	
 	
@@ -207,8 +238,61 @@ public class Parser {
 	/**********************/
 	
 	
+	/* Creación de un IDS -> información sobre esta ejecución del Parser */
+	private int createIds(){
+		int ids = 0;
+		ConexionSQL sql = new ConexionSQL();
+		Connection conn = sql.conectarMySQL();
+		CallableStatement sentencia = null;
+		
+		try{
+			sentencia = (CallableStatement) conn.prepareCall("{call newIds(?, ?)}");
+			
+			// INICIAMOS LA TRANSACCIÓN
+			conn.setAutoCommit(false);
+			
+			// Parametro 1 del procedimiento almacenado
+			sentencia.setInt("modos_id", 2);
+			
+			// Definimos los tipos de los params de salida del procedimiento almacenado
+			sentencia.registerOutParameter("ids", java.sql.Types.INTEGER);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+			// COMMIT DE LAS INSTRUCCIONES
+			conn.commit(); 
+			
+			// Se obtiene la salida
+			ids = sentencia.getInt("ids");
+		} catch (SQLException e) {
+			System.out.println("Error para rollback: " + e.getMessage());
+			e.printStackTrace();
+			
+			// Si algo ha fallado, hacemos rollback para deshacer todo y no grabar nada en la BD
+			if (conn != null){
+				try {
+					conn.rollback();
+				} catch (SQLException e1) {
+					System.out.println("Error haciendo rollback: " + e.getMessage());
+					e1.printStackTrace();
+				}
+			}
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return ids;
+	}
+	
 	/* Comprobación del identificador (NIF) del entry, para ver si es válido o no */
-	private String getEntryPartyID(Element e){
+ 	private String getEntryPartyID(Element e){
 		String ID = "";
 		
 		// Busco el ContractFolderStatus -> Sabemos que solo hay uno
@@ -300,64 +384,5 @@ public class Parser {
 			System.out.println("------------");
 		}
 		System.out.println("Link siguiente: " + nextLink);
-	}
-	
-	
-	/*************************/
-	/** GETTERS AND SETTERS **/
-	/*************************/
-	
-	
-	public String getNIF() {
-		return NIF;
-	}
-
-
-	public File getURL() {
-		return URL;
-	}
-
-	public void setURL(File uRL) {
-		URL = uRL;
-	}
-
-	public String getUpdated() {
-		return updated;
-	}
-
-	public void setUpdated(String updated) {
-		this.updated = updated;
-	}
-
-	public String getSelfLink() {
-		return selfLink;
-	}
-
-	public void setSelfLink(String selfLink) {
-		this.selfLink = selfLink;
-	}
-
-	public String getNextLink() {
-		return nextLink;
-	}
-
-	public void setNextLink(String nextLink) {
-		this.nextLink = nextLink;
-	}
-
-	public int getEntryCont() {
-		return entryCont;
-	}
-
-	public void setEntryCont(int entryCont) {
-		this.entryCont = entryCont;
-	}
-
-	public ArrayList<Entry> getEntries() {
-		return entries;
-	}
-
-	public void setEntries(ArrayList<Entry> entries) {
-		this.entries = entries;
 	}
 }

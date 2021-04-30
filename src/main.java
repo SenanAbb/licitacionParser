@@ -1,5 +1,10 @@
 import java.io.File;
 import java.io.IOException;
+import java.sql.Array;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,10 +12,13 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import Conexion.ConexionSQL;
 import Parser.Parser;
 
 public class main {
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
+
+		/** PARSER DE DIRECTORIO */
 //		Parser p = new Parser("P2900000G");
 //		String path = "C:/Users/senan/OneDrive/Escritorio/licitacionesPerfilesContratanteCompleto3_202101";
 //
@@ -29,6 +37,8 @@ public class main {
 //            }
 //        }
 		
+		
+		/** PARSER DE UN SOLO ARCHIVO */
 		String URL = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/Documentacion/Informacion/pruebas_licitacion.atom";
 		Parser p = new Parser(URL, "P2900000G");
 		
