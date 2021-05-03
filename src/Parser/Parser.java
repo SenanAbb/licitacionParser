@@ -152,6 +152,7 @@ public class Parser {
 			}
 		} catch (NullPointerException | ParserConfigurationException | SAXException | IOException e) {
 			System.err.println("No hay ninguna ENTRY en el documento, o el documento es inválido");
+			e.printStackTrace();
 		}
 	}
 

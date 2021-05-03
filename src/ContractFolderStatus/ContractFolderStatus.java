@@ -393,11 +393,11 @@ public class ContractFolderStatus {
 			// Ejecutamos el procedimiento
 			sentencia.execute();
 			
-			// Se obtiene la salida (parametro nº 7)
+			// Se obtiene la salida (parametro nº 4)
 			this.contract_folder_status = sentencia.getInt("contract_folder_status");
 
 			// Graban las subclases
-			//this.locatedContractingParty.writeData(contract_folder_status, conn);
+			this.locatedContractingParty.writeData(contract_folder_status, conn);
 			
 		} catch (SQLException e){
 			System.out.println("[CFS] Error para rollback: " + e.getMessage());

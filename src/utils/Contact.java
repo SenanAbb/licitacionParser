@@ -1,6 +1,11 @@
 package utils;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import org.w3c.dom.Element;
+
+import com.mysql.cj.jdbc.CallableStatement;
 
 /**
  * @params
@@ -11,6 +16,9 @@ import org.w3c.dom.Element;
  */
 public class Contact {
 	private String name, electronicMail, telephone, telefax; 
+	
+	// ID
+	private int contact;
 	
 	public void readAttributes(Element c, int POS_UNICO_ELEMENTO) {
 		this.name = null;
@@ -51,7 +59,45 @@ public class Contact {
 						 "----> Telefax: " + telefax + "\n" +
 						 "--------------------------------\n");	
 	}
-	
-	
-	public Contact(){}
+
+	public void writeDataTBLPartyContact(int party, Connection conn) {
+		writeData(conn);
+		TablasAuxiliares.writeDataTBLPartyContact(party, contact, conn);
+	}
+
+	private void writeData(Connection conn) {
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newContact(?, ?, ?, ?, ?)}");
+			
+			// Parametros del procedimiento almacenado
+			sentencia.setString("name", this.name);
+			sentencia.setString("electronicmail", this.electronicMail);
+			sentencia.setString("telephone", this.telephone);
+			sentencia.setString("telefax", this.telefax);
+			
+			// Definimos los tipos de los params de salida del procedimiento almacenado
+			sentencia.registerOutParameter("contact", java.sql.Types.INTEGER);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+			// Se obtiene la salida
+			this.contact = sentencia.getInt("contact");	
+		} catch (SQLException e){
+			System.out.println("[Party] Error para rollback: " + e.getMessage());
+			e.printStackTrace();
+			
+			// Si algo ha fallado, hacemos rollback para deshacer todo y no grabar nada en la BD
+			if (conn != null){
+				try {
+					conn.rollback();
+				} catch (SQLException e1) {
+					System.out.println("[Party] Error haciendo rollback: " + e.getMessage());
+					e1.printStackTrace();
+				}
+			}
+		}
+	}
 }

@@ -1,6 +1,11 @@
 package utils;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import org.w3c.dom.Element;
+
+import com.mysql.cj.jdbc.CallableStatement;
 
 /**
  * @params
@@ -11,14 +16,19 @@ import org.w3c.dom.Element;
  *		country: Country [0..1]/[1]
  */
 public class PostalAddress {
+	private static final int NULL_FORMAT = 0;
+	
 	private int addressFormatCode;
 	private AddressLine addressLine;
 	private String cityName, postalZone;
 	private Country country;
 	
+	//ID
+	private int postal_address;
+	
 	// Obligatorio nos dice si los campos AddressLine, CityName, PostalZone y Country debes ser o no obligatorios
 	public void readAttributes(Element pa, int POS_UNICO_ELEMENTO, boolean obligatorio) {
-		this.addressFormatCode = -1;
+		this.addressFormatCode = 0;
 		this.cityName = null;
 		this.postalZone = null;
 		this.addressLine = null;
@@ -110,7 +120,57 @@ public class PostalAddress {
 				country.print();
 		System.out.print("--------------------------------\n");
 	}
-	
-	
-	public PostalAddress(){}
+
+	public void writeDataTBLPartyPostalAddress(int party, Connection conn) {
+		writeData(conn);
+		TablasAuxiliares.writeDataTBLPartyPostaladdress(party, postal_address, conn);
+		
+		// Subclases
+		if (addressLine != null){
+			addressLine.writeData(postal_address, conn);
+		}
+		
+		if (country != null){
+			country.writeData(postal_address, conn);
+		}
+	}
+
+	private void writeData(Connection conn) {
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newPostaladdress(?, ?, ?, ?)}");
+			
+			// Parametros del procedimiento almacenado
+			if(addressFormatCode == -1){
+				sentencia.setInt("addressformatcode", NULL_FORMAT);
+			}else{
+				sentencia.setInt("addressformatcode", this.addressFormatCode);
+			}
+			sentencia.setString("cityname", this.cityName);
+			sentencia.setString("postalzone", this.postalZone);
+			
+			// Definimos los tipos de los params de salida del procedimiento almacenado
+			sentencia.registerOutParameter("postal_address", java.sql.Types.INTEGER);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+			// Se obtiene la salida
+			this.postal_address = sentencia.getInt("postal_address");	
+		} catch (SQLException e){
+			System.out.println("[Party] Error para rollback: " + e.getMessage());
+			e.printStackTrace();
+			
+			// Si algo ha fallado, hacemos rollback para deshacer todo y no grabar nada en la BD
+			if (conn != null){
+				try {
+					conn.rollback();
+				} catch (SQLException e1) {
+					System.out.println("[Party] Error haciendo rollback: " + e.getMessage());
+					e1.printStackTrace();
+				}
+			}
+		}
+	}
 }

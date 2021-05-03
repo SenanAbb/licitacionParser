@@ -1,7 +1,12 @@
 package locatedContractingParty;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import com.mysql.cj.jdbc.CallableStatement;
 
 import utils.Contact;
 import utils.PartyIdentification;
@@ -23,6 +28,9 @@ public class Party {
 	private PartyIdentification[] partyIdentificationList;
 	private Contact contact;
 	private PostalAddress postalAddress;
+	
+	//ID
+	private int party;
 	
 	public void readAttributes(Element p, int POS_UNICO_ELEMENTO){
 		this.websiteURI = null;
@@ -99,7 +107,56 @@ public class Party {
 		postalAddress.print();
 		System.out.print("--------------------------------\n");
 	}
-	
-	
-	public Party(){}
+
+	public void writeData(int located_contracting_party, Connection conn) {
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newParty(?, ?, ?, ?)}");
+			
+			// Parametros del procedimiento almacenado
+			sentencia.setString("websiteuri", this.websiteURI);
+			sentencia.setString("buyerprofileuriid", this.buyerProfileURIID);
+			sentencia.setInt("located_contracting_party", located_contracting_party);
+			
+			// Definimos los tipos de los params de salida del procedimiento almacenado
+			sentencia.registerOutParameter("party", java.sql.Types.INTEGER);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+			// Se obtiene la salida
+			this.party = sentencia.getInt("party");
+
+			// Graban las subclases
+			this.partyName.writeDataTBLPartyPartyname(party, conn);
+			
+			for (PartyIdentification p : partyIdentificationList){
+				p.writeDataTBLPartyPartyidentification(party, conn);
+			}
+			
+			if (contact != null){
+				contact.writeDataTBLPartyContact(party, conn);
+			}
+			
+			if (postalAddress != null){
+				postalAddress.writeDataTBLPartyPostalAddress(party, conn);
+			}
+			
+		} catch (SQLException e){
+			System.out.println("[Party] Error para rollback: " + e.getMessage());
+			e.printStackTrace();
+			
+			// Si algo ha fallado, hacemos rollback para deshacer todo y no grabar nada en la BD
+			if (conn != null){
+				try {
+					conn.rollback();
+				} catch (SQLException e1) {
+					System.out.println("[Party] Error haciendo rollback: " + e.getMessage());
+					e1.printStackTrace();
+				}
+			}
+		}
+		
+	}
 }
