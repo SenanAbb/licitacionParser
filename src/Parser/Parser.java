@@ -51,6 +51,13 @@ public class Parser {
 	private String selfLink, nextLink;
 	private int entryCont = 0;
 	private ArrayList<Entry> entries = new ArrayList<Entry>();
+	private ArrayList<String> expedientes = new ArrayList<String>();
+	
+	/* modo = [EXP, NIF] */
+	private String modo;
+	
+	/* Si escribir = true -> escribirá los datos en la BD */
+	private boolean escribir = true;
 
 	public void readAllEntries(){
 		try {
@@ -69,83 +76,20 @@ public class Parser {
 						// Lo transformo a element
 						Element e = (Element) entry;
 						
-						//Compruebo el PartyID para saber si es un Entry válido o no
 						String result = "";
-						try{
+						if (modo == "NIF"){
 							result = getEntryPartyID(e);
-						}catch (NullPointerException ex){
-							System.err.println(ex.getMessage());
+							if (result.compareTo(NIF) == 0){
+								readAttributesAndWrite(e);
+							}
+						}else if (modo == "EXP"){
+							result = getEntryExp(e);
+							if (expedientes.contains(result)){
+								readAttributesAndWrite(e);
+							}
+						}else{
+							readAttributesAndWrite(e);		
 						}
-						//if (result.compareTo(NIF) == 0){
-							// ----> PARSEO INIT <---- //
-							String[] idSplit = null;
-							String id = null, entryId = null, entryLink = null, entrySummary = null, entryTitle = null;
-							Timestamp entryUpdate = null;
-							
-							Element idElement = (Element) e.getElementsByTagName("id").item(POS_UNICO_ELEMENTO);
-							try{
-								id = idElement.getTextContent();
-								idSplit = idElement.getTextContent().split("/");
-								entryId = idSplit[idSplit.length-1];
-							}catch (NullPointerException exID){
-								System.err.print("ERROR FATAL: Entry -> ID no existe\n");
-							}
-							
-							Element link = (Element) e.getElementsByTagName("link").item(POS_UNICO_ELEMENTO);
-							try{
-								entryLink = link.getAttributes().getNamedItem("href").getTextContent();
-							}catch (NullPointerException exLINK){
-								System.err.print("ERROR FATAL: Entry " + entryId + " -> LINK no existe\n");
-							}
-									
-							Element summary = (Element) e.getElementsByTagName("summary").item(POS_UNICO_ELEMENTO);		
-							try{
-								entrySummary = summary.getTextContent();
-							}catch (NullPointerException exSUMMARY){
-								System.err.print("ERROR FATAL: Entry " + entryId + " -> SUMMARY no existe\n");
-							}
-							
-							Element title = (Element) e.getElementsByTagName("title").item(POS_UNICO_ELEMENTO);
-							try{
-								entryTitle = title.getTextContent();
-							}catch (NullPointerException exTITLE){
-								System.err.print("ERROR FATAL: Entry " + entryId + " -> TITLE no existe\n");
-							}
-											
-							Element update = (Element) e.getElementsByTagName("updated").item(POS_UNICO_ELEMENTO);
-							try{
-								// Quitamos los espacios y los caracteres que no queremos
-								String date = update.getTextContent().replace("T", " ");
-								date = date.substring(0, date.indexOf("+"));
-								
-								entryUpdate = Timestamp.valueOf(date);
-							}catch (NullPointerException exUPDATED){
-								System.err.print("ERROR FATAL: Entry " + entryId + " -> UPDATED no existe\n");
-							}
-							
-							Entry newEntry = new Entry(id, entryId, entryLink, entrySummary, entryTitle, entryUpdate);
-							newEntry.readContractFolderStatus(e, POS_UNICO_ELEMENTO);
-							//newEntry.print();
-							entries.add(newEntry);	
-							
-							// ----> PARSEO END <---- //
-							
-							// ----> CONEXION CON BD INIT <---- //
-							
-							/**
-							 * Vamos a insertar en la BD la entry:
-							 * 	1. Debemos crear un registro en tbl_ids para guardar la fecha en que se produjo esta lectura
-							 * 	2. Guardamos el ids generado automáticamente para linkearlo en tbl_entrys (FK)
-							 * 	3. Almacenamos los datos del entry
-							 * 	3.1. Creamos la conexion en la clase ConexionSQL
-							 * 	3.2. Le pasamos al entry el objeto sql para que pueda hacer la llamada a la creación de su sentencia, y ejecutarla
-							 */
-							
-							System.out.println("==ESCRIBIENDO==");
-							newEntry.writeData(ids);
-							
-							// ----> CONEXION CON BD END <---- //
-						//}
 					}
 				}
 			}else{
@@ -154,6 +98,71 @@ public class Parser {
 		} catch (NullPointerException | ParserConfigurationException | SAXException | IOException e) {
 			System.err.println("No hay ninguna ENTRY en el documento, o el documento es inválido");
 			e.printStackTrace();
+		}
+	}
+
+	private void readAttributesAndWrite(Element e) {
+		String[] idSplit = null;
+		String id = null, entryId = null, entryLink = null, entrySummary = null, entryTitle = null;
+		Timestamp entryUpdate = null;
+		
+		Element idElement = (Element) e.getElementsByTagName("id").item(POS_UNICO_ELEMENTO);
+		try{
+			id = idElement.getTextContent();
+			idSplit = idElement.getTextContent().split("/");
+			entryId = idSplit[idSplit.length-1];
+		}catch (NullPointerException exID){
+			System.err.print("ERROR FATAL: Entry -> ID no existe\n");
+		}
+		
+		Element link = (Element) e.getElementsByTagName("link").item(POS_UNICO_ELEMENTO);
+		try{
+			entryLink = link.getAttributes().getNamedItem("href").getTextContent();
+		}catch (NullPointerException exLINK){
+			System.err.print("ERROR FATAL: Entry " + entryId + " -> LINK no existe\n");
+		}
+				
+		Element summary = (Element) e.getElementsByTagName("summary").item(POS_UNICO_ELEMENTO);		
+		try{
+			entrySummary = summary.getTextContent();
+		}catch (NullPointerException exSUMMARY){
+			System.err.print("ERROR FATAL: Entry " + entryId + " -> SUMMARY no existe\n");
+		}
+		
+		Element title = (Element) e.getElementsByTagName("title").item(POS_UNICO_ELEMENTO);
+		try{
+			entryTitle = title.getTextContent();
+		}catch (NullPointerException exTITLE){
+			System.err.print("ERROR FATAL: Entry " + entryId + " -> TITLE no existe\n");
+		}
+						
+		Element update = (Element) e.getElementsByTagName("updated").item(POS_UNICO_ELEMENTO);
+		try{
+			// Quitamos los espacios y los caracteres que no queremos
+			String date = update.getTextContent().replace("T", " ");
+			date = date.substring(0, date.indexOf("+"));
+			
+			entryUpdate = Timestamp.valueOf(date);
+		}catch (NullPointerException exUPDATED){
+			System.err.print("ERROR FATAL: Entry " + entryId + " -> UPDATED no existe\n");
+		}
+		
+		Entry newEntry = new Entry(id, entryId, entryLink, entrySummary, entryTitle, entryUpdate);
+		newEntry.readContractFolderStatus(e, POS_UNICO_ELEMENTO);
+		//newEntry.print();
+		entries.add(newEntry);	
+		
+		
+		/* ----> CONEXION CON BD INIT <----
+		 * Vamos a insertar en la BD la entry:
+		 * 	1. Debemos crear un registro en tbl_ids para guardar la fecha en que se produjo esta lectura
+		 * 	2. Guardamos el ids generado automáticamente para linkearlo en tbl_entrys (FK)
+		 * 	3. Almacenamos los datos del entry
+		 * 	3.1. Creamos la conexion en la clase ConexionSQL
+		 * 	3.2. Le pasamos al entry el objeto sql para que pueda hacer la llamada a la creación de su sentencia, y ejecutarla
+		 */
+		if (escribir){
+			newEntry.writeData(ids);
 		}
 	}
 
@@ -223,9 +232,17 @@ public class Parser {
 	/******************/
 
 	
-	public Parser(String URL, String NIF){
+	public Parser(String URL, String NIF, String modo){
 		this.URL = new File(URL);
 		this.NIF = NIF;
+		this.modo = modo;
+		this.ids = createIds();
+	}
+	
+	public Parser(String URL, ArrayList<String> exp, String modo){
+		this.URL = new File(URL);
+		this.expedientes = exp;
+		this.modo = modo;
 		this.ids = createIds();
 	}
 	
@@ -233,6 +250,16 @@ public class Parser {
 		this.NIF = NIF;
 		this.ids = createIds();
 	}
+	
+	public Parser(ArrayList<String> exp, String modo){
+		this.expedientes = exp;
+		this.modo = modo;
+		this.ids = createIds();
+	}
+	
+	public Parser(){
+		this.ids = createIds();
+	};
 	
 	
 	/**********************/
@@ -344,6 +371,26 @@ public class Parser {
 		return ID;
 	}
 	
+ 	private String getEntryExp(Element e) {
+ 		String exp = "";
+		
+		// Busco el ContractFolderStatus -> Sabemos que solo hay uno
+		Element cfs = (Element)e.getElementsByTagName("cac-place-ext:ContractFolderStatus").item(POS_UNICO_ELEMENTO);
+		if (cfs != null){
+			// Dentro del ContractFolderStatus, busco el ContractFolderID -> Sabemos que solo hay uno
+			Element cfid = (Element) cfs.getElementsByTagName("cbc:ContractFolderID").item(POS_UNICO_ELEMENTO);
+			if (cfid != null){
+				exp = cfid.getTextContent();
+			}else{
+				throw new NullPointerException("ENTRY -> CONTRACT FOLDER STATUS -> LOCATED CONTRACTING PARTY no existe, no se puede obtener la identificación del entry");
+			}
+		}else{
+			throw new NullPointerException("ENTRY -> CONTRACT FOLDER STATUS no existe, no se puede obtener la identificación del entry");
+		}
+	
+		return exp;
+	}
+ 	
 	/* Reconstrucción del link */
 	private String rebuildLink(String ID, String href) {
 		String result = "";

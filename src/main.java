@@ -18,32 +18,69 @@ import Parser.Parser;
 public class main {
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
 
-//		/** PARSER DE DIRECTORIO */
-//		Parser p = new Parser("P2900000G");
-//		String path = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/LicitacionParser/Licitaciones 20-21/NOV 2020";
-//
-//        String[] files = getFiles( path );
-//
-//        if ( files != null ) {
-//            int size = files.length;
-//            for ( int i = 0; i < size; i ++ ) {
-//            	System.out.println("///////////////////////////////////////");
-//            	System.out.println(files[i]);
-//            	System.out.println("///////////////////////////////////////");
-//            	File file = new File(files[i]);
-//            	p.setURL(file);
-//            	p.start();
-//            	p.readAllEntries();
-//            }
-//        }
+		/** PARSER DE DIRECTORIO */
+		ArrayList<String> exp = new ArrayList<String>();
+		exp.add("PDT.-3.9/19");
+		exp.add("PDT.-3.8/19");
+		
+		Parser p = new Parser();
+		
+		String path = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/LicitacionParser/Licitaciones 20-21/";
+		String[] files = null;
+		
+		File f = new File(path);
+		File[] listado = f.listFiles();
+		if (listado == null || listado.length == 0) {
+		    System.out.println("No hay elementos dentro de la carpeta actual");
+		}else {
+		    for (int i=0; i< listado.length; i++) {
+		    	String sub_path = path.concat(listado[i].getName());
+		    	
+		    	if (!listado[i].isDirectory()){
+		    		System.out.println("==============");
+                	System.out.println(sub_path);
+                	System.out.println("==============");
+                	File file = new File(sub_path);
+                	p.setURL(file);
+                	p.start();
+                	p.readAllEntries();
+                	
+		    	}else{
+		    		System.out.println("----> " + listado[i].getName() + " <-----");
+		    		files = getFiles(sub_path);
+		    		if ( files != null ) {
+		                int size = files.length;
+		                for ( int j = 0; j < size; j ++ ) {
+		                	System.out.println("==============");
+		                	System.out.println("ARCHIVO Nº " + (j+1) + " DE " + size);
+		                	System.out.println(files[j]);
+		                	System.out.println("==============");
+		                	File file = new File(files[j]);
+		                	p.setURL(file);
+		                	p.start();
+		                	p.readAllEntries();
+		                }
+		            }
+		    	}
+		    }
+		}
+		
+  
+
+        
 		
 		
-		/** PARSER DE UN SOLO ARCHIVO */
-		String URL = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/Documentacion/Informacion/pruebas_licitacion.atom";
-		Parser p = new Parser(URL, "P2900000G");
-		
-		p.start();
-		p.readAllEntries();
+//		/** PARSER DE UN SOLO ARCHIVO */
+//		String URL = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/Documentacion/Informacion/pruebas_licitacion.atom";
+//		//String URL = "Licitaciones 20-21/2020_12/licitacionesPerfilesContratanteCompleto3_20201230_181906_1";
+//		ArrayList<String> exp = new ArrayList<String>();
+//		exp.add("PDT.-3.9/19");
+//		exp.add("PDT.-3.8/19");
+//		
+//		Parser p = new Parser(URL, exp, "EXP");
+//		
+//		p.start();
+//		p.readAllEntries();
 	}
 
 	private static String[] getFiles(String path) {

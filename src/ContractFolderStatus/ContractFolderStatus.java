@@ -391,9 +391,7 @@ public class ContractFolderStatus {
 			sentencia.registerOutParameter("contract_folder_status", java.sql.Types.INTEGER);
 			
 			// Ejecutamos el procedimiento
-			System.out.println("escribiendo cfs");
 			sentencia.execute();
-			System.out.println("escrito cfs");
 			
 			// Se obtiene la salida (parametro nº 4)
 			this.contract_folder_status = sentencia.getInt("contract_folder_status");
