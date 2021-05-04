@@ -35,7 +35,7 @@ CREATE TABLE `tbl_address_format_code` (
 
 LOCK TABLES `tbl_address_format_code` WRITE;
 /*!40000 ALTER TABLE `tbl_address_format_code` DISABLE KEYS */;
-INSERT INTO `tbl_address_format_code` VALUES (0,'NULL'),(1,'Formato español');
+INSERT INTO `tbl_address_format_code` VALUES (0,'NULL'),(1,'prueba');
 /*!40000 ALTER TABLE `tbl_address_format_code` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -54,7 +54,7 @@ CREATE TABLE `tbl_address_line` (
   PRIMARY KEY (`address_line`),
   KEY `fk_tbl_address_line_tbl_postal_address1_idx` (`postaladdress`),
   CONSTRAINT `fk_tbl_address_line_tbl_postal_address1` FOREIGN KEY (`postaladdress`) REFERENCES `tbl_postal_address` (`postal_address`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -63,7 +63,6 @@ CREATE TABLE `tbl_address_line` (
 
 LOCK TABLES `tbl_address_line` WRITE;
 /*!40000 ALTER TABLE `tbl_address_line` DISABLE KEYS */;
-INSERT INTO `tbl_address_line` VALUES (1,'Pacífico, 54',7,'2021-05-03 09:19:32'),(4,'Pacífico, 54',10,'2021-05-03 09:29:45');
 /*!40000 ALTER TABLE `tbl_address_line` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -82,7 +81,7 @@ CREATE TABLE `tbl_contact` (
   `telefax` varchar(50) DEFAULT NULL,
   `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`contact`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,7 +90,6 @@ CREATE TABLE `tbl_contact` (
 
 LOCK TABLES `tbl_contact` WRITE;
 /*!40000 ALTER TABLE `tbl_contact` DISABLE KEYS */;
-INSERT INTO `tbl_contact` VALUES (7,'Presidencia de la Diputación Provincial de Málaga','perfil.del.contratante@malaga.es',NULL,NULL,'2021-05-03 08:53:45'),(16,'Presidencia de la Diputación Provincial de Málaga','perfil.del.contratante@malaga.es',NULL,NULL,'2021-05-03 09:15:06'),(18,'Presidencia de la Diputación Provincial de Málaga','perfil.del.contratante@malaga.es',NULL,NULL,'2021-05-03 09:19:32'),(21,'Presidencia de la Diputación Provincial de Málaga','perfil.del.contratante@malaga.es',NULL,NULL,'2021-05-03 09:29:45');
 /*!40000 ALTER TABLE `tbl_contact` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -113,7 +111,7 @@ CREATE TABLE `tbl_contract_folder_status` (
   KEY `fk_tbl_contract_folder_status_tbl_contract_folder_status_co_idx` (`contractfolderstatuscode`),
   CONSTRAINT `fk_tbl_contract_folder_status_tbl_contract_folder_status_code1` FOREIGN KEY (`contractfolderstatuscode`) REFERENCES `tbl_contract_folder_status_code` (`contract_folder_status_code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_contract_folder_status_tbl_entrys` FOREIGN KEY (`entry`) REFERENCES `tbl_entrys` (`entrys`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -122,7 +120,6 @@ CREATE TABLE `tbl_contract_folder_status` (
 
 LOCK TABLES `tbl_contract_folder_status` WRITE;
 /*!40000 ALTER TABLE `tbl_contract_folder_status` DISABLE KEYS */;
-INSERT INTO `tbl_contract_folder_status` VALUES (2,'SUM.- 005/2019','ADJ','2021-04-30 11:44:46',3),(4,'SUM.- 005/2019','ADJ','2021-05-02 17:49:39',5),(12,'SUM.- 005/2019','ADJ','2021-05-03 07:26:17',14),(14,'SUM.- 005/2019','ADJ','2021-05-03 07:49:44',16),(19,'SUM.- 005/2019','ADJ','2021-05-03 08:03:27',21),(30,'SUM.- 005/2019','ADJ','2021-05-03 08:14:38',32),(31,'SUM.- 005/2019','ADJ','2021-05-03 08:15:08',33),(39,'SUM.- 005/2019','ADJ','2021-05-03 08:53:45',41),(50,'SUM.- 005/2019','ADJ','2021-05-03 09:15:06',52),(52,'SUM.- 005/2019','ADJ','2021-05-03 09:19:32',54),(55,'SUM.- 005/2019','ADJ','2021-05-03 09:29:45',57);
 /*!40000 ALTER TABLE `tbl_contract_folder_status` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -146,7 +143,7 @@ CREATE TABLE `tbl_contract_folder_status_code` (
 
 LOCK TABLES `tbl_contract_folder_status_code` WRITE;
 /*!40000 ALTER TABLE `tbl_contract_folder_status_code` DISABLE KEYS */;
-INSERT INTO `tbl_contract_folder_status_code` VALUES ('ADJ','Adjudicada');
+INSERT INTO `tbl_contract_folder_status_code` VALUES ('ADJ','Adjudicada'),('ANUL','Anulada'),('EV','Pendiente de adjudicación'),('PRE','Anuncio Previo'),('PUB','En plazo'),('RES','Resuelta');
 /*!40000 ALTER TABLE `tbl_contract_folder_status_code` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -159,7 +156,7 @@ DROP TABLE IF EXISTS `tbl_contracting_party_type_code`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tbl_contracting_party_type_code` (
   `contracting_party_type_code` int(11) NOT NULL,
-  `description` varchar(100) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
   PRIMARY KEY (`contracting_party_type_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -170,7 +167,7 @@ CREATE TABLE `tbl_contracting_party_type_code` (
 
 LOCK TABLES `tbl_contracting_party_type_code` WRITE;
 /*!40000 ALTER TABLE `tbl_contracting_party_type_code` DISABLE KEYS */;
-INSERT INTO `tbl_contracting_party_type_code` VALUES (3,'prueba');
+INSERT INTO `tbl_contracting_party_type_code` VALUES (1,'Administración General del Estado'),(2,'Comunidad Autónoma'),(3,'Administración Local'),(4,'Entidad de Derecho Público '),(5,'Otras Entidades del Sector Público');
 /*!40000 ALTER TABLE `tbl_contracting_party_type_code` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -189,7 +186,7 @@ CREATE TABLE `tbl_country` (
   PRIMARY KEY (`country`),
   KEY `fk_tbl_country_tbl_identification_code` (`identificationcode`),
   CONSTRAINT `fk_tbl_country_tbl_identification_code` FOREIGN KEY (`identificationcode`) REFERENCES `tbl_identification_code` (`identification_code`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -198,7 +195,6 @@ CREATE TABLE `tbl_country` (
 
 LOCK TABLES `tbl_country` WRITE;
 /*!40000 ALTER TABLE `tbl_country` DISABLE KEYS */;
-INSERT INTO `tbl_country` VALUES (1,'ES','España','2021-05-03 09:29:45');
 /*!40000 ALTER TABLE `tbl_country` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -244,7 +240,7 @@ CREATE TABLE `tbl_entrys` (
   PRIMARY KEY (`entrys`),
   KEY `fk_tbl_entrys_tbl_ids` (`ids`),
   CONSTRAINT `fk_tbl_entrys_tbl_ids` FOREIGN KEY (`ids`) REFERENCES `tbl_ids` (`ids`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -253,7 +249,6 @@ CREATE TABLE `tbl_entrys` (
 
 LOCK TABLES `tbl_entrys` WRITE;
 /*!40000 ALTER TABLE `tbl_entrys` DISABLE KEYS */;
-INSERT INTO `tbl_entrys` VALUES (3,'https://contrataciondelestado.es/sindicacion/licitacionesPerfilContratante/5947346','https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=%2FZW6sgpqWGQBPRBxZ4nJ%2Fg%3D%3D','Id licitación: SUM.- 005/2019; Órgano de Contratación: Presidencia de la Diputación Provincial de Málaga; Importe: 210289.23 EUR; Estado: ADJ','Suministro de material de limpieza respetuoso con el medioambiente con destino a Centros y Servicios de la Diputación Provincial de Málaga, dividido en 4 lotes.','2020-12-31 08:33:33','2021-04-30 11:44:45',3),(5,'https://contrataciondelestado.es/sindicacion/licitacionesPerfilContratante/5947346','https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=%2FZW6sgpqWGQBPRBxZ4nJ%2Fg%3D%3D','Id licitación: SUM.- 005/2019; Órgano de Contratación: Presidencia de la Diputación Provincial de Málaga; Importe: 210289.23 EUR; Estado: ADJ','Suministro de material de limpieza respetuoso con el medioambiente con destino a Centros y Servicios de la Diputación Provincial de Málaga, dividido en 4 lotes.','2020-12-31 08:33:33','2021-05-02 17:49:39',5),(14,'https://contrataciondelestado.es/sindicacion/licitacionesPerfilContratante/5947346','https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=%2FZW6sgpqWGQBPRBxZ4nJ%2Fg%3D%3D','Id licitación: SUM.- 005/2019; Órgano de Contratación: Presidencia de la Diputación Provincial de Málaga; Importe: 210289.23 EUR; Estado: ADJ','Suministro de material de limpieza respetuoso con el medioambiente con destino a Centros y Servicios de la Diputación Provincial de Málaga, dividido en 4 lotes.','2020-12-31 08:33:33','2021-05-03 07:26:17',14),(16,'https://contrataciondelestado.es/sindicacion/licitacionesPerfilContratante/5947346','https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=%2FZW6sgpqWGQBPRBxZ4nJ%2Fg%3D%3D','Id licitación: SUM.- 005/2019; Órgano de Contratación: Presidencia de la Diputación Provincial de Málaga; Importe: 210289.23 EUR; Estado: ADJ','Suministro de material de limpieza respetuoso con el medioambiente con destino a Centros y Servicios de la Diputación Provincial de Málaga, dividido en 4 lotes.','2020-12-31 08:33:33','2021-05-03 07:49:44',16),(21,'https://contrataciondelestado.es/sindicacion/licitacionesPerfilContratante/5947346','https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=%2FZW6sgpqWGQBPRBxZ4nJ%2Fg%3D%3D','Id licitación: SUM.- 005/2019; Órgano de Contratación: Presidencia de la Diputación Provincial de Málaga; Importe: 210289.23 EUR; Estado: ADJ','Suministro de material de limpieza respetuoso con el medioambiente con destino a Centros y Servicios de la Diputación Provincial de Málaga, dividido en 4 lotes.','2020-12-31 08:33:33','2021-05-03 08:03:26',21),(32,'https://contrataciondelestado.es/sindicacion/licitacionesPerfilContratante/5947346','https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=%2FZW6sgpqWGQBPRBxZ4nJ%2Fg%3D%3D','Id licitación: SUM.- 005/2019; Órgano de Contratación: Presidencia de la Diputación Provincial de Málaga; Importe: 210289.23 EUR; Estado: ADJ','Suministro de material de limpieza respetuoso con el medioambiente con destino a Centros y Servicios de la Diputación Provincial de Málaga, dividido en 4 lotes.','2020-12-31 08:33:33','2021-05-03 08:14:38',32),(33,'https://contrataciondelestado.es/sindicacion/licitacionesPerfilContratante/5947346','https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=%2FZW6sgpqWGQBPRBxZ4nJ%2Fg%3D%3D','Id licitación: SUM.- 005/2019; Órgano de Contratación: Presidencia de la Diputación Provincial de Málaga; Importe: 210289.23 EUR; Estado: ADJ','Suministro de material de limpieza respetuoso con el medioambiente con destino a Centros y Servicios de la Diputación Provincial de Málaga, dividido en 4 lotes.','2020-12-31 08:33:33','2021-05-03 08:15:08',33),(41,'https://contrataciondelestado.es/sindicacion/licitacionesPerfilContratante/5947346','https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=%2FZW6sgpqWGQBPRBxZ4nJ%2Fg%3D%3D','Id licitación: SUM.- 005/2019; Órgano de Contratación: Presidencia de la Diputación Provincial de Málaga; Importe: 210289.23 EUR; Estado: ADJ','Suministro de material de limpieza respetuoso con el medioambiente con destino a Centros y Servicios de la Diputación Provincial de Málaga, dividido en 4 lotes.','2020-12-31 08:33:33','2021-05-03 08:53:45',41),(52,'https://contrataciondelestado.es/sindicacion/licitacionesPerfilContratante/5947346','https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=%2FZW6sgpqWGQBPRBxZ4nJ%2Fg%3D%3D','Id licitación: SUM.- 005/2019; Órgano de Contratación: Presidencia de la Diputación Provincial de Málaga; Importe: 210289.23 EUR; Estado: ADJ','Suministro de material de limpieza respetuoso con el medioambiente con destino a Centros y Servicios de la Diputación Provincial de Málaga, dividido en 4 lotes.','2020-12-31 08:33:33','2021-05-03 09:15:06',52),(54,'https://contrataciondelestado.es/sindicacion/licitacionesPerfilContratante/5947346','https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=%2FZW6sgpqWGQBPRBxZ4nJ%2Fg%3D%3D','Id licitación: SUM.- 005/2019; Órgano de Contratación: Presidencia de la Diputación Provincial de Málaga; Importe: 210289.23 EUR; Estado: ADJ','Suministro de material de limpieza respetuoso con el medioambiente con destino a Centros y Servicios de la Diputación Provincial de Málaga, dividido en 4 lotes.','2020-12-31 08:33:33','2021-05-03 09:19:32',54),(57,'https://contrataciondelestado.es/sindicacion/licitacionesPerfilContratante/5947346','https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=%2FZW6sgpqWGQBPRBxZ4nJ%2Fg%3D%3D','Id licitación: SUM.- 005/2019; Órgano de Contratación: Presidencia de la Diputación Provincial de Málaga; Importe: 210289.23 EUR; Estado: ADJ','Suministro de material de limpieza respetuoso con el medioambiente con destino a Centros y Servicios de la Diputación Provincial de Málaga, dividido en 4 lotes.','2020-12-31 08:33:33','2021-05-03 09:29:45',57);
 /*!40000 ALTER TABLE `tbl_entrys` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -296,7 +291,7 @@ CREATE TABLE `tbl_ids` (
   PRIMARY KEY (`ids`),
   KEY `fk_tbl_ids_tbl_modosid` (`modosid`),
   CONSTRAINT `fk_tbl_ids_tbl_modosid` FOREIGN KEY (`modosid`) REFERENCES `tbl_modosid` (`modosid`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -305,7 +300,6 @@ CREATE TABLE `tbl_ids` (
 
 LOCK TABLES `tbl_ids` WRITE;
 /*!40000 ALTER TABLE `tbl_ids` DISABLE KEYS */;
-INSERT INTO `tbl_ids` VALUES (2,'2021-04-30 11:42:17',2),(3,'2021-04-30 11:44:44',2),(4,'2021-05-02 17:48:42',2),(5,'2021-05-02 17:49:38',2),(6,'2021-05-03 07:21:30',2),(7,'2021-05-03 07:21:41',2),(8,'2021-05-03 07:22:09',2),(9,'2021-05-03 07:23:08',2),(10,'2021-05-03 07:23:57',2),(11,'2021-05-03 07:24:39',2),(12,'2021-05-03 07:24:53',2),(13,'2021-05-03 07:26:02',2),(14,'2021-05-03 07:26:17',2),(15,'2021-05-03 07:47:53',2),(16,'2021-05-03 07:49:43',2),(17,'2021-05-03 07:58:37',2),(18,'2021-05-03 07:59:54',2),(19,'2021-05-03 08:00:16',2),(20,'2021-05-03 08:01:03',2),(21,'2021-05-03 08:03:26',2),(22,'2021-05-03 08:04:08',2),(23,'2021-05-03 08:04:28',2),(24,'2021-05-03 08:04:38',2),(25,'2021-05-03 08:04:47',2),(26,'2021-05-03 08:08:19',2),(27,'2021-05-03 08:09:00',2),(28,'2021-05-03 08:09:07',2),(29,'2021-05-03 08:09:15',2),(30,'2021-05-03 08:09:58',2),(31,'2021-05-03 08:10:13',2),(32,'2021-05-03 08:14:38',2),(33,'2021-05-03 08:15:08',2),(34,'2021-05-03 08:48:28',2),(35,'2021-05-03 08:49:33',2),(36,'2021-05-03 08:51:28',2),(37,'2021-05-03 08:52:04',2),(38,'2021-05-03 08:52:11',2),(39,'2021-05-03 08:52:44',2),(40,'2021-05-03 08:53:33',2),(41,'2021-05-03 08:53:45',2),(42,'2021-05-03 09:03:44',2),(43,'2021-05-03 09:04:44',2),(44,'2021-05-03 09:05:41',2),(45,'2021-05-03 09:06:21',2),(46,'2021-05-03 09:06:30',2),(47,'2021-05-03 09:06:45',2),(48,'2021-05-03 09:10:25',2),(49,'2021-05-03 09:10:40',2),(50,'2021-05-03 09:10:56',2),(51,'2021-05-03 09:13:03',2),(52,'2021-05-03 09:15:05',2),(53,'2021-05-03 09:19:15',2),(54,'2021-05-03 09:19:31',2),(55,'2021-05-03 09:29:02',2),(56,'2021-05-03 09:29:28',2),(57,'2021-05-03 09:29:44',2);
 /*!40000 ALTER TABLE `tbl_ids` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -326,7 +320,7 @@ CREATE TABLE `tbl_located_contracting_party` (
   KEY `fk_tbl_located_contracting_party_tbl_contracting_party_type_code` (`contractingpartytypecode`),
   CONSTRAINT `fk_tbl_located_contracting_party_tbl_contract_folder_status` FOREIGN KEY (`contractfolderstatus`) REFERENCES `tbl_contract_folder_status` (`contract_folder_status`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_located_contracting_party_tbl_contracting_party_type_code` FOREIGN KEY (`contractingpartytypecode`) REFERENCES `tbl_contracting_party_type_code` (`contracting_party_type_code`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -335,7 +329,6 @@ CREATE TABLE `tbl_located_contracting_party` (
 
 LOCK TABLES `tbl_located_contracting_party` WRITE;
 /*!40000 ALTER TABLE `tbl_located_contracting_party` DISABLE KEYS */;
-INSERT INTO `tbl_located_contracting_party` VALUES (2,3,4,'2021-05-02 17:49:39'),(9,3,12,'2021-05-03 07:26:17'),(10,3,12,'2021-05-03 07:27:02'),(12,3,14,'2021-05-03 07:49:44'),(17,3,19,'2021-05-03 08:03:27'),(28,3,30,'2021-05-03 08:14:38'),(29,3,31,'2021-05-03 08:15:08'),(37,3,39,'2021-05-03 08:53:45'),(48,3,50,'2021-05-03 09:15:06'),(50,3,52,'2021-05-03 09:19:32'),(53,3,55,'2021-05-03 09:29:45');
 /*!40000 ALTER TABLE `tbl_located_contracting_party` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -359,7 +352,7 @@ CREATE TABLE `tbl_modosid` (
 
 LOCK TABLES `tbl_modosid` WRITE;
 /*!40000 ALTER TABLE `tbl_modosid` DISABLE KEYS */;
-INSERT INTO `tbl_modosid` VALUES (1,'AUTO'),(2,'MANUAL');
+INSERT INTO `tbl_modosid` VALUES (1,'Automático'),(2,'Manual');
 /*!40000 ALTER TABLE `tbl_modosid` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -432,7 +425,7 @@ CREATE TABLE `tbl_party` (
   PRIMARY KEY (`party`),
   KEY `fk_tbl_party_tbl_located_contracting_party1_idx` (`locatedcontractingparty`),
   CONSTRAINT `fk_tbl_party_tbl_located_contracting_party1` FOREIGN KEY (`locatedcontractingparty`) REFERENCES `tbl_located_contracting_party` (`located_contracting_party`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -441,7 +434,6 @@ CREATE TABLE `tbl_party` (
 
 LOCK TABLES `tbl_party` WRITE;
 /*!40000 ALTER TABLE `tbl_party` DISABLE KEYS */;
-INSERT INTO `tbl_party` VALUES (2,'http://www.malaga.es',NULL,12,'2021-05-03 07:49:44'),(7,'http://www.malaga.es',NULL,17,'2021-05-03 08:03:27'),(18,'http://www.malaga.es',NULL,28,'2021-05-03 08:14:38'),(19,'http://www.malaga.es',NULL,29,'2021-05-03 08:15:08'),(27,'http://www.malaga.es',NULL,37,'2021-05-03 08:53:45'),(37,'http://www.malaga.es',NULL,48,'2021-05-03 09:15:06'),(39,'http://www.malaga.es',NULL,50,'2021-05-03 09:19:32'),(42,'http://www.malaga.es',NULL,53,'2021-05-03 09:29:45');
 /*!40000 ALTER TABLE `tbl_party` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -469,7 +461,6 @@ CREATE TABLE `tbl_party_contact` (
 
 LOCK TABLES `tbl_party_contact` WRITE;
 /*!40000 ALTER TABLE `tbl_party_contact` DISABLE KEYS */;
-INSERT INTO `tbl_party_contact` VALUES (7,27,'2021-05-03 08:53:45'),(16,37,'2021-05-03 09:15:06'),(18,39,'2021-05-03 09:19:32'),(21,42,'2021-05-03 09:29:45');
 /*!40000 ALTER TABLE `tbl_party_contact` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -486,7 +477,7 @@ CREATE TABLE `tbl_party_identification` (
   `schemename` varchar(50) NOT NULL,
   `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`party_identification`)
-) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -495,7 +486,6 @@ CREATE TABLE `tbl_party_identification` (
 
 LOCK TABLES `tbl_party_identification` WRITE;
 /*!40000 ALTER TABLE `tbl_party_identification` DISABLE KEYS */;
-INSERT INTO `tbl_party_identification` VALUES (18,'L02000029','DIR3','2021-05-03 08:14:38'),(19,'P2900000G','NIF','2021-05-03 08:14:39'),(20,'L02000029','DIR3','2021-05-03 08:15:09'),(21,'P2900000G','NIF','2021-05-03 08:15:09'),(34,'L02000029','DIR3','2021-05-03 08:53:45'),(35,'P2900000G','NIF','2021-05-03 08:53:45'),(52,'L02000029','DIR3','2021-05-03 09:15:06'),(53,'P2900000G','NIF','2021-05-03 09:15:06'),(56,'L02000029','DIR3','2021-05-03 09:19:32'),(57,'P2900000G','NIF','2021-05-03 09:19:32'),(62,'L02000029','DIR3','2021-05-03 09:29:45'),(63,'P2900000G','NIF','2021-05-03 09:29:45');
 /*!40000 ALTER TABLE `tbl_party_identification` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -511,7 +501,7 @@ CREATE TABLE `tbl_party_name` (
   `name` varchar(300) NOT NULL,
   `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`party_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -520,7 +510,6 @@ CREATE TABLE `tbl_party_name` (
 
 LOCK TABLES `tbl_party_name` WRITE;
 /*!40000 ALTER TABLE `tbl_party_name` DISABLE KEYS */;
-INSERT INTO `tbl_party_name` VALUES (1,'Presidencia de la Diputación Provincial de Málaga','2021-05-03 07:49:44'),(6,'Presidencia de la Diputación Provincial de Málaga','2021-05-03 08:03:27'),(17,'Presidencia de la Diputación Provincial de Málaga','2021-05-03 08:14:38'),(18,'Presidencia de la Diputación Provincial de Málaga','2021-05-03 08:15:09'),(26,'Presidencia de la Diputación Provincial de Málaga','2021-05-03 08:53:45'),(36,'Presidencia de la Diputación Provincial de Málaga','2021-05-03 09:15:06'),(38,'Presidencia de la Diputación Provincial de Málaga','2021-05-03 09:19:32'),(41,'Presidencia de la Diputación Provincial de Málaga','2021-05-03 09:29:45');
 /*!40000 ALTER TABLE `tbl_party_name` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -548,7 +537,6 @@ CREATE TABLE `tbl_party_partyidentification` (
 
 LOCK TABLES `tbl_party_partyidentification` WRITE;
 /*!40000 ALTER TABLE `tbl_party_partyidentification` DISABLE KEYS */;
-INSERT INTO `tbl_party_partyidentification` VALUES (18,18,'2021-05-03 08:14:38'),(18,19,'2021-05-03 08:14:39'),(19,20,'2021-05-03 08:15:09'),(19,21,'2021-05-03 08:15:09'),(27,34,'2021-05-03 08:53:45'),(27,35,'2021-05-03 08:53:45'),(37,52,'2021-05-03 09:15:06'),(37,53,'2021-05-03 09:15:06'),(39,56,'2021-05-03 09:19:32'),(39,57,'2021-05-03 09:19:32'),(42,62,'2021-05-03 09:29:45'),(42,63,'2021-05-03 09:29:45');
 /*!40000 ALTER TABLE `tbl_party_partyidentification` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -576,7 +564,6 @@ CREATE TABLE `tbl_party_partyname` (
 
 LOCK TABLES `tbl_party_partyname` WRITE;
 /*!40000 ALTER TABLE `tbl_party_partyname` DISABLE KEYS */;
-INSERT INTO `tbl_party_partyname` VALUES (1,2,'2021-05-03 07:49:44'),(6,7,'2021-05-03 08:03:27'),(17,18,'2021-05-03 08:14:38'),(18,19,'2021-05-03 08:15:09'),(26,27,'2021-05-03 08:53:45'),(36,37,'2021-05-03 09:15:06'),(38,39,'2021-05-03 09:19:32'),(41,42,'2021-05-03 09:29:45');
 /*!40000 ALTER TABLE `tbl_party_partyname` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -604,7 +591,6 @@ CREATE TABLE `tbl_party_postaladdress` (
 
 LOCK TABLES `tbl_party_postaladdress` WRITE;
 /*!40000 ALTER TABLE `tbl_party_postaladdress` DISABLE KEYS */;
-INSERT INTO `tbl_party_postaladdress` VALUES (5,37,'2021-05-03 09:15:06'),(7,39,'2021-05-03 09:19:32'),(10,42,'2021-05-03 09:29:45');
 /*!40000 ALTER TABLE `tbl_party_postaladdress` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -624,7 +610,7 @@ CREATE TABLE `tbl_postal_address` (
   PRIMARY KEY (`postal_address`),
   KEY `fk_tbl_postal_address_tbl_address_format_code` (`addressformatcode`),
   CONSTRAINT `fk_tbl_postal_address_tbl_address_format_code` FOREIGN KEY (`addressformatcode`) REFERENCES `tbl_address_format_code` (`address_format_code`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -633,7 +619,6 @@ CREATE TABLE `tbl_postal_address` (
 
 LOCK TABLES `tbl_postal_address` WRITE;
 /*!40000 ALTER TABLE `tbl_postal_address` DISABLE KEYS */;
-INSERT INTO `tbl_postal_address` VALUES (5,0,'Málaga','29004','2021-05-03 09:15:06'),(7,0,'Málaga','29004','2021-05-03 09:19:32'),(10,0,'Málaga','29004','2021-05-03 09:29:45');
 /*!40000 ALTER TABLE `tbl_postal_address` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -661,7 +646,6 @@ CREATE TABLE `tbl_postaladdress_country` (
 
 LOCK TABLES `tbl_postaladdress_country` WRITE;
 /*!40000 ALTER TABLE `tbl_postaladdress_country` DISABLE KEYS */;
-INSERT INTO `tbl_postaladdress_country` VALUES (1,10,'2021-05-03 09:29:45');
 /*!40000 ALTER TABLE `tbl_postaladdress_country` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -725,7 +709,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newContractFolderStatus`(
 IN contractFolderID VARCHAR(50),
@@ -776,7 +760,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newEntry`(
 	IN id VARCHAR(2500), 
@@ -805,7 +789,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newIds`(IN modos_id INT(11), 
 	
@@ -1047,7 +1031,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `newPartyPostaladdress`(
 IN party INT, 
 IN postal_address INT)
 BEGIN
-	INSERT INTO tbl_party_postaladdress(party, postaladdress)
+	INSERT INTO tbl_party_postaladdress (party, postaladdress)
     VALUES (party, postal_address);
 END ;;
 DELIMITER ;
@@ -1113,4 +1097,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-03 11:32:38
+-- Dump completed on 2021-05-04 11:23:24

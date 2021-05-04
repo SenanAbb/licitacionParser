@@ -18,32 +18,32 @@ import Parser.Parser;
 public class main {
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
 
-		/** PARSER DE DIRECTORIO */
-		Parser p = new Parser("P2900000G");
-		String path = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/LicitacionParser/Licitaciones 20-21/NOV 2020";
-
-        String[] files = getFiles( path );
-
-        if ( files != null ) {
-            int size = files.length;
-            for ( int i = 0; i < size; i ++ ) {
-            	System.out.println("///////////////////////////////////////");
-            	System.out.println(files[i]);
-            	System.out.println("///////////////////////////////////////");
-            	File file = new File(files[i]);
-            	p.setURL(file);
-            	p.start();
-            	p.readAllEntries();
-            }
-        }
+//		/** PARSER DE DIRECTORIO */
+//		Parser p = new Parser("P2900000G");
+//		String path = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/LicitacionParser/Licitaciones 20-21/NOV 2020";
+//
+//        String[] files = getFiles( path );
+//
+//        if ( files != null ) {
+//            int size = files.length;
+//            for ( int i = 0; i < size; i ++ ) {
+//            	System.out.println("///////////////////////////////////////");
+//            	System.out.println(files[i]);
+//            	System.out.println("///////////////////////////////////////");
+//            	File file = new File(files[i]);
+//            	p.setURL(file);
+//            	p.start();
+//            	p.readAllEntries();
+//            }
+//        }
 		
 		
-//		/** PARSER DE UN SOLO ARCHIVO */
-//		String URL = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/Documentacion/Informacion/pruebas_licitacion.atom";
-//		Parser p = new Parser(URL, "P2900000G");
-//		
-//		p.start();
-//		p.readAllEntries();
+		/** PARSER DE UN SOLO ARCHIVO */
+		String URL = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/Documentacion/Informacion/pruebas_licitacion.atom";
+		Parser p = new Parser(URL, "P2900000G");
+		
+		p.start();
+		p.readAllEntries();
 	}
 
 	private static String[] getFiles(String path) {
