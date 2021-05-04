@@ -76,7 +76,7 @@ public class Parser {
 						}catch (NullPointerException ex){
 							System.err.println(ex.getMessage());
 						}
-						if (result.compareTo(NIF) == 0){
+						//if (result.compareTo(NIF) == 0){
 							// ----> PARSEO INIT <---- //
 							String[] idSplit = null;
 							String id = null, entryId = null, entryLink = null, entrySummary = null, entryTitle = null;
@@ -141,10 +141,11 @@ public class Parser {
 							 * 	3.2. Le pasamos al entry el objeto sql para que pueda hacer la llamada a la creación de su sentencia, y ejecutarla
 							 */
 							
+							System.out.println("==ESCRIBIENDO==");
 							newEntry.writeData(ids);
 							
 							// ----> CONEXION CON BD END <---- //
-						}
+						//}
 					}
 				}
 			}else{
@@ -385,5 +386,9 @@ public class Parser {
 			System.out.println("------------");
 		}
 		System.out.println("Link siguiente: " + nextLink);
+	}
+
+	public void setURL(File file) {
+		this.URL = file;
 	}
 }
