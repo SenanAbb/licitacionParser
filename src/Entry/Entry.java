@@ -24,7 +24,6 @@ public class Entry {
 	private String id, id_num, link, summary, title;
 	private Timestamp updated;
 	private ContractFolderStatus cfs;
-	private int entrys;
 	
 	public void readContractFolderStatus(Element entry, int POS_UNICO_ELEMENTO){
 		this.cfs = null;
@@ -64,65 +63,6 @@ public class Entry {
 		cfs.print();
 	}
 	
-	public void writeData(int ids) {
-		ConexionSQL sql = new ConexionSQL();
-		Connection conn = sql.conectarMySQL();
-		CallableStatement sentencia = null;
-		
-		try {
-			sentencia = (CallableStatement) conn.prepareCall("{call newEntry(?, ?, ?, ?, ?, ?, ?)}");
-			
-			// INICIAMOS LA TRANSACCIÓN
-			conn.setAutoCommit(false);
-			
-			// Parametros del procedimiento almacenado
-			sentencia.setString("id", this.id);
-			sentencia.setString("link", this.link);
-			sentencia.setString("summary", this.summary);
-			sentencia.setString("title", this.title);
-			sentencia.setTimestamp("updated", this.updated);
-			sentencia.setInt("ids", ids);
-			
-			// Definimos los tipos de los params de salida del procedimiento almacenado
-			sentencia.registerOutParameter("entrys", java.sql.Types.INTEGER);
-			
-			// Ejecutamos el procedimiento
-			sentencia.execute();
-			
-			// Se obtiene la salida (parametro nº 7)
-			this.entrys = sentencia.getInt("entrys");
-			
-			// Mandamos a ContractFolderStatus a grabar datos
-			this.cfs.writeData(entrys, conn);
-			
-			// COMMIT DE LAS INSTRUCCIONES
-			conn.commit(); 
-		
-		} catch (SQLException e){
-			System.out.println("[ENTRY] Error para rollback: " + e.getMessage());
-			e.printStackTrace();
-			
-			// Si algo ha fallado, hacemos rollback para deshacer todo y no grabar nada en la BD
-			if (conn != null){
-				try {
-					conn.rollback();
-				} catch (SQLException e1) {
-					System.out.println("[ENTRY] Error haciendo rollback: " + e.getMessage());
-					e1.printStackTrace();
-				}
-			}
-		} finally {
-			// Cerramos las conexiones
-			try {
-				if (sentencia != null) sentencia.close();
-				if (conn != null) conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	
 	/******************/
 	/** CONSTRUCTORS **/
 	/******************/
@@ -157,6 +97,10 @@ public class Entry {
 	
 	public String getLink() {
 		return link;
+	}
+	
+	public String getSummary() {
+		return summary;
 	}
 	
 	public ContractFolderStatus getContractFolderStatus() {

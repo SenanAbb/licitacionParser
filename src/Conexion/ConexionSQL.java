@@ -1,15 +1,20 @@
 package Conexion;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import procurementProject.RequiredCommodityClassification;
 import Entry.Entry;
 
 import com.mysql.cj.jdbc.CallableStatement;
 
+import documents.AdditionalDocumentReference;
+
 public class ConexionSQL {
+	private static final int PLIEGO_ADMINISTRATIVO = 1;
+	private static final int PLIEGO_TECNICO = 2;
+	private static final int PLIEGO_ADICIONAL = 3;
 	
     private String driver = "com.mysql.jdbc.Driver"; // Librería de MySQL
     private String database = "licitacion"; // Nombre de la base de datos  
@@ -90,16 +95,14 @@ public class ConexionSQL {
 			}
 		}
 	}
-
 	
 	public void writeExpediente(Entry entry, int ids) {
 		boolean existe = searchExpediente(Integer.parseInt(entry.getId()));
 		if(existe){
-			//writeNewIdsExpediente(entry, ids);
-			System.out.println("ENTRY: " + entry.getId() + " ...............EXISTE............");
+			writeNewIdsExpediente(entry, ids);
 		}else{
 			writeNewExpediente(entry);
-			//writeNewIdsExpediente(entry, ids);
+			writeNewIdsExpediente(entry, ids);
 		}
 	}
 
@@ -145,7 +148,7 @@ public class ConexionSQL {
 		CallableStatement sentencia = null;
 		
 		try {
-			sentencia = (CallableStatement) conn.prepareCall("{call newExpediente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+			sentencia = (CallableStatement) conn.prepareCall("{call newExpediente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 			
 			// Parametros del procedimiento almacenado
 			sentencia.setInt("expedientes", Integer.parseInt(entry.getId()));
@@ -155,16 +158,94 @@ public class ConexionSQL {
 			sentencia.setDouble("valor_estimado", entry.getContractFolderStatus().getProcurementProject().getBudgetAmount().getEstimatedOverallContractAmount());
 			sentencia.setDouble("presupuesto_sin_impuestos", entry.getContractFolderStatus().getProcurementProject().getBudgetAmount().getTaxExclusiveAmount());
 			sentencia.setDouble("presupuesto_con_impuestos", entry.getContractFolderStatus().getProcurementProject().getBudgetAmount().getTotalAmount());
-			Date start_date = (Date) entry.getContractFolderStatus().getProcurementProject().getPlannedPeriod().getStartDate();
-			sentencia.setDate("start_date", start_date);
-			sentencia.setDate("end_date", (Date) entry.getContractFolderStatus().getProcurementProject().getPlannedPeriod().getEndDate());
-			sentencia.setDouble("duracion", entry.getContractFolderStatus().getProcurementProject().getPlannedPeriod().getDurationMeasure());
+			
+			java.sql.Date start_date = entry.getContractFolderStatus().getProcurementProject().getPlannedPeriod().getStartDate();
+			java.sql.Date end_date = entry.getContractFolderStatus().getProcurementProject().getPlannedPeriod().getEndDate();
+			double duration = entry.getContractFolderStatus().getProcurementProject().getPlannedPeriod().getDurationMeasure();
+			String unit_code = entry.getContractFolderStatus().getProcurementProject().getPlannedPeriod().getUnitCode();
+			
+			if (start_date != null && end_date != null){
+				sentencia.setDate("start_date", start_date);
+				sentencia.setDate("end_date", end_date);
+				sentencia.setDouble("duracion", duration);
+				sentencia.setString("unitcode", null);
+			} else if (start_date != null && duration != -1){
+				sentencia.setDate("start_date", start_date);
+				sentencia.setDate("end_date", null);
+				sentencia.setDouble("duracion", duration);
+				sentencia.setString("unitcode", unit_code);
+			} else {
+				sentencia.setDate("start_date", null);
+				sentencia.setDate("end_date", null);
+				sentencia.setDouble("duracion", duration);
+				sentencia.setString("unitcode", unit_code);
+			}
+			
+			sentencia.setString("unitcode", entry.getContractFolderStatus().getProcurementProject().getPlannedPeriod().getUnitCode());
 			sentencia.setInt("typecode", entry.getContractFolderStatus().getProcurementProject().getTypeCode());
 			sentencia.setInt("subtypecode", entry.getContractFolderStatus().getProcurementProject().getSubTypeCode());
 			
 			// Ejecutamos el procedimiento
 			sentencia.execute();
 			
+			// WRITE CPV
+			for (RequiredCommodityClassification r : entry.getContractFolderStatus().getProcurementProject().getRequiredCommodityClassificationList()){
+				sentencia = (CallableStatement) conn.prepareCall("{call newExpediente_CPV(?, ?)}");
+				
+				// Parametros
+				sentencia.setInt("code", r.getItemClassificationCode());
+				sentencia.setInt("expedientes", Integer.parseInt(entry.getId()));
+				
+				// Ejecutamos
+				sentencia.execute();
+				sentencia.close();
+			}
+			
+			// WRITE PLIEGOS
+			// Administrativas (LegalDocumentReference)
+			if (entry.getContractFolderStatus().getLegalDocumentReference() != null){
+				sentencia = (CallableStatement) conn.prepareCall("{call newPliego(?, ?, ?, ?, ?, ?)}");
+				
+				sentencia.setString("id", entry.getContractFolderStatus().getLegalDocumentReference().getId());
+				sentencia.setString("uri", entry.getContractFolderStatus().getLegalDocumentReference().getAttachment().getExternalReference().getURI());
+				sentencia.setString("document_hash", entry.getContractFolderStatus().getLegalDocumentReference().getAttachment().getExternalReference().getDocumentHash());
+				sentencia.setString("file_name", entry.getContractFolderStatus().getLegalDocumentReference().getAttachment().getExternalReference().getFileName());
+				sentencia.setInt("expedientes", Integer.parseInt(entry.getId()));
+				sentencia.setInt("tipo_pliego", PLIEGO_ADMINISTRATIVO);
+				
+				sentencia.execute();
+			}
+			
+			
+			// Técnicas (TechnicalDocumentReference)
+			if (entry.getContractFolderStatus().getTechnicalDocumentReference() != null){
+				sentencia = (CallableStatement) conn.prepareCall("{call newPliego(?, ?, ?, ?, ?, ?)}");
+				
+				sentencia.setString("id", entry.getContractFolderStatus().getTechnicalDocumentReference().getId());
+				sentencia.setString("uri", entry.getContractFolderStatus().getTechnicalDocumentReference().getAttachment().getExternalReference().getURI());
+				sentencia.setString("document_hash", entry.getContractFolderStatus().getTechnicalDocumentReference().getAttachment().getExternalReference().getDocumentHash());
+				sentencia.setString("file_name", entry.getContractFolderStatus().getTechnicalDocumentReference().getAttachment().getExternalReference().getFileName());
+				sentencia.setInt("expedientes", Integer.parseInt(entry.getId()));
+				sentencia.setInt("tipo_pliego", PLIEGO_TECNICO);
+				
+				sentencia.execute();
+			}
+			
+			// Adicionales (AditionalDocumentReference)
+			if (entry.getContractFolderStatus().getAdditionalDocumentReferenceList() != null){
+				for (AdditionalDocumentReference a : entry.getContractFolderStatus().getAdditionalDocumentReferenceList()){
+					sentencia = (CallableStatement) conn.prepareCall("{call newPliego(?, ?, ?, ?, ?, ?)}");
+					
+					sentencia.setString("id", a.getId());
+					sentencia.setString("uri", a.getAttachment().getExternalReference().getURI());
+					sentencia.setString("document_hash", a.getAttachment().getExternalReference().getDocumentHash());
+					sentencia.setString("file_name", a.getAttachment().getExternalReference().getFileName());
+					sentencia.setInt("expedientes", Integer.parseInt(entry.getId()));
+					sentencia.setInt("tipo_pliego", PLIEGO_ADICIONAL);
+					
+					sentencia.execute();
+				}
+			}
 		} catch (SQLException e){
 			e.printStackTrace();
 		} finally {
@@ -178,4 +259,31 @@ public class ConexionSQL {
 		}
 	}
 
+	private void writeNewIdsExpediente(Entry entry, int ids){
+		Connection conn = conectarMySQL();
+		
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newExpediente_Ids(?, ?, ?, ?, ?)}");
+			
+			sentencia.setInt("ids", ids);
+			sentencia.setInt("expediente", Integer.parseInt(entry.getId()));
+			sentencia.setString("summary", entry.getSummary());
+			sentencia.setTimestamp("updated", entry.getUpdated());
+			sentencia.setString("estado", entry.getContractFolderStatus().getContractFolderStatusCode());
+			
+			sentencia.execute();
+		} catch (SQLException e){
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

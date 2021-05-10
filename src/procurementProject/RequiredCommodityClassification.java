@@ -21,4 +21,8 @@ public class RequiredCommodityClassification {
 		System.out.print("--->Item Clas. Code: " + itemClassificationCode + "\n");
 		System.out.print("--------------------------------\n");
 	}
+	
+	public int getItemClassificationCode() {
+		return itemClassificationCode;
+	}
 }

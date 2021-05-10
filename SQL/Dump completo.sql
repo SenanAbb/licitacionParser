@@ -179,6 +179,7 @@ CREATE TABLE `tbl_expedientes` (
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   `duracion` decimal(17,0) DEFAULT NULL,
+  `unitcode` varchar(45) DEFAULT NULL,
   `typecode` int(11) DEFAULT NULL,
   `subtypecode` int(11) DEFAULT NULL,
   PRIMARY KEY (`expedientes`),
@@ -245,7 +246,7 @@ CREATE TABLE `tbl_ids` (
 
 LOCK TABLES `tbl_ids` WRITE;
 /*!40000 ALTER TABLE `tbl_ids` DISABLE KEYS */;
-INSERT INTO `tbl_ids` VALUES (1,2,'2021-05-10 07:46:23'),(2,2,'2021-05-10 07:48:55');
+INSERT INTO `tbl_ids` VALUES (1,2,'2021-05-10 08:52:48'),(2,2,'2021-05-10 09:15:07');
 /*!40000 ALTER TABLE `tbl_ids` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -315,7 +316,7 @@ DROP TABLE IF EXISTS `tbl_pliegos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tbl_pliegos` (
-  `pliegos` int(11) NOT NULL,
+  `pliegos` int(11) NOT NULL AUTO_INCREMENT,
   `id` varchar(200) DEFAULT NULL,
   `uri` varchar(2500) DEFAULT NULL,
   `document_hash` varchar(2500) DEFAULT NULL,
@@ -463,14 +464,70 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `newExpediente`(
     IN start_date DATE, 
     IN end_date DATE,
     IN duracion DECIMAL(17,0),
+    IN unitcode VARCHAR(45),
     IN typecode INT, 
     IN subtypecode INT)
 BEGIN
 	START TRANSACTION;
 		INSERT INTO tbl_expedientes (expedientes, title, link, objeto_contrato, valor_estimado, presupuesto_sin_impuestos,
-				presupuesto_con_impuestos, start_date, end_date, duracion, typecode, subtypecode)
+				presupuesto_con_impuestos, start_date, end_date, duracion, unitcode, typecode, subtypecode)
 		VALUES (expedientes, title, link, objeto_contrato, valor_estimado, presupuesto_sin_impuestos,
-				presupuesto_con_impuestos, start_date, end_date, duracion, typecode, subtypecode);
+				presupuesto_con_impuestos, start_date, end_date, duracion, unitcode, typecode, subtypecode);
+    COMMIT;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newExpediente_CPV` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newExpediente_CPV`(
+	IN code INT,
+    IN expedientes INT)
+BEGIN
+	START TRANSACTION;
+    
+    INSERT INTO tbl_expediente_cpv (code, expedientes)
+    VALUES (code, expedientes);
+    
+    COMMIT;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newExpediente_Ids` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newExpediente_Ids`(
+	IN ids INT,
+    IN expediente INT,
+    IN summary VARCHAR(400),
+    IN updated TIMESTAMP,
+    IN estado VARCHAR(45))
+BEGIN
+	START TRANSACTION;
+    
+		INSERT INTO tbl_ids_expedientes (ids, expediente, summary, updated, estado)
+        VALUES (ids, expediente, summary, updated, estado);
+    
     COMMIT;
 END ;;
 DELIMITER ;
@@ -497,6 +554,36 @@ BEGIN
     VALUES (modos_id);
     
     SET ids = last_insert_id();
+    COMMIT;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newPliego` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newPliego`(
+	IN id VARCHAR(200),
+    IN uri VARCHAR(2500),
+    IN document_hash VARCHAR(2500),
+    IN file_name VARCHAR(2500),
+    IN expedientes INT,
+    IN tipo_pliego INT)
+BEGIN
+	START TRANSACTION;
+    
+		INSERT INTO tbl_pliegos (id, uri, document_hash, file_name, expedientes, tipo_pliego)
+        VALUES (id, uri, document_hash, file_name, expedientes, tipo_pliego);
+    
     COMMIT;
 END ;;
 DELIMITER ;
@@ -563,4 +650,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-10  9:56:28
+-- Dump completed on 2021-05-10 12:22:32

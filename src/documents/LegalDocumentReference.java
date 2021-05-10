@@ -39,4 +39,12 @@ public class LegalDocumentReference {
 		attachment.print();
 		System.out.print("===============================================================\n");
 	}
+	
+	public String getId() {
+		return id;
+	}
+	
+	public Attachment getAttachment() {
+		return attachment;
+	}
 }

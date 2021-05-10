@@ -25,4 +25,8 @@ public class Attachment {
 		System.out.print("*** ATTACHMENT ***\n");
 		externalReference.print();
 	}
+	
+	public ExternalReference getExternalReference() {
+		return externalReference;
+	}
 }

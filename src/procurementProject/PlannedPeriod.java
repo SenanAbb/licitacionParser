@@ -75,11 +75,23 @@ public class PlannedPeriod {
 		return durationMeasure;
 	}
 
-	public Date getStartDate() {
-		return startDate;
+	public java.sql.Date getStartDate() {
+		if (startDate != null){
+			return new java.sql.Date(startDate.getTime());	
+		}else{
+			return null;
+		}
 	}
 
-	public Date getEndDate() {
-		return endDate;
+	public java.sql.Date getEndDate() {
+		if (endDate != null){
+			return new java.sql.Date(endDate.getTime());
+		}else{
+			return null;
+		}
+	}
+
+	public String getUnitCode() {
+		return durationMeasureUnitCode;
 	}
 }

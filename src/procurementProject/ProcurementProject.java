@@ -191,4 +191,8 @@ public class ProcurementProject {
 	public PlannedPeriod getPlannedPeriod() {
 		return plannedPeriod;
 	}
+
+	public RequiredCommodityClassification[] getRequiredCommodityClassificationList() {
+		return requiredCommodityClassificationList;
+	}
 }

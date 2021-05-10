@@ -1,11 +1,6 @@
 package locatedContractingParty;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import org.w3c.dom.Element;
-
-import com.mysql.cj.jdbc.CallableStatement;
 
 /**
  * @params
@@ -73,46 +68,5 @@ public class LocatedContractingParty {
 					"--------------------------------\n");
 		}
 		System.out.print("===============================================================\n");
-	}
-
-	public void writeData(int contract_folder_status, Connection conn){
-		CallableStatement sentencia = null;
-		
-		try {
-			sentencia = (CallableStatement) conn.prepareCall("{call newLocatedContractingParty(?, ?, ?)}");
-			
-			// Parametros del procedimiento almacenado
-			sentencia.setInt("contractingPartyTypeCode", this.contractingPartyTypeCode);
-			sentencia.setInt("contractFolderStatus", contract_folder_status);
-			
-			// Definimos los tipos de los params de salida del procedimiento almacenado
-			sentencia.registerOutParameter("located_contracting_party", java.sql.Types.INTEGER);
-			
-			// Ejecutamos el procedimiento
-			sentencia.execute();
-			
-			// Se obtiene la salida (parametro nº 4)
-			this.located_contracting_party = sentencia.getInt("located_contracting_party");
-			
-			// Graban las subclases
-			if(this.parentLocatedParty != null){
-				this.parentLocatedParty.writeData(located_contracting_party, conn);
-			}
-			this.party.writeData(located_contracting_party, conn);
-			
-		} catch (SQLException e){
-			System.out.println("[LocatedContractingParty] Error para rollback: " + e.getMessage());
-			e.printStackTrace();
-			
-			// Si algo ha fallado, hacemos rollback para deshacer todo y no grabar nada en la BD
-			if (conn != null){
-				try {
-					conn.rollback();
-				} catch (SQLException e1) {
-					System.out.println("[LocatedContractingParty] Error haciendo rollback: " + e.getMessage());
-					e1.printStackTrace();
-				}
-			}
-		}
 	}
 }

@@ -41,4 +41,16 @@ public class ExternalReference {
 						 "----> Document HASH: " + documentHash + "\n" +
 						 "----> File Name: " + fileName + "\n");
 	}
+
+	public String getURI() {
+		return URI;
+	}
+
+	public String getDocumentHash() {
+		return documentHash;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
 }
