@@ -171,4 +171,24 @@ public class ProcurementProject {
 		}
 		System.out.print("===============================================================\n");
 	}
+
+	public String getName(){
+		return name;
+	}
+	
+	public int getTypeCode() {
+		return typeCode;
+	}
+	
+	public int getSubTypeCode() {
+		return subTypeCode;
+	}
+	
+	public BudgetAmount getBudgetAmount() {
+		return budgetAmount;
+	}
+	
+	public PlannedPeriod getPlannedPeriod() {
+		return plannedPeriod;
+	}
 }

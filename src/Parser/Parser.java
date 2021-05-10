@@ -3,21 +3,18 @@ package Parser;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
+import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -42,6 +39,8 @@ import Entry.Entry;
  */
 public class Parser {
 	private static final int POS_UNICO_ELEMENTO = 0; 
+	private static final int MODO_AUTOMATICO = 1; 
+	private static final int MODO_MANUAL = 2; 
 	private static int ids;
 	
 	private String NIF = "";
@@ -54,15 +53,15 @@ public class Parser {
 	private ArrayList<String> expedientes = new ArrayList<String>();
 	
 	/* modo = [EXP, NIF] */
-	private String modo;
+	private String modo_identificacion;
 	
 	/* Si escribir = true -> escribirá los datos en la BD */
 	private boolean escribir = true;
 
-	public void readAllEntries(){
+	public void readEntries(){
 		try {
     		//Iniciamos el DocumentBuilderFactory;
-			Document document = initDocumentBuilder();
+			Document document = initDocumentBuilder(this.URL);
 			
 			NodeList entriesNodes = document.getElementsByTagName("entry");
 			
@@ -71,25 +70,22 @@ public class Parser {
 				for (int i = 0; i < entriesNodes.getLength(); i++){
 					// Cojo el nodo actual
 					Node entry = entriesNodes.item(i);
-					// Compruebo si es un elemento
-					if (entry.getNodeType() == Node.ELEMENT_NODE){
-						// Lo transformo a element
-						Element e = (Element) entry;
-						
-						String result = "";
-						if (modo == "NIF"){
-							result = getEntryPartyID(e);
-							if (result.compareTo(NIF) == 0){
-								readAttributesAndWrite(e);
-							}
-						}else if (modo == "EXP"){
-							result = getEntryExp(e);
-							if (expedientes.contains(result)){
-								readAttributesAndWrite(e);
-							}
-						}else{
-							readAttributesAndWrite(e);		
+					// Lo transformo a element
+					Element e = (Element) entry;
+					
+					String result = "";
+					if (modo_identificacion == "NIF"){
+						result = getEntryPartyID(e);
+						if (result.compareTo(NIF) == 0){
+							readAttributesAndWrite(e);
 						}
+					}else if (modo_identificacion == "EXP"){
+						result = getEntryExp(e);
+						if (expedientes.contains(result)){
+							readAttributesAndWrite(e);
+						}
+					}else{
+						readAttributesAndWrite(e);		
 					}
 				}
 			}else{
@@ -100,7 +96,7 @@ public class Parser {
 			e.printStackTrace();
 		}
 	}
-
+	
 	private void readAttributesAndWrite(Element e) {
 		String[] idSplit = null;
 		String id = null, entryId = null, entryLink = null, entrySummary = null, entryTitle = null;
@@ -162,7 +158,8 @@ public class Parser {
 		 * 	3.2. Le pasamos al entry el objeto sql para que pueda hacer la llamada a la creación de su sentencia, y ejecutarla
 		 */
 		if (escribir){
-			newEntry.writeData(ids);
+			ConexionSQL conn = new ConexionSQL();
+			conn.writeExpediente(newEntry, ids);
 		}
 	}
 
@@ -174,7 +171,7 @@ public class Parser {
 	private void readUpdateDate() throws FileNotFoundException, ParserConfigurationException, SAXException, IOException{
 		try {
 			//Iniciamos el DocumentBuilderFactory;
-			Document document = initDocumentBuilder();
+			Document document = initDocumentBuilder(this.URL);
 			
 			//Buscamos la lista de nodos en la raíz (feed) con la etiqueta "updated"
 			NodeList nodos = document.getElementsByTagName("updated");
@@ -195,7 +192,7 @@ public class Parser {
 		
 		try {
 			//Iniciamos el DocumentBuilderFactory;
-			Document document = initDocumentBuilder();
+			Document document = initDocumentBuilder(this.URL);
 			
 			// Recogemos primero el ID, para poder modificarlo despues
 			NodeList IDs = document.getElementsByTagName("id");
@@ -225,7 +222,125 @@ public class Parser {
 			e.getStackTrace();
 		}
 	}
+	
+	public void writeSubtypeCodes() throws ParserConfigurationException, SAXException, TransformerException {
+		try {
+			// 2 -> Servicios
+			// 3 -> Obras
+			int code = 0, tipo;
+			String nombre = null;
+			ConexionSQL con = new ConexionSQL();
+			URL url;
+			URLConnection conexion;
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); 
+	        DocumentBuilder db = dbf.newDocumentBuilder(); 
+			
+			/* SERVICIOS */
+	        tipo = 2;
+	        
+	        // Se abre la conexión
+	        url = new URL("https://contrataciondelestado.es/codice/cl/1.04/ServiceContractCode-1.04.gc");
+	        conexion = url.openConnection();
+	        conexion.connect();
+	     
+	        Document doc = db.parse(conexion.getInputStream());
+	        
+	        Element codeList = (Element) doc.getElementsByTagName("gc:CodeList").item(POS_UNICO_ELEMENTO);
+	        Element simpleCodeList = (Element) codeList.getElementsByTagName("SimpleCodeList").item(POS_UNICO_ELEMENTO);
+	        NodeList rowsList = simpleCodeList.getElementsByTagName("Row");
+	        
+	        for (int i = 0; i < rowsList.getLength(); i++){
+	        	Element row = (Element) rowsList.item(i);
+	        	NodeList valueList = row.getElementsByTagName("Value");
+	        	for (int j = 0; j < valueList.getLength(); j++){
+	        		if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("code") == 0){
+	        			code = Integer.parseInt(valueList.item(j).getTextContent().trim());
+	        		}else if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("nombre") == 0){
+	        			nombre = valueList.item(j).getTextContent().trim();
+	        		}
+	        	}
+	        	// Escribimos en la BD
+	        	con.writeSubTypeCode(code, nombre, tipo);
+	        }
+	        
+	        /* OBRAS */
+	        tipo = 3;
+	        
+	        // Se abre la conexión
+	        url = new URL("https://contrataciondelestado.es/codice/cl/1.04/WorksContractCode-1.04.gc");
+	        conexion = url.openConnection();
+	        conexion.connect();
+	     
+	        doc = db.parse(conexion.getInputStream());
+	        
+	        codeList = (Element) doc.getElementsByTagName("gc:CodeList").item(POS_UNICO_ELEMENTO);
+	        simpleCodeList = (Element) codeList.getElementsByTagName("SimpleCodeList").item(POS_UNICO_ELEMENTO);
+	        rowsList = simpleCodeList.getElementsByTagName("Row");
+	        
+	        for (int i = 0; i < rowsList.getLength(); i++){
+	        	Element row = (Element) rowsList.item(i);
+	        	NodeList valueList = row.getElementsByTagName("Value");
+	        	for (int j = 0; j < valueList.getLength(); j++){
+	        		if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("code") == 0){
+	        			code = Integer.parseInt(valueList.item(j).getTextContent().trim());
+	        		}else if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("nombre") == 0){
+	        			nombre = valueList.item(j).getTextContent().trim();
+	        		}
+	        	}
+	        	// Escribimos en la BD
+	        	con.writeSubTypeCode(code, nombre, tipo);
+	        }
+	     } catch (IOException e) {
+	        e.printStackTrace();
+	     }
+	}
 
+	public void writeCPV() throws ParserConfigurationException, SAXException, TransformerException {
+		try {
+			int code = 0;
+			String nombre = "";
+			ConexionSQL con = new ConexionSQL();
+			URL url;
+			URLConnection conexion;
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); 
+	        DocumentBuilder db = dbf.newDocumentBuilder(); 
+	        
+	        // Se abre la conexión
+	        url = new URL("https://contrataciondelestado.es/codice/cl/1.04/CPV2007-1.04.gc");
+	        conexion = url.openConnection();
+	        conexion.connect();
+	     
+	        Document doc = db.parse(conexion.getInputStream());
+	        
+	        Element codeList = (Element) doc.getElementsByTagName("gc:CodeList").item(POS_UNICO_ELEMENTO);
+	        Element simpleCodeList = (Element) codeList.getElementsByTagName("SimpleCodeList").item(POS_UNICO_ELEMENTO);
+	        NodeList rowsList = simpleCodeList.getElementsByTagName("Row");
+	        
+	        for (int i = 0; i < rowsList.getLength(); i++){
+	        	Element row = (Element) rowsList.item(i);
+	        	NodeList valueList = row.getElementsByTagName("Value");
+	        	for (int j = 0; j < valueList.getLength(); j++){
+	        		if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("code") == 0){
+	        			code = Integer.parseInt(valueList.item(j).getTextContent().trim());
+	        		}else if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("nombre") == 0){
+	        			String[] nombres = valueList.item(j).getTextContent().replaceAll("\n", "").split(" ");
+	        			
+	        			for (int k = 0; k < nombres.length; k++){
+	        				if (!nombres[k].isEmpty() && nombres[k].compareTo("\n")!=0){
+	        					nombre += nombres[k] + " ";
+	        				}
+	        			}
+	        		}
+	        	}
+	        	// Escribimos en la BD
+	        	con.writeCPVCode(code, nombre.trim());
+	        	nombre = "";
+	        }
+		}catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
 	
 	/******************/
 	/** CONSTRUCTORS **/
@@ -235,14 +350,14 @@ public class Parser {
 	public Parser(String URL, String NIF, String modo){
 		this.URL = new File(URL);
 		this.NIF = NIF;
-		this.modo = modo;
+		this.modo_identificacion = modo;
 		this.ids = createIds();
 	}
 	
 	public Parser(String URL, ArrayList<String> exp, String modo){
 		this.URL = new File(URL);
 		this.expedientes = exp;
-		this.modo = modo;
+		this.modo_identificacion = modo;
 		this.ids = createIds();
 	}
 	
@@ -253,7 +368,7 @@ public class Parser {
 	
 	public Parser(ArrayList<String> exp, String modo){
 		this.expedientes = exp;
-		this.modo = modo;
+		this.modo_identificacion = modo;
 		this.ids = createIds();
 	}
 	
@@ -265,7 +380,7 @@ public class Parser {
 	/**********************/
 	/** AUXILIARY METHODS**/
 	/**********************/
-	
+
 	
 	/* Creación de un IDS -> información sobre esta ejecución del Parser */
 	private int createIds(){
@@ -277,20 +392,14 @@ public class Parser {
 		try{
 			sentencia = (CallableStatement) conn.prepareCall("{call newIds(?, ?)}");
 			
-			// INICIAMOS LA TRANSACCIÓN
-			conn.setAutoCommit(false);
-			
 			// Parametro 1 del procedimiento almacenado
-			sentencia.setInt("modos_id", 2);
+			sentencia.setInt("modos_id", MODO_MANUAL);
 			
 			// Definimos los tipos de los params de salida del procedimiento almacenado
 			sentencia.registerOutParameter("ids", java.sql.Types.INTEGER);
 			
 			// Ejecutamos el procedimiento
 			sentencia.execute();
-			
-			// COMMIT DE LAS INSTRUCCIONES
-			conn.commit(); 
 			
 			// Se obtiene la salida
 			ids = sentencia.getInt("ids");
@@ -407,12 +516,12 @@ public class Parser {
 		return result;
 	}
 	
-	private Document initDocumentBuilder() throws ParserConfigurationException, SAXException, IOException, FileNotFoundException{
+	private Document initDocumentBuilder(File url) throws ParserConfigurationException, SAXException, IOException, FileNotFoundException{
 		Document document = null;
 		try{
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
-            document = documentBuilder.parse(URL);
+            document = documentBuilder.parse(url);
             document.getDocumentElement().normalize();
 		}catch (FileNotFoundException e){
 			throw e;
@@ -438,4 +547,6 @@ public class Parser {
 	public void setURL(File file) {
 		this.URL = file;
 	}
+
+
 }

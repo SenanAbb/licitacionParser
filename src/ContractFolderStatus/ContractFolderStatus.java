@@ -117,7 +117,8 @@ public class ContractFolderStatus {
 		}catch(NullPointerException e){
 			System.err.print("ERROR FATAL: ContractFolderStatus -> PROCUREMENT PROJECT no existe\n");
 		}catch(Exception e){
-			System.err.print("ERROR FATAL: ContractFolderStatus -> PROCUREMENT PROJECT no existe\n");
+			System.err.print("ERROR FATAL: " + e.getMessage() + "\n");
+			e.printStackTrace();
 		}
 	}
 	
@@ -413,5 +414,9 @@ public class ContractFolderStatus {
 				}
 			}
 		}
+	}
+
+	public ProcurementProject getProcurementProject() {
+		return procurementProject;
 	}
 }

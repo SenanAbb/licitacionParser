@@ -71,4 +71,16 @@ public class BudgetAmount {
 				"---> Tax Exclusive Amount: " + taxExclusiveAmount + " " + taxExclusiveAmountCurrencyID + "\n" +
 				"--------------------------------\n");
 	}
+
+	public double getEstimatedOverallContractAmount(){
+		return estimatedOverallContractAmount;
+	}
+	
+	public double getTotalAmount(){
+		return totalAmount;
+	}
+	
+	public double getTaxExclusiveAmount(){
+		return taxExclusiveAmount;
+	}
 }

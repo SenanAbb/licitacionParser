@@ -151,7 +151,17 @@ public class Entry {
 		return updated;
 	}
 
+	public String getTitle() {
+		return title;
+	}
 	
+	public String getLink() {
+		return link;
+	}
+	
+	public ContractFolderStatus getContractFolderStatus() {
+		return cfs;
+	}
 }
 
 
