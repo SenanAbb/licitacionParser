@@ -3,7 +3,6 @@ package Parser;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Connection;
@@ -160,6 +159,7 @@ public class Parser {
 		if (escribir){
 			ConexionSQL conn = new ConexionSQL();
 			conn.writeExpediente(newEntry, ids);
+			conn.writeLugarDeEjecucion(newEntry, ids);
 		}
 	}
 
@@ -222,6 +222,8 @@ public class Parser {
 			e.getStackTrace();
 		}
 	}
+	
+	/* TYPE CODES */
 	
 	public void writeSubtypeCodes() throws ParserConfigurationException, SAXException, TransformerException {
 		try {
@@ -335,6 +337,82 @@ public class Parser {
 	        	// Escribimos en la BD
 	        	con.writeCPVCode(code, nombre.trim());
 	        	nombre = "";
+	        }
+		}catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	public void writeCountryIdentificationCode() throws ParserConfigurationException, SAXException, TransformerException {
+		try {
+			String code = "", nombre = "";
+			ConexionSQL con = new ConexionSQL();
+			URL url;
+			URLConnection conexion;
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); 
+	        DocumentBuilder db = dbf.newDocumentBuilder(); 
+	        
+	        // Se abre la conexión
+	        url = new URL("https://contrataciondelestado.es/codice/cl/2.08/CountryIdentificationCode-2.08.gc");
+	        conexion = url.openConnection();
+	        conexion.connect();
+	     
+	        Document doc = db.parse(conexion.getInputStream());
+	        
+	        Element codeList = (Element) doc.getElementsByTagName("gc:CodeList").item(POS_UNICO_ELEMENTO);
+	        Element simpleCodeList = (Element) codeList.getElementsByTagName("SimpleCodeList").item(POS_UNICO_ELEMENTO);
+	        NodeList rowsList = simpleCodeList.getElementsByTagName("Row");
+	        
+	        for (int i = 0; i < rowsList.getLength(); i++){
+	        	Element row = (Element) rowsList.item(i);
+	        	NodeList valueList = row.getElementsByTagName("Value");
+	        	for (int j = 0; j < valueList.getLength(); j++){
+	        		if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("code") == 0){
+	        			code = valueList.item(j).getTextContent().trim();
+	        		}else if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("nombre") == 0){
+	        			nombre = valueList.item(j).getTextContent().trim();
+	        		}
+	        	}
+	        	// Escribimos en la BD
+	        	con.writeCountryIdentificationCode(code, nombre);
+	        }
+		}catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	public void writeCountrySubentityCode() throws ParserConfigurationException, SAXException, TransformerException {
+		try {
+			String code = "", nombre = "";
+			ConexionSQL con = new ConexionSQL();
+			URL url;
+			URLConnection conexion;
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); 
+	        DocumentBuilder db = dbf.newDocumentBuilder(); 
+	        
+	        // Se abre la conexión
+	        url = new URL("https://contrataciondelestado.es/codice/cl/2.08/NUTS-2021.gc");
+	        conexion = url.openConnection();
+	        conexion.connect();
+	     
+	        Document doc = db.parse(conexion.getInputStream());
+	        
+	        Element codeList = (Element) doc.getElementsByTagName("gc:CodeList").item(POS_UNICO_ELEMENTO);
+	        Element simpleCodeList = (Element) codeList.getElementsByTagName("SimpleCodeList").item(POS_UNICO_ELEMENTO);
+	        NodeList rowsList = simpleCodeList.getElementsByTagName("Row");
+	        
+	        for (int i = 0; i < rowsList.getLength(); i++){
+	        	Element row = (Element) rowsList.item(i);
+	        	NodeList valueList = row.getElementsByTagName("Value");
+	        	for (int j = 0; j < valueList.getLength(); j++){
+	        		if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("code") == 0){
+	        			code = valueList.item(j).getTextContent().trim();
+	        		}else if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("nombre") == 0){
+	        			nombre = valueList.item(j).getTextContent().trim();
+	        		}
+	        	}
+	        	// Escribimos en la BD
+	        	con.writeCountrySubentityCode(code, nombre);
 	        }
 		}catch (IOException e) {
 	        e.printStackTrace();

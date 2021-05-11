@@ -195,4 +195,8 @@ public class ProcurementProject {
 	public RequiredCommodityClassification[] getRequiredCommodityClassificationList() {
 		return requiredCommodityClassificationList;
 	}
+
+	public RealizedLocation getRealizedLocation() {
+		return realizedLocation;
+	}
 }

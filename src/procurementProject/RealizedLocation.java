@@ -48,4 +48,12 @@ public class RealizedLocation {
 		}
 		System.out.print("--------------------------------\n");
 	}	
+	
+	public Address getAddress(){
+		return address;
+	}
+	
+	public String getCountrySubentityCode() {
+		return countrySubentityCode;
+	}
 }

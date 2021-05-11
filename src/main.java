@@ -13,9 +13,9 @@ import Parser.Parser;
 
 public class main {
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, TransformerException {
-		//rellenar();
+//		rellenar();
 		leerDirectorio();
-		//leerArchivo();
+//		leerArchivo();
 	}
 
 	private static void leerDirectorio() throws FileNotFoundException, ParserConfigurationException, SAXException, IOException {
@@ -86,8 +86,10 @@ public class main {
 		Parser p = new Parser();
 		
 		// Rellenar las tablas TypeCode
-		p.writeSubtypeCodes();
-		p.writeCPV();
+//		p.writeSubtypeCodes();
+//		p.writeCPV();
+//		p.writeCountryIdentificationCode();
+//		p.writeCountrySubentityCode();
 	}
 	
 	private static String[] getFiles(String path) {

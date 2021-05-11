@@ -88,6 +88,54 @@ INSERT INTO `tbl_contracting_party_type_code` VALUES (1,'Administración General
 UNLOCK TABLES;
 
 --
+-- Table structure for table `tbl_country_identification_code`
+--
+
+DROP TABLE IF EXISTS `tbl_country_identification_code`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_country_identification_code` (
+  `code` varchar(3) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_country_identification_code`
+--
+
+LOCK TABLES `tbl_country_identification_code` WRITE;
+/*!40000 ALTER TABLE `tbl_country_identification_code` DISABLE KEYS */;
+INSERT INTO `tbl_country_identification_code` VALUES ('1A','Kosovo'),('AD','Andorra'),('AE','Emiratos Árabes Unidos'),('AF','Afganistán'),('AG','Antigua y Barbuda'),('AI','Anguila'),('AL','Albania'),('AM','Armenia'),('AO','Angola'),('AQ','Antártida'),('AR','Argentina'),('AS','Samoa Americana'),('AT','Austria'),('AU','Australia'),('AW','Aruba'),('AZ','Azerbaiyán'),('BA','Bosnia y Herzegovina'),('BB','Barbados'),('BD','Bangladés'),('BE','Bélgica'),('BF','Burkina Faso'),('BG','Bulgaria'),('BH','Bahréin'),('BI','Burundi'),('BJ','Benín'),('BL','San Bartolomé'),('BM','Bermudas'),('BN','Brunéi'),('BO','Bolivia'),('BQ','Bonaire, San Eustaquio y Saba'),('BR','Brasil'),('BS','Bahamas'),('BT','Bhután'),('BV','Isla Bouvet'),('BW','Botsuana'),('BY','Bielorrusia'),('BZ','Belice'),('CA','Canadá'),('CC','Islas Cocos'),('CD','República Democrática del Congo'),('CF','República Centroafricana'),('CG','Congo'),('CH','Suiza'),('CI','Costa de Marfil'),('CK','Islas Cook'),('CL','Chile'),('CM','Camerún'),('CN','China'),('CO','Colombia'),('CP','Clipperton'),('CR','Costa Rica'),('CU','Cuba'),('CV','Cabo Verde'),('CW','Curazao'),('CX','Isla Christmas'),('CY','Chipre'),('CZ','República Checa'),('DE','Alemania'),('DJ','Yibuti'),('DK','Dinamarca'),('DM','Dominica'),('DO','República Dominicana'),('DZ','Argelia'),('EC','Ecuador'),('EE','Estonia'),('EG','Egipto'),('EH','Sáhara Occidental'),('ER','Eritrea'),('ES','España'),('ET','Etiopía'),('FI','Finlandia'),('FJ','Fiyi'),('FK','Islas Malvinas'),('FM','Micronesia'),('FO','Islas Feroe'),('FR','Francia'),('GA','Gabón'),('GD','Granada'),('GE','Georgia'),('GG','Guernsey'),('GH','Ghana'),('GL','Groenlandia'),('GM','Gambia'),('GN','Guinea'),('GQ','Guinea Ecuatorial'),('GR','Grecia'),('GS','Islas Georgias del Sur y Sandwich del Sur'),('GT','Guatemala'),('GU','Guam'),('GW','Guinea-Bissau'),('GY','Guyana'),('HK','Hong Kong'),('HM','Islas Heard y McDonald'),('HN','Honduras'),('HR','Croacia'),('HT','Haití'),('HU','Hungría'),('ID','Indonesia'),('IE','Irlanda'),('IL','Israel'),('IM','Isla de Man'),('IN','India'),('IO','Territorio Británico del Océano Índico'),('IQ','Iraq'),('IR','Irán'),('IS','Islandia'),('IT','Italia'),('JE','Jersey'),('JM','Jamaica'),('JO','Jordania'),('JP','Japón'),('KE','Kenia'),('KG','Kirguistán'),('KH','Camboya'),('KI','Kiribati'),('KM','Comoras'),('KN','San Cristóbal y Nieves'),('KP','Corea del Norte'),('KR','Corea del Sur'),('KW','Kuwait'),('KY','Islas Caimán'),('KZ','Kazajstán'),('LA','Laos'),('LB','Líbano'),('LC','Santa Lucía'),('LI','Liechtenstein'),('LK','Sri Lanka'),('LR','Liberia'),('LS','Lesoto'),('LT','Lituania'),('LU','Luxemburgo'),('LV','Letonia'),('LY','Libia'),('MA','Marruecos'),('MC','Mónaco'),('MD','Moldavia'),('ME','Montenegro'),('MG','Madagascar'),('MH','Islas Marshall'),('MK','Macedonia del Norte'),('ML','Malí'),('MM','Myanmar/Birmania'),('MN','Mongolia'),('MO','Macao'),('MP','Islas Marianas del Norte'),('MR','Mauritania'),('MS','Montserrat'),('MT','Malta'),('MU','Mauricio'),('MV','Maldivas'),('MW','Malaui'),('MX','México'),('MY','Malasia'),('MZ','Mozambique'),('NA','Namibia'),('NC','Nueva Caledonia'),('NE','Níger'),('NF','Isla Norfolk'),('NG','Nigeria'),('NI','Nicaragua'),('NL','Países Bajos'),('NO','Noruega'),('NP','Nepal'),('NR','Nauru'),('NU','Niue'),('NZ','Nueva Zelanda'),('OM','Omán'),('PA','Panamá'),('PE','Perú'),('PF','Polinesia Francesa'),('PG','Papúa Nueva Guinea'),('PH','Filipinas'),('PK','Pakistán'),('PL','Polonia'),('PM','San Pedro y Miquelón'),('PN','Islas Pitcairn'),('PR','Puerto Rico'),('PS','Palestina'),('PT','Portugal'),('PW','Palaos'),('PY','Paraguay'),('QA','Qatar'),('RO','Rumanía'),('RS','Serbia'),('RU','Rusia'),('RW','Ruanda'),('SA','Arabia Saudí'),('SB','Islas Salomón'),('SC','Seychelles'),('SD','Sudán'),('SE','Suecia'),('SG','Singapur'),('SH','Santa Elena, Ascensión y Tristán da Cunha'),('SI','Eslovenia'),('SJ','Svalbard y Jan Mayen'),('SK','Eslovaquia'),('SL','Sierra Leona'),('SM','San Marino'),('SN','Senegal'),('SO','Somalia'),('SR','Surinam'),('SS','Sudán del Sur'),('ST','Santo Tomé y Príncipe'),('SV','El Salvador'),('SX','San Martín (Sint Maarten)'),('SY','Siria'),('SZ','Suazilandia'),('TC','Islas Turcas y Caicos'),('TD','Chad'),('TF','Territorios Australes y Antárticas Franceses'),('TG','Togo'),('TH','Tailandia'),('TJ','Tayikistán'),('TK','Tokelau'),('TL','Timor Oriental'),('TM','Turkmenistán'),('TN','Túnez'),('TO','Tonga'),('TR','Turquía'),('TT','Trinidad y Tobago'),('TV','Tuvalu'),('TW','Taiwán'),('TZ','Tanzania'),('UA','Ucrania'),('UG','Uganda'),('UK','Reino Unido'),('UM','Islas menores alejadas de los Estados Unidos'),('US','Estados Unidos'),('UY','Uruguay'),('UZ','Uzbekistán'),('VA','Estado de la Ciudad del Vaticano'),('VC','San Vicente y las Granadinas'),('VE','Venezuela'),('VG','Islas Vírgenes Británicas'),('VI','Islas Vírgenes de los Estados Unidos'),('VN','Vietnam'),('VU','Vanuatu'),('WF','Wallis y Futuna'),('WS','Samoa'),('YE','Yemen'),('ZA','Sudáfrica'),('ZM','Zambia'),('ZW','Zimbabue');
+/*!40000 ALTER TABLE `tbl_country_identification_code` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_country_subentity_code`
+--
+
+DROP TABLE IF EXISTS `tbl_country_subentity_code`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_country_subentity_code` (
+  `code` varchar(5) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_country_subentity_code`
+--
+
+LOCK TABLES `tbl_country_subentity_code` WRITE;
+/*!40000 ALTER TABLE `tbl_country_subentity_code` DISABLE KEYS */;
+INSERT INTO `tbl_country_subentity_code` VALUES ('AL','Shqipëria'),('AL0','Shqipëria'),('AL01','Veri'),('AL02','Qender'),('AL03','Jug'),('ALZ','Extra-Regio NUTS 1'),('ALZZ','Extra-Regio NUTS 2'),('AT','Österreich'),('AT1','Ostösterreich'),('AT11','Burgenland'),('AT12','Niederösterreich'),('AT13','Wien'),('AT2','Südösterreich'),('AT21','Kärnten'),('AT22','Steiermark'),('AT3','Westösterreich'),('AT31','Oberösterreich'),('AT32','Salzburg'),('AT33','Tirol'),('AT34','Vorarlberg'),('ATZ','Extra-Regio NUTS 1'),('ATZZ','Extra-Regio NUTS 2'),('BE','Belgique/België'),('BE1','Région de Bruxelles-Capitale/Brussels Hoofdstedelijk Gewest'),('BE10','Région de Bruxelles-Capitale/ Brussels Hoofdstedelijk Gewest'),('BE2','Vlaams Gewest'),('BE21','Prov. Antwerpen'),('BE22','Prov. Limburg (BE)'),('BE23','Prov. Oost-Vlaanderen'),('BE24','Prov. Vlaams-Brabant'),('BE25','Prov. West-Vlaanderen'),('BE3','Région wallonne'),('BE31','Prov. Brabant Wallon'),('BE32','Prov. Hainaut'),('BE33','Prov. Liège'),('BE34','Prov. Luxembourg (BE)'),('BE35','Prov. Namur'),('BEZ','Extra-Regio NUTS 1'),('BEZZ','Extra-Regio NUTS 2'),('BG','Bulgaria'),('BG3','Severna I Yugoiztochna Bulgaria'),('BG31','Severozapaden'),('BG32','Severen tsentralen'),('BG33','Severoiztochen'),('BG34','Yugoiztochen'),('BG4','Yugozapadna I Yuzhna Tsentralna Bulgaria'),('BG41','Yugozapaden'),('BG42','Yuzhen tsentralen'),('BGZ','Extra-Regio NUTS 1'),('BGZZ','Extra-Regio NUTS 2'),('CH','Schweiz/Suisse/Svizzera'),('CH0','Schweiz/Suisse/Svizzera'),('CH01','Région lémanique'),('CH02','Espace Mittelland'),('CH03','Nordwestschweiz'),('CH04','Zürich'),('CH05','Ostschweiz'),('CH06','Zentralschweiz'),('CH07','Ticino'),('CHZ','Extra-Regio NUTS 1'),('CHZZ','Extra-Regio NUTS 2'),('CY','Kypros / K?br?s'),('CY0','Kypros / K?br?s'),('CY00','Kypros / K?br?s'),('CYZ','Extra-Regio NUTS 1'),('CYZZ','Extra-Regio NUTS 2'),('CZ','?esko'),('CZ0','?esko'),('CZ01','Praha'),('CZ02','St?ední ?echy'),('CZ03','Jihozápad'),('CZ04','Severozápad'),('CZ05','Severovýchod'),('CZ06','Jihovýchod'),('CZ07','St?ední Morava'),('CZ08','Moravskoslezsko'),('CZZ','Extra-Regio NUTS 1'),('CZZZ','Extra-Regio NUTS 2'),('DE','Deutschland'),('DE1','Baden-Württemberg'),('DE11','Stuttgart'),('DE12','Karlsruhe'),('DE13','Freiburg'),('DE14','Tübingen'),('DE2','Bayern'),('DE21','Oberbayern'),('DE22','Niederbayern'),('DE23','Oberpfalz'),('DE24','Oberfranken'),('DE25','Mittelfranken'),('DE26','Unterfranken'),('DE27','Schwaben'),('DE3','Berlin'),('DE30','Berlin'),('DE4','Brandenburg'),('DE40','Brandenburg'),('DE5','Bremen'),('DE50','Bremen'),('DE6','Hamburg'),('DE60','Hamburg'),('DE7','Hessen'),('DE71','Darmstadt'),('DE72','Gießen'),('DE73','Kassel'),('DE8','Mecklenburg-Vorpommern'),('DE80','Mecklenburg-Vorpommern'),('DE9','Niedersachsen'),('DE91','Braunschweig'),('DE92','Hannover'),('DE93','Lüneburg'),('DE94','Weser-Ems'),('DEA','Nordrhein-Westfalen'),('DEA1','Düsseldorf'),('DEA2','Köln'),('DEA3','Münster'),('DEA4','Detmold'),('DEA5','Arnsberg'),('DEB','Rheinland-Pfalz'),('DEB1','Koblenz'),('DEB2','Trier'),('DEB3','Rheinhessen-Pfalz'),('DEC','Saarland'),('DEC0','Saarland'),('DED','Sachsen'),('DED2','Dresden'),('DED4','Chemnitz'),('DED5','Leipzig'),('DEE','Sachsen-Anhalt'),('DEE0','Sachsen-Anhalt'),('DEF','Schleswig-Holstein'),('DEF0','Schleswig-Holstein'),('DEG','Thüringen'),('DEG0','Thüringen'),('DEZ','Extra-Regio NUTS 1'),('DEZZ','Extra-Regio NUTS 2'),('DK','Danmark'),('DK0','Danmark'),('DK01','Hovedstaden'),('DK02','Sjælland'),('DK03','Syddanmark'),('DK04','Midtjylland'),('DK05','Nordjylland'),('DKZ','Extra-Regio NUTS 1'),('DKZZ','Extra-Regio NUTS 2'),('EE','Eesti'),('EE0','Eesti'),('EE00','Eesti'),('EEZ','Extra-Regio NUTS 1'),('EEZZ','Extra-Regio NUTS 2'),('EL','Ellada'),('EL3','Attiki'),('EL30','Attiki'),('EL4','Nisia Aigaiou, Kriti'),('EL41','Voreio Aigaio'),('EL42','Notio Aigaio'),('EL43','Kriti'),('EL5','Voreia Ellada'),('EL51','Anatoliki Makedonia, Thraki'),('EL52','Kentriki Makedonia'),('EL53','Dytiki Makedonia'),('EL54','Ipeiros'),('EL6','Kentriki Ellada'),('EL61','Thessalia'),('EL62','Ionia Nisia'),('EL63','Dytiki Ellada'),('EL64','Sterea Ellada'),('EL65','Peloponnisos'),('ELZ','Extra-Regio NUTS 1'),('ELZZ','Extra-Regio NUTS 2'),('ES','España'),('ES1','Noroeste'),('ES11','Galicia'),('ES111','A Coruña'),('ES112','Lugo'),('ES113','Ourense'),('ES114','Pontevedra'),('ES12','Principado de Asturias'),('ES120','Asturias'),('ES13','Cantabria'),('ES130','Cantabria'),('ES2','Noreste'),('ES21','País Vasco'),('ES211','Araba/Álava'),('ES212','Gipuzkoa'),('ES213','Bizkaia'),('ES22','Comunidad Foral de Navarra'),('ES220','Navarra'),('ES23','La Rioja'),('ES230','La Rioja'),('ES24','Aragón'),('ES241','Huesca'),('ES242','Teruel'),('ES243','Zaragoza'),('ES3','Comunidad de Madrid'),('ES30','Comunidad de Madrid'),('ES300','Madrid'),('ES4','Centro (ES)'),('ES41','Castilla y León'),('ES411','Ávila'),('ES412','Burgos'),('ES413','León'),('ES414','Palencia'),('ES415','Salamanca'),('ES416','Segovia'),('ES417','Soria'),('ES418','Valladolid'),('ES419','Zamora'),('ES42','Castilla-La Mancha'),('ES421','Albacete'),('ES422','Ciudad Real'),('ES423','Cuenca'),('ES424','Guadalajara'),('ES425','Toledo'),('ES43','Extremadura'),('ES431','Badajoz'),('ES432','Cáceres'),('ES5','Este'),('ES51','Cataluña'),('ES511','Barcelona'),('ES512','Girona'),('ES513','Lleida'),('ES514','Tarragona'),('ES52','Comunitat Valenciana'),('ES521','Alicante/Alacant'),('ES522','Castellón/Castelló'),('ES523','Valencia/València'),('ES53','Illes Balears'),('ES531','Eivissa y Formentera'),('ES532','Mallorca'),('ES533','Menorca'),('ES6','Sur'),('ES61','Andalucía'),('ES611','Almería'),('ES612','Cádiz'),('ES613','Córdoba'),('ES614','Granada'),('ES615','Huelva'),('ES616','Jaén'),('ES617','Málaga'),('ES618','Sevilla'),('ES62','Región de Murcia'),('ES620','Murcia'),('ES63','Ciudad de Ceuta'),('ES630','Ceuta'),('ES64','Ciudad de Melilla'),('ES640','Melilla'),('ES7','Canarias'),('ES70','Canarias'),('ES703','El Hierro'),('ES704','Fuerteventura'),('ES705','Gran Canaria'),('ES706','La Gomera'),('ES707','La Palma'),('ES708','Lanzarote'),('ES709','Tenerife'),('ESZ','Extra-Regio NUTS 1'),('ESZZ','Extra-Regio NUTS 2'),('ESZZZ','Extra-Regio NUTS 3'),('FI','Suomi/Finland'),('FI1','Manner-Suomi'),('FI19','Länsi-Suomi'),('FI1B','Helsinki-Uusimaa'),('FI1C','Etelä-Suomi'),('FI1D','Pohjois- ja Itä-Suomi'),('FI2','Åland'),('FI20','Åland'),('FIZ','Extra-Regio NUTS 1'),('FIZZ','Extra-Regio NUTS 2'),('FR','France'),('FR1','Ile-de-France'),('FR10','Ile-de-France'),('FRB','Centre — Val de Loire'),('FRB0','Centre — Val de Loire'),('FRC','Bourgogne-Franche-Comté'),('FRC1','Bourgogne'),('FRC2','Franche-Comté'),('FRD','Normandie'),('FRD1','Basse-Normandie'),('FRD2','Haute-Normandie'),('FRE','Hauts-de-France'),('FRE1','Nord-Pas de Calais'),('FRE2','Picardie'),('FRF','Grand Est'),('FRF1','Alsace'),('FRF2','Champagne-Ardenne'),('FRF3','Lorraine'),('FRG','Pays de la Loire'),('FRG0','Pays de la Loire'),('FRH','Bretagne'),('FRH0','Bretagne'),('FRI','Nouvelle-Aquitaine'),('FRI1','Aquitaine'),('FRI2','Limousin'),('FRI3','Poitou-Charentes'),('FRJ','Occitanie'),('FRJ1','Languedoc-Roussillon'),('FRJ2','Midi-Pyrénées'),('FRK','Auvergne-Rhône-Alpes'),('FRK1','Auvergne'),('FRK2','Rhône-Alpes'),('FRL','Provence-Alpes-Côte d’Azur'),('FRL0','Provence-Alpes-Côte d’Azur'),('FRM','Corse'),('FRM0','Corse'),('FRY','RUP FR — Régions Ultrapériphériques Françaises'),('FRY1','Guadeloupe'),('FRY2','Martinique'),('FRY3','Guyane'),('FRY4','La Réunion'),('FRY5','Mayotte'),('FRZ','Extra-Regio NUTS 1'),('FRZZ','Extra-Regio NUTS 2'),('HR','Hrvatska'),('HR0','Hrvatska'),('HR02','Panonska Hrvatska'),('HR03','Jadranska Hrvatska'),('HR05','Grad Zagreb'),('HR06','Sjeverna Hrvatska'),('HRZ','Extra-Regio NUTS 1'),('HRZZ','Extra-Regio NUTS 2'),('HU','Magyarország'),('HU1','Közép-Magyarország'),('HU11','Budapest'),('HU12','Pest'),('HU2','Dunántúl'),('HU21','Közép-Dunántúl'),('HU22','Nyugat-Dunántúl'),('HU23','Dél-Dunántúl'),('HU3','Alföld és Észak'),('HU31','Észak-Magyarország'),('HU32','Észak-Alföld'),('HU33','Dél-Alföld'),('HUZ','Extra-Regio NUTS 1'),('HUZZ','Extra-Regio NUTS 2'),('IE','Éire/Ireland'),('IE0','Ireland'),('IE04','Northern and Western'),('IE05','Southern'),('IE06','Eastern and Midland'),('IEZ','Extra-Regio NUTS 1'),('IEZZ','Extra-Regio NUTS 2'),('IS','Ísland'),('IS0','Ísland'),('IS00','Ísland'),('ISZ','Extra-Regio NUTS 1'),('ISZZ','Extra-Regio NUTS 2'),('IT','Italia'),('ITC','Nord-Ovest'),('ITC1','Piemonte'),('ITC2','Valle d’Aosta/Vallée d’Aoste'),('ITC3','Liguria'),('ITC4','Lombardia'),('ITF','Sud'),('ITF1','Abruzzo'),('ITF2','Molise'),('ITF3','Campania'),('ITF4','Puglia'),('ITF5','Basilicata'),('ITF6','Calabria'),('ITG','Isole'),('ITG1','Sicilia'),('ITG2','Sardegna'),('ITH','Nord-Est'),('ITH1','Provincia Autonoma di Bolzano/Bozen'),('ITH2','Provincia Autonoma di Trento'),('ITH3','Veneto'),('ITH4','Friuli-Venezia Giulia'),('ITH5','Emilia-Romagna'),('ITI','Centro (IT)'),('ITI1','Toscana'),('ITI2','Umbria'),('ITI3','Marche'),('ITI4','Lazio'),('ITZ','Extra-Regio NUTS 1'),('ITZZ','Extra-Regio NUTS 2'),('LI','Liechtenstein'),('LI0','Liechtenstein'),('LI00','Liechtenstein'),('LIZ','Extra-Regio NUTS 1'),('LIZZ','Extra-Regio NUTS 2'),('LT','Lietuva'),('LT0','Lietuva'),('LT01','Sostin?s regionas'),('LT02','Vidurio ir vakar? Lietuvos regionas'),('LTZ','Extra-Regio NUTS 1'),('LTZZ','Extra-Regio NUTS 2'),('LU','Luxembourg'),('LU0','Luxembourg'),('LU00','Luxembourg'),('LUZ','Extra-Regio NUTS 1'),('LUZZ','Extra-Regio NUTS 2'),('LV','Latvija'),('LV0','Latvija'),('LV00','Latvija'),('LVZ','Extra-Regio NUTS 1'),('LVZZ','Extra-Regio NUTS 2'),('ME','Montenegro'),('ME0','Montenegro'),('ME00','Montenegro'),('MEZ','Extra-Regio NUTS 1'),('MEZZ','Extra-Regio NUTS 2'),('MK','Severna Makedonija'),('MK0','Severna Makedonija'),('MK00','Severna Makedonija'),('MKZ','Extra-Regio NUTS 1'),('MKZZ','Extra-Regio NUTS 2'),('MT','Malta'),('MT0','Malta'),('MT00','Malta'),('MTZ','Extra-Regio NUTS 1'),('MTZZ','Extra-Regio NUTS 2'),('NL','Nederland'),('NL1','Noord-Nederland'),('NL11','Groningen'),('NL12','Friesland (NL)'),('NL13','Drenthe'),('NL2','Oost-Nederland'),('NL21','Overijssel'),('NL22','Gelderland'),('NL23','Flevoland'),('NL3','West-Nederland'),('NL31','Utrecht'),('NL32','Noord-Holland'),('NL33','Zuid-Holland'),('NL34','Zeeland'),('NL4','Zuid-Nederland'),('NL41','Noord-Brabant'),('NL42','Limburg (NL)'),('NLZ','Extra-Regio NUTS 1'),('NLZZ','Extra-Regio NUTS 2'),('NO','Norge'),('NO0','Norge'),('NO02','Innlandet'),('NO06','Trøndelag'),('NO07','Nord-Norge'),('NO08','Oslo og Viken'),('NO09','Agder og Sør-Østlandet'),('NO0A','Vestlandet'),('NO0B','Jan Mayen and Svalbard'),('NOZ','Extra-Regio NUTS 1'),('NOZZ','Extra-Regio NUTS 2'),('PL','Polska'),('PL2','Makroregion po?udniowy'),('PL21','Ma?opolskie'),('PL22','?l?skie'),('PL4','Makroregion pó?nocno-zachodni'),('PL41','Wielkopolskie'),('PL42','Zachodniopomorskie'),('PL43','Lubuskie'),('PL5','Makroregion po?udniowo-zachodni'),('PL51','Dolno?l?skie'),('PL52','Opolskie'),('PL6','Makroregion pó?nocny'),('PL61','Kujawsko-pomorskie'),('PL62','Warmi?sko-mazurskie'),('PL63','Pomorskie'),('PL7','Makroregion centralny'),('PL71','?ódzkie'),('PL72','?wi?tokrzyskie'),('PL8','Makroregion wschodni'),('PL81','Lubelskie'),('PL82','Podkarpackie'),('PL84','Podlaskie'),('PL9','Makroregion województwo mazowieckie'),('PL91','Warszawski sto?eczny'),('PL92','Mazowiecki regionalny'),('PLZ','Extra-Regio NUTS 1'),('PLZZ','Extra-Regio NUTS 2'),('PT','Portugal'),('PT1','Continente'),('PT11','Norte'),('PT15','Algarve'),('PT16','Centro (PT)'),('PT17','Área Metropolitana de Lisboa'),('PT18','Alentejo'),('PT2','Região Autónoma dos Açores'),('PT20','Região Autónoma dos Açores'),('PT3','Região Autónoma da Madeira'),('PT30','Região Autónoma da Madeira'),('PTZ','Extra-Regio NUTS 1'),('PTZZ','Extra-Regio NUTS 2'),('RO','România'),('RO1','Macroregiunea Unu'),('RO11','Nord-Vest'),('RO12','Centru'),('RO2','Macroregiunea Doi'),('RO21','Nord-Est'),('RO22','Sud-Est'),('RO3','Macroregiunea Trei'),('RO31','Sud-Muntenia'),('RO32','Bucure?ti-Ilfov'),('RO4','Macroregiunea Patru'),('RO41','Sud-Vest Oltenia'),('RO42','Vest'),('ROZ','Extra-Regio NUTS 1'),('ROZZ','Extra-Regio NUTS 2'),('RS','Srbija'),('RS1','Srbija - Sever'),('RS11','Beogradski region'),('RS12','Region Vojvodine'),('RS2','Srbija - Jug'),('RS21','Region Šumadije i Zapadne Srbije'),('RS22','Region Južne i Isto?ne Srbije'),('RSZ','Extra-Regio NUTS 1'),('RSZZ','Extra-Regio NUTS 2'),('SE','Sverige'),('SE1','Östra Sverige'),('SE11','Stockholm'),('SE12','Östra Mellansverige'),('SE2','Södra Sverige'),('SE21','Småland med öarna'),('SE22','Sydsverige'),('SE23','Västsverige'),('SE3','Norra Sverige'),('SE31','Norra Mellansverige'),('SE32','Mellersta Norrland'),('SE33','Övre Norrland'),('SEZ','Extra-Regio NUTS 1'),('SEZZ','Extra-Regio NUTS 2'),('SI','Slovenija'),('SI0','Slovenija'),('SI03','Vzhodna Slovenija'),('SI04','Zahodna Slovenija'),('SIZ','Extra-Regio NUTS 1'),('SIZZ','Extra-Regio NUTS 2'),('SK','Slovensko'),('SK0','Slovensko'),('SK01','Bratislavský kraj'),('SK02','Západné Slovensko'),('SK03','Stredné Slovensko'),('SK04','Východné Slovensko'),('SKZ','Extra-Regio NUTS 1'),('SKZZ','Extra-Regio NUTS 2'),('TR','Türkiye'),('TR1','?stanbul'),('TR10','?stanbul'),('TR2','Bat? Marmara'),('TR21','Tekirda?, Edirne, K?rklareli'),('TR22','Bal?kesir, Çanakkale'),('TR3','Ege'),('TR31','?zmir'),('TR32','Ayd?n, Denizli, Mu?la'),('TR33','Manisa, Afyonkarahisar, Kütahya, U?ak'),('TR4','Do?u Marmara'),('TR41','Bursa, Eski?ehir, Bilecik'),('TR42','Kocaeli, Sakarya, Düzce, Bolu, Yalova'),('TR5','Bat? Anadolu'),('TR51','Ankara'),('TR52','Konya, Karaman'),('TR6','Akdeniz'),('TR61','Antalya, Isparta, Burdur'),('TR62','Adana, Mersin'),('TR63','Hatay, Kahramanmara?, Osmaniye'),('TR7','Orta Anadolu'),('TR71','K?r?kkale, Aksaray, Ni?de, Nev?ehir, K?r?ehir'),('TR72','Kayseri, Sivas, Yozgat'),('TR8','Bat? Karadeniz'),('TR81','Zonguldak, Karabük, Bart?n'),('TR82','Kastamonu, Çank?r?, Sinop'),('TR83','Samsun, Tokat, Çorum, Amasya'),('TR9','Do?u Karadeniz'),('TR90','Trabzon, Ordu, Giresun, Rize, Artvin, Gümü?hane'),('TRA','Kuzeydo?u Anadolu'),('TRA1','Erzurum, Erzincan, Bayburt'),('TRA2','A?r?, Kars, I?d?r, Ardahan'),('TRB','Ortado?u Anadolu'),('TRB1','Malatya, Elaz??, Bingöl, Tunceli'),('TRB2','Van, Mu?, Bitlis, Hakkari'),('TRC','Güneydo?u Anadolu'),('TRC1','Gaziantep, Ad?yaman, Kilis'),('TRC2','?anl?urfa, Diyarbak?r'),('TRC3','Mardin, Batman, ??rnak, Siirt'),('TRZ','Extra-Regio NUTS 1'),('TRZZ','Extra-Regio NUTS 2'),('UK','United Kingdom'),('UKC','North East (England)'),('UKC1','Tees Valley and Durham'),('UKC2','Northumberland and Tyne and Wear'),('UKD','North West (England)'),('UKD1','Cumbria'),('UKD3','Greater Manchester'),('UKD4','Lancashire'),('UKD6','Cheshire'),('UKD7','Merseyside'),('UKE','Yorkshire and the Humber'),('UKE1','East Yorkshire and Northern Lincolnshire'),('UKE2','North Yorkshire'),('UKE3','South Yorkshire'),('UKE4','West Yorkshire'),('UKF','East Midlands (England)'),('UKF1','Derbyshire and Nottinghamshire'),('UKF2','Leicestershire, Rutland and Northamptonshire'),('UKF3','Lincolnshire'),('UKG','West Midlands (England)'),('UKG1','Herefordshire, Worcestershire and Warwickshire'),('UKG2','Shropshire and Staffordshire'),('UKG3','West Midlands'),('UKH','East of England'),('UKH1','East Anglia'),('UKH2','Bedfordshire and Hertfordshire'),('UKH3','Essex'),('UKI','London'),('UKI3','Inner London — West'),('UKI4','Inner London — East'),('UKI5','Outer London — East and North East'),('UKI6','Outer London — South'),('UKI7','Outer London — West and North West'),('UKJ','South East (England)'),('UKJ1','Berkshire, Buckinghamshire and Oxfordshire'),('UKJ2','Surrey, East and West Sussex'),('UKJ3','Hampshire and Isle of Wight'),('UKJ4','Kent'),('UKK','South West (England)'),('UKK1','Gloucestershire, Wiltshire and Bristol/Bath area'),('UKK2','Dorset and Somerset'),('UKK3','Cornwall and Isles of Scilly'),('UKK4','Devon'),('UKL','Wales'),('UKL1','West Wales and The Valleys'),('UKL2','East Wales'),('UKM','Scotland'),('UKM5','North Eastern Scotland'),('UKM6','Highlands and Islands'),('UKM7','Eastern Scotland'),('UKM8','West Central Scotland'),('UKM9','Southern Scotland'),('UKN','Northern Ireland'),('UKN0','Northern Ireland'),('UKZ','Extra-Regio NUTS 1'),('UKZZ','Extra-Regio NUTS 2');
+/*!40000 ALTER TABLE `tbl_country_subentity_code` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tbl_cpv`
 --
 
@@ -237,7 +285,7 @@ CREATE TABLE `tbl_ids` (
   PRIMARY KEY (`ids`),
   KEY `modosid_idx` (`modosid`),
   CONSTRAINT `modosid` FOREIGN KEY (`modosid`) REFERENCES `tbl_modosid` (`modosid`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -246,7 +294,6 @@ CREATE TABLE `tbl_ids` (
 
 LOCK TABLES `tbl_ids` WRITE;
 /*!40000 ALTER TABLE `tbl_ids` DISABLE KEYS */;
-INSERT INTO `tbl_ids` VALUES (1,2,'2021-05-10 08:52:48'),(2,2,'2021-05-10 09:15:07'),(3,2,'2021-05-10 10:46:03'),(4,2,'2021-05-10 10:46:27');
 /*!40000 ALTER TABLE `tbl_ids` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -282,6 +329,42 @@ CREATE TABLE `tbl_ids_expedientes` (
 LOCK TABLES `tbl_ids_expedientes` WRITE;
 /*!40000 ALTER TABLE `tbl_ids_expedientes` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tbl_ids_expedientes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_lugar_de_ejecucion`
+--
+
+DROP TABLE IF EXISTS `tbl_lugar_de_ejecucion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_lugar_de_ejecucion` (
+  `lugar_de_ejecucion` int(11) NOT NULL AUTO_INCREMENT,
+  `expedientes` int(11) NOT NULL,
+  `country_identification_code` varchar(3),
+  `country_subentity_code` varchar(5) NOT NULL,
+  `pais` varchar(100) DEFAULT NULL,
+  `calle` varchar(220) DEFAULT NULL,
+  `codigo_postal` varchar(32) DEFAULT NULL,
+  `poblacion` varchar(90) DEFAULT NULL,
+  `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`lugar_de_ejecucion`),
+  KEY `fk_calle_tbl_country_identification_code1_idx` (`country_identification_code`),
+  KEY `fk_calle_tbl_country_subentity_code1_idx` (`country_subentity_code`),
+  KEY `fk_calle_tbl_expedientes1_idx` (`expedientes`),
+  CONSTRAINT `fk_calle_tbl_country_identification_code1` FOREIGN KEY (`country_identification_code`) REFERENCES `tbl_country_identification_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_calle_tbl_country_subentity_code1` FOREIGN KEY (`country_subentity_code`) REFERENCES `tbl_country_subentity_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_calle_tbl_expedientes1` FOREIGN KEY (`expedientes`) REFERENCES `tbl_expedientes` (`expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_lugar_de_ejecucion`
+--
+
+LOCK TABLES `tbl_lugar_de_ejecucion` WRITE;
+/*!40000 ALTER TABLE `tbl_lugar_de_ejecucion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_lugar_de_ejecucion` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -419,6 +502,54 @@ UNLOCK TABLES;
 --
 -- Dumping routines for database 'licitacion'
 --
+/*!50003 DROP PROCEDURE IF EXISTS `newCountryIdentificationCode` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newCountryIdentificationCode`(
+	IN code VARCHAR(3),
+	IN nombre VARCHAR(100))
+BEGIN
+	START TRANSACTION;
+	INSERT INTO tbl_country_identification_code (code, nombre)
+	VALUES (code, nombre);
+    COMMIT;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newCountrySubentityCode` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newCountrySubentityCode`(
+IN code VARCHAR(5),
+IN nombre VARCHAR(100))
+BEGIN
+	START TRANSACTION;
+		INSERT INTO tbl_country_subentity_code (code, nombre)
+        VALUES (code, nombre);
+    COMMIT;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `newCPV` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -561,6 +692,35 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newLugarDeEjecucion` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newLugarDeEjecucion`(
+	IN expedientes INT,
+    IN country_identification_code VARCHAR(3),
+    IN country_subentity_code VARCHAR(5),
+    IN pais VARCHAR(100),
+    IN calle VARCHAR(220),
+    IN codigo_postal VARCHAR(32),
+    IN poblacion VARCHAR(90))
+BEGIN
+	START TRANSACTION;
+		INSERT INTO tbl_lugar_de_ejecucion (expedientes, country_identification_code, country_subentity_code, pais, calle, codigo_postal, poblacion)
+        VALUES (expedientes, country_identification_code, country_subentity_code, pais, calle, codigo_postal, poblacion);
+    COMMIT;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `newPliego` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -650,4 +810,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-11 11:25:11
+-- Dump completed on 2021-05-11 13:02:20

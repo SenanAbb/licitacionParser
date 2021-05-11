@@ -38,6 +38,8 @@ public class ConexionSQL {
     	return conn;
     }
 
+    /* TYPE CODES */
+    
 	public void writeSubTypeCode(int code, String nombre, int tipo) {
 		Connection conn = conectarMySQL();
 		
@@ -95,36 +97,20 @@ public class ConexionSQL {
 		}
 	}
 	
-	public void writeExpediente(Entry entry, int ids) {
-		boolean existe = searchExpediente(Integer.parseInt(entry.getId()));
-		if(existe){
-			writeNewIdsExpediente(entry, ids);
-		}else{
-			writeNewExpediente(entry);
-			writeNewIdsExpediente(entry, ids);
-		}
-	}
-
-	private boolean searchExpediente(int id) {
+	public void writeCountryIdentificationCode(String code, String nombre){
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
-		boolean existe = false;
 		
 		try {
-			sentencia = (CallableStatement) conn.prepareCall("{call searchExpediente(?, ?)}");
+			sentencia = (CallableStatement) conn.prepareCall("{call newCountryIdentificationCode(?, ?)}");
 			
 			// Parametros del procedimiento almacenado
-			sentencia.setInt("id", id);
-			
-			// Definimos los tipos de los params de salida del procedimiento almacenado
-			sentencia.registerOutParameter("existe", java.sql.Types.BOOLEAN);
+			sentencia.setString("code", code);
+			sentencia.setString("nombre", nombre);
 			
 			// Ejecutamos el procedimiento
 			sentencia.execute();
-			
-			// Se obtiene la salida (parametro nº 4)
-			existe = sentencia.getBoolean("existe");
 			
 		} catch (SQLException e){
 			e.printStackTrace();
@@ -137,8 +123,46 @@ public class ConexionSQL {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void writeCountrySubentityCode(String code, String nombre){
+		Connection conn = conectarMySQL();
 		
-		return existe;
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newCountrySubentityCode(?, ?)}");
+			
+			// Parametros del procedimiento almacenado
+			sentencia.setString("code", code);
+			sentencia.setString("nombre", nombre);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+		} catch (SQLException e){
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/* TABLAS GENERALES */
+	
+	public void writeExpediente(Entry entry, int ids) {
+		boolean existe = searchExpediente(Integer.parseInt(entry.getId()));
+		if(existe){
+			writeNewIdsExpediente(entry, ids);
+		}else{
+			writeNewExpediente(entry);
+			writeNewIdsExpediente(entry, ids);
+		}
 	}
 
 	private void writeNewExpediente(Entry entry){
@@ -287,5 +311,93 @@ public class ConexionSQL {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public void writeLugarDeEjecucion(Entry entry, int ids){
+		Connection conn = conectarMySQL();
+		
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newLugarDeEjecucion(?, ?, ?, ?, ?, ?, ?)}");
+			
+			// Parametros
+			sentencia.setInt("expedientes", Integer.parseInt(entry.getId()));
+			sentencia.setString("country_subentity_code", entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getCountrySubentityCode());
+			
+			if (entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getAddress() != null){
+				sentencia.setString("country_identification_code", entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getAddress().getCountry().getIdentificationCode());
+				sentencia.setString("pais", entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getAddress().getCountry().getName());
+				
+				if (entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getAddress().getAddressLine() != null){
+					sentencia.setString("calle", entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getAddress().getAddressLine().getLine());
+				}else{
+					sentencia.setString("calle", null);
+				}
+				
+				sentencia.setString("codigo_postal", entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getAddress().getPostalZone());
+				sentencia.setString("poblacion", entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getAddress().getCityName());
+			}else{
+				sentencia.setString("country_identification_code", null);	
+				sentencia.setString("pais", null);
+				sentencia.setString("calle", null);
+				sentencia.setString("codigo_postal", null);
+				sentencia.setString("poblacion", null);
+			}
+			
+			
+			// Ejecucion
+			sentencia.execute();
+			
+		} catch (SQLException | NullPointerException e){
+			System.out.println(entry.getId() + " ");
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/* AUXILIARES */
+	
+	private boolean searchExpediente(int id) {
+		Connection conn = conectarMySQL();
+		
+		CallableStatement sentencia = null;
+		boolean existe = false;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call searchExpediente(?, ?)}");
+			
+			// Parametros del procedimiento almacenado
+			sentencia.setInt("id", id);
+			
+			// Definimos los tipos de los params de salida del procedimiento almacenado
+			sentencia.registerOutParameter("existe", java.sql.Types.BOOLEAN);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+			// Se obtiene la salida (parametro nº 4)
+			existe = sentencia.getBoolean("existe");
+			
+		} catch (SQLException e){
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return existe;
 	}
 }

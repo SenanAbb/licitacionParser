@@ -73,4 +73,20 @@ public class Address {
 			System.out.print("**** COUNTRY: null ****\n");
 		}
 	}
+
+	public Country getCountry() {
+		return country;
+	}
+	
+	public AddressLine getAddressLine() {
+		return addressLine;
+	}
+	
+	public String getPostalZone() {
+		return postalZone;
+	}
+	
+	public String getCityName() {
+		return cityName;
+	}
 }

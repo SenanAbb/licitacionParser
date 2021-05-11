@@ -28,34 +28,7 @@ public class AddressLine {
 						 "----> Address Line: " + line + "\n");
 	}
 	
-	
-	public AddressLine(){}
-
-	public void writeData(int postal_address, Connection conn) {
-		CallableStatement sentencia = null;
-		
-		try {
-			sentencia = (CallableStatement) conn.prepareCall("{call newAddressLine(?, ?)}");
-			
-			// Parametros del procedimiento almacenado
-			sentencia.setString("line", this.line);
-			sentencia.setInt("postal_address", postal_address);
-			
-			// Ejecutamos el procedimiento
-			sentencia.execute();
-		} catch (SQLException e){
-			System.out.println("[Party] Error para rollback: " + e.getMessage());
-			e.printStackTrace();
-			
-			// Si algo ha fallado, hacemos rollback para deshacer todo y no grabar nada en la BD
-			if (conn != null){
-				try {
-					conn.rollback();
-				} catch (SQLException e1) {
-					System.out.println("[Party] Error haciendo rollback: " + e.getMessage());
-					e1.printStackTrace();
-				}
-			}
-		}
+	public String getLine() {
+		return line;
 	}
 }
