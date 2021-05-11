@@ -156,6 +156,7 @@ public class Parser {
 		 * 	3.1. Creamos la conexion en la clase ConexionSQL
 		 * 	3.2. Le pasamos al entry el objeto sql para que pueda hacer la llamada a la creación de su sentencia, y ejecutarla
 		 */
+		
 		if (escribir){
 			ConexionSQL conn = new ConexionSQL();
 			conn.writeExpediente(newEntry, ids);
@@ -238,7 +239,7 @@ public class Parser {
 	        tipo = 2;
 	        
 	        // Se abre la conexión
-	        url = new URL("https://contrataciondelestado.es/codice/cl/1.04/ServiceContractCode-1.04.gc");
+	        url = new URL("https://contrataciondelestado.es/codice/cl/2.02/PatrimonialContractCode-2.02.gc");
 	        conexion = url.openConnection();
 	        conexion.connect();
 	     

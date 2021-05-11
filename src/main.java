@@ -14,8 +14,8 @@ import Parser.Parser;
 public class main {
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, TransformerException {
 		//rellenar();
-		//leerDirectorio();
-		leerArchivo();
+		leerDirectorio();
+		//leerArchivo();
 	}
 
 	private static void leerDirectorio() throws FileNotFoundException, ParserConfigurationException, SAXException, IOException {
@@ -40,7 +40,7 @@ public class main {
                 	System.out.println("==============");
                 	File file = new File(sub_path);
                 	p.setURL(file);
-                	p.start();
+                	//p.start();
                 	p.readEntries();           
 		    	}else{
 		    		System.out.println("----> " + listado[i].getName() + " <-----");
@@ -54,7 +54,7 @@ public class main {
 		                	System.out.println("==============");
 		                	File file = new File(files[j]);
 		                	p.setURL(file);
-		                	p.start();
+		                	//p.start();
 		                	p.readEntries();
 		                }
 		            }

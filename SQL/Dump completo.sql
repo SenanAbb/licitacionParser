@@ -173,9 +173,9 @@ CREATE TABLE `tbl_expedientes` (
   `link` varchar(2500) NOT NULL,
   `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `objeto_contrato` varchar(2000) NOT NULL,
-  `valor_estimado` decimal(10,2) DEFAULT NULL,
-  `presupuesto_sin_impuestos` decimal(10,2) DEFAULT NULL,
-  `presupuesto_con_impuestos` decimal(10,2) DEFAULT NULL,
+  `valor_estimado` decimal(12,2) DEFAULT NULL,
+  `presupuesto_sin_impuestos` decimal(12,2) DEFAULT NULL,
+  `presupuesto_con_impuestos` decimal(12,2) DEFAULT NULL,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   `duracion` decimal(17,0) DEFAULT NULL,
@@ -237,7 +237,7 @@ CREATE TABLE `tbl_ids` (
   PRIMARY KEY (`ids`),
   KEY `modosid_idx` (`modosid`),
   CONSTRAINT `modosid` FOREIGN KEY (`modosid`) REFERENCES `tbl_modosid` (`modosid`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -246,7 +246,7 @@ CREATE TABLE `tbl_ids` (
 
 LOCK TABLES `tbl_ids` WRITE;
 /*!40000 ALTER TABLE `tbl_ids` DISABLE KEYS */;
-INSERT INTO `tbl_ids` VALUES (1,2,'2021-05-10 08:52:48'),(2,2,'2021-05-10 09:15:07');
+INSERT INTO `tbl_ids` VALUES (1,2,'2021-05-10 08:52:48'),(2,2,'2021-05-10 09:15:07'),(3,2,'2021-05-10 10:46:03'),(4,2,'2021-05-10 10:46:27');
 /*!40000 ALTER TABLE `tbl_ids` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -364,7 +364,7 @@ CREATE TABLE `tbl_subtype_code` (
 
 LOCK TABLES `tbl_subtype_code` WRITE;
 /*!40000 ALTER TABLE `tbl_subtype_code` DISABLE KEYS */;
-INSERT INTO `tbl_subtype_code` VALUES (1,'Servicios de mantenimiento y reparación',2),(2,'Servicios de transporte por vía terrestre, incluidos los servicios de furgones blindados y servicios de mensajería, excepto el transporte de correo',2),(3,'Servicios de transporte aéreo: transporte de pasajeros y carga, excepto el transporte de correo',2),(4,'Transporte de correo por vía terrestre y por vía aírea',2),(5,'Servicios de telecomunicación',2),(6,'Servicios financieros: a) servicios de seguros; b) servicios bancarios y de inversión',2),(7,'Servicios de informítica y servicios conexos',2),(8,'Servicios de investigación y desarrollo',2),(9,'Servicios de contabilidad, auditoría y teneduría de libros',2),(10,'Servicios de investigación de estudios y encuestas de la opinión pública',2),(11,'Servicios de consultores de dirección y servicios conexos',2),(12,'Servicios de arquitectura; servicios de ingeniería y servicios integrados de ingeniería; servicios de planificación urbana y servicios de arquitectura paisajista. Servicios conexos de consultores en ciencia y tecnología. Servicios de ensayos y anílisis tícnicos',2),(13,'Servicios de publicidad',2),(14,'Servicios de limpieza de edificios y servicios de administración de bienes raíces',2),(15,'Servicios editoriales y de imprenta, por tarifa o por contrato',2),(16,'Servicios de alcantarillado y eliminación de desperdicios: servicios de saneamiento y servicios similares',2),(17,'Servicios de hostelería y restaurante',2),(18,'Servicios de transporte por ferrocarril',2),(19,'Servicios de transporte fluvial y marítimo',2),(20,'Servicios de transporte complementarios y auxiliares',2),(21,'Servicios jurídicos',2),(22,'Servicios de colocación y suministro de personal',2),(23,'Servicios de investigación y seguridad, excepto los servicios de furgones blindados',2),(24,'Servicios de educación y formación profesional',2),(25,'Servicios sociales y de salud',2),(26,'Servicios de esparcimiento, culturales y deportivos',2),(27,'Otros servicios',2),(4500,'Construcción',3),(4510,'Preparación de obras',3),(4511,'Demolición de inmuebles y movimientos de tierras',3),(4512,'Perforaciones y sondeos',3),(4520,'Construcción general de inmuebles y obras de ingeniería\n				civil',3),(4521,'Construcción general de edificios y obras singulares de ingeniería\n					civil (puentes, túneles, etc.)',3),(4522,'Construcción de cubiertas y estructuras de cerramiento',3),(4523,'Construcción de autopistas,carreteras, campos de aterrizaje, vías\n					férreas y centros deportivos',3),(4524,'Obras hidráulicas',3),(4525,'Otras construcciones especializadas',3),(4530,'Instalación de edificios y obras',3),(4531,'Instalación eléctrica',3),(4532,'Aislamiento térmico, acústico y antivibratorio',3),(4533,'Fontanería',3),(4534,'Otras instalaciones de edificios y obras',3),(4540,'Acabado de edificios y obras',3),(4541,'Revocamiento',3),(4542,'Instalaciones de carpintería',3),(4543,'Revestimiento de suelos y paredes',3),(4544,'Pintura y acristalamiento',3),(4545,'Otros acabados de edificios y obras',3),(4550,'Alquiler de equipo de construcción o demolición con\n				operario',3);
+INSERT INTO `tbl_subtype_code` VALUES (0,'null',0),(1,'Servicios de mantenimiento y reparación',2),(2,'Servicios de transporte por vía terrestre, incluidos los servicios de furgones blindados y servicios de mensajería, excepto el transporte de correo',2),(3,'Servicios de transporte aéreo: transporte de pasajeros y carga, excepto el transporte de correo',2),(4,'Transporte de correo por vía terrestre y por vía aírea',2),(5,'Servicios de telecomunicación',2),(6,'Servicios financieros: a) servicios de seguros; b) servicios bancarios y de inversión',2),(7,'Servicios de informítica y servicios conexos',2),(8,'Servicios de investigación y desarrollo',2),(9,'Servicios de contabilidad, auditoría y teneduría de libros',2),(10,'Servicios de investigación de estudios y encuestas de la opinión pública',2),(11,'Servicios de consultores de dirección y servicios conexos',2),(12,'Servicios de arquitectura; servicios de ingeniería y servicios integrados de ingeniería; servicios de planificación urbana y servicios de arquitectura paisajista. Servicios conexos de consultores en ciencia y tecnología. Servicios de ensayos y anílisis tícnicos',2),(13,'Servicios de publicidad',2),(14,'Servicios de limpieza de edificios y servicios de administración de bienes raíces',2),(15,'Servicios editoriales y de imprenta, por tarifa o por contrato',2),(16,'Servicios de alcantarillado y eliminación de desperdicios: servicios de saneamiento y servicios similares',2),(17,'Servicios de hostelería y restaurante',2),(18,'Servicios de transporte por ferrocarril',2),(19,'Servicios de transporte fluvial y marítimo',2),(20,'Servicios de transporte complementarios y auxiliares',2),(21,'Servicios jurídicos',2),(22,'Servicios de colocación y suministro de personal',2),(23,'Servicios de investigación y seguridad, excepto los servicios de furgones blindados',2),(24,'Servicios de educación y formación profesional',2),(25,'Servicios sociales y de salud',2),(26,'Servicios de esparcimiento, culturales y deportivos',2),(27,'Otros servicios',2),(30,'Adquisición de inmuebles',2),(31,'Adquisición de derechos de propiedad incorporal',2),(40,'Arrendamiento de inmuebles',2),(50,'Enajenación de inmuebles',2),(51,'Enajenación de bienes muebles',2),(52,'Enajenación de derechos de propiedad incorporal',2),(60,'Permuta',2),(100,'Otros contratos patrimoniales',2),(4500,'Construcción',3),(4510,'Preparación de obras',3),(4511,'Demolición de inmuebles y movimientos de tierras',3),(4512,'Perforaciones y sondeos',3),(4520,'Construcción general de inmuebles y obras de ingeniería\n				civil',3),(4521,'Construcción general de edificios y obras singulares de ingeniería\n					civil (puentes, túneles, etc.)',3),(4522,'Construcción de cubiertas y estructuras de cerramiento',3),(4523,'Construcción de autopistas,carreteras, campos de aterrizaje, vías\n					férreas y centros deportivos',3),(4524,'Obras hidráulicas',3),(4525,'Otras construcciones especializadas',3),(4530,'Instalación de edificios y obras',3),(4531,'Instalación eléctrica',3),(4532,'Aislamiento térmico, acústico y antivibratorio',3),(4533,'Fontanería',3),(4534,'Otras instalaciones de edificios y obras',3),(4540,'Acabado de edificios y obras',3),(4541,'Revocamiento',3),(4542,'Instalaciones de carpintería',3),(4543,'Revestimiento de suelos y paredes',3),(4544,'Pintura y acristalamiento',3),(4545,'Otros acabados de edificios y obras',3),(4550,'Alquiler de equipo de construcción o demolición con\n				operario',3);
 /*!40000 ALTER TABLE `tbl_subtype_code` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -412,7 +412,7 @@ CREATE TABLE `tbl_type_code` (
 
 LOCK TABLES `tbl_type_code` WRITE;
 /*!40000 ALTER TABLE `tbl_type_code` DISABLE KEYS */;
-INSERT INTO `tbl_type_code` VALUES (1,'Suministros'),(2,'Servicios'),(3,'Obras'),(7,'Administrativo especial'),(8,'Privado'),(21,'Gestión de servicios'),(31,'Concesión de obras públicas'),(40,'Colaboración entre el sector público y el sector privado'),(50,'Patrimonial'),(999,'Otros');
+INSERT INTO `tbl_type_code` VALUES (0,'null'),(1,'Suministros'),(2,'Servicios'),(3,'Obras'),(7,'Administrativo especial'),(8,'Privado'),(21,'Gestión de servicios'),(22,'Concesión de servicios'),(31,'Concesión de obras públicas'),(32,'Concesión de obras'),(40,'Colaboración entre el sector público y el sector privado'),(50,'Patrimonial'),(999,'Otros');
 /*!40000 ALTER TABLE `tbl_type_code` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -458,9 +458,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `newExpediente`(
 	IN title VARCHAR(2000),
     IN link VARCHAR(2500),
     IN objeto_contrato VARCHAR(2000),
-    IN valor_estimado DECIMAL(10,2),
-    IN presupuesto_sin_impuestos DECIMAL(10,2),
-    IN presupuesto_con_impuestos DECIMAL(10,2),
+    IN valor_estimado DECIMAL(12,2),
+    IN presupuesto_sin_impuestos DECIMAL(12,2),
+    IN presupuesto_con_impuestos DECIMAL(12,2),
     IN start_date DATE, 
     IN end_date DATE,
     IN duracion DECIMAL(17,0),
@@ -650,4 +650,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-10 12:22:32
+-- Dump completed on 2021-05-11 11:25:11

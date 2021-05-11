@@ -78,7 +78,6 @@ public class ConexionSQL {
 			// Parametros del procedimiento almacenado
 			sentencia.setInt("code", code);
 			sentencia.setString("nombre", nombre.replaceAll("\n", ""));
-			System.out.println(nombre.trim());
 			
 			// Ejecutamos el procedimiento
 			sentencia.execute();
@@ -189,16 +188,18 @@ public class ConexionSQL {
 			sentencia.execute();
 			
 			// WRITE CPV
-			for (RequiredCommodityClassification r : entry.getContractFolderStatus().getProcurementProject().getRequiredCommodityClassificationList()){
-				sentencia = (CallableStatement) conn.prepareCall("{call newExpediente_CPV(?, ?)}");
-				
-				// Parametros
-				sentencia.setInt("code", r.getItemClassificationCode());
-				sentencia.setInt("expedientes", Integer.parseInt(entry.getId()));
-				
-				// Ejecutamos
-				sentencia.execute();
-				sentencia.close();
+			if (entry.getContractFolderStatus().getProcurementProject().getRequiredCommodityClassificationList() != null){
+				for (RequiredCommodityClassification r : entry.getContractFolderStatus().getProcurementProject().getRequiredCommodityClassificationList()){
+					sentencia = (CallableStatement) conn.prepareCall("{call newExpediente_CPV(?, ?)}");
+					
+					// Parametros
+					sentencia.setInt("code", r.getItemClassificationCode());
+					sentencia.setInt("expedientes", Integer.parseInt(entry.getId()));
+					
+					// Ejecutamos
+					sentencia.execute();
+					sentencia.close();
+				}
 			}
 			
 			// WRITE PLIEGOS
@@ -247,6 +248,7 @@ public class ConexionSQL {
 				}
 			}
 		} catch (SQLException e){
+			System.out.println(entry.getId() + " " + entry.getContractFolderStatus().getProcurementProject().getTypeCode());
 			e.printStackTrace();
 		} finally {
 			// Cerramos las conexiones
