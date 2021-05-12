@@ -79,10 +79,6 @@ public class main {
 	}
 	
 	private static void rellenar() throws ParserConfigurationException, SAXException, TransformerException{
-		ArrayList<String> exp = new ArrayList<String>();
-		exp.add("PDT.-3.9/19");
-		exp.add("PDT.-3.8/19");
-		
 		Parser p = new Parser();
 		
 		// Rellenar las tablas TypeCode
@@ -90,6 +86,12 @@ public class main {
 //		p.writeCPV();
 //		p.writeCountryIdentificationCode();
 //		p.writeCountrySubentityCode();
+//		p.writeProcedureCode();
+//		p.writeContractingSystemTypeCode();
+//		p.writeUrgencyCode();
+//		p.writeSubmissionMethodCode();
+//		p.writeLanguage();
+//		p.writeProcurementLegislation();
 	}
 	
 	private static String[] getFiles(String path) {
@@ -113,4 +115,5 @@ public class main {
         }
         return arr_res;
 	}
+
 }

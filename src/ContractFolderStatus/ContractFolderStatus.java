@@ -386,4 +386,12 @@ public class ContractFolderStatus {
 	public String getContractFolderStatusCode() {
 		return contractFolderStatusCode;
 	}
+
+	public TenderingProcess getTenderingProcess() {
+		return tenderingProcess;
+	}
+	
+	public TenderingTerms getTenderingTerms(){
+		return tenderingTerms;
+	}
 }

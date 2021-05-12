@@ -23,4 +23,8 @@ public class Language {
 						 "---> ID: " + id + "\n" +
 						 "--------------------------------\n");
 	}
+
+	public String getId() {
+		return id;
+	}
 }

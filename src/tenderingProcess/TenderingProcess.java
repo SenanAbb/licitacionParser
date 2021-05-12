@@ -8,7 +8,7 @@ import utils.DocumentAvailabilityPeriod;
 /**
  * @params
  * 		procedureCode: int[1]
- * 		contractingSystemCode: int[1]
+ * 		contractingSystemCode: int[0..1]
  *		urgencyCode: int[0..1]
  *		submissionMethodCode: int[0..1]
  *		maximumLotPresentationQuantity: int[0..1]
@@ -258,5 +258,25 @@ public class TenderingProcess {
 		}
 		
 		System.out.print("===============================================================\n");
+	}
+
+	public int getProcedureCode() {
+		return procedureCode;
+	}
+	
+	public int getContractingSystemTypeCode() {
+		return contractingSystemCode;
+	}
+	
+	public int getUrgencyCode() {
+		return urgencyCode;
+	}
+	
+	public int getSubmissionMethodCode() {
+		return submissionMethodCode;
+	}
+	
+	public AuctionTerms getAuctionTerms() {
+		return auctionTerms;
 	}
 }

@@ -22,4 +22,8 @@ public class AuctionTerms {
 						 "---> Auction Constraint Indicator: " + auctionConstraintIndicator + "\n" +
 						 "--------------------------------\n");
 	}
+	
+	public boolean getAuctionConstraintIndicator() {
+		return auctionConstraintIndicator;
+	}
 }

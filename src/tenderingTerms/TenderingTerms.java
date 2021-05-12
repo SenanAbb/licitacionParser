@@ -336,4 +336,12 @@ public class TenderingTerms {
 		}
 		System.out.print("===============================================================\n");
 	}
+
+	public ProcurementLegislationDocumentReference getProcurementLegislationDocumenteReference() {
+		return procurementLegislationDocumentReference;
+	}
+	
+	public Language[] getLanguageList() {
+		return languageList;
+	}
 }

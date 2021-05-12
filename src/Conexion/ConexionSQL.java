@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import procurementProject.RequiredCommodityClassification;
+import tenderingTerms.Language;
 import Entry.Entry;
 
 import com.mysql.cj.jdbc.CallableStatement;
@@ -153,6 +154,174 @@ public class ConexionSQL {
 		}
 	}
 
+	public void writeProcedureCode(int code, String nombre){
+		Connection conn = conectarMySQL();
+		
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newProcedureCode(?, ?)}");
+			
+			// Parametros del procedimiento almacenado
+			sentencia.setInt("code", code);
+			sentencia.setString("nombre", nombre);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+		} catch (SQLException e){
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void writeContractingSystemTypeCode(int code, String nombre){
+		Connection conn = conectarMySQL();
+		
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newContractingSystemTypeCode(?, ?)}");
+			
+			// Parametros del procedimiento almacenado
+			sentencia.setInt("code", code);
+			sentencia.setString("nombre", nombre);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+		} catch (SQLException e){
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void writeUrgencyCode(int code, String nombre){
+		Connection conn = conectarMySQL();
+		
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newUrgencyCode(?, ?)}");
+			
+			// Parametros del procedimiento almacenado
+			sentencia.setInt("code", code);
+			sentencia.setString("nombre", nombre);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+		} catch (SQLException e){
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void writeSubmissionMethodCode(int code, String nombre){
+		Connection conn = conectarMySQL();
+		
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newSubmissionMethodCode(?, ?)}");
+			
+			// Parametros del procedimiento almacenado
+			sentencia.setInt("code", code);
+			sentencia.setString("nombre", nombre);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+		} catch (SQLException e){
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void writeLanguage(String code, String nombre){
+		Connection conn = conectarMySQL();
+		
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newLanguage(?, ?)}");
+			
+			// Parametros del procedimiento almacenado
+			sentencia.setString("code", code);
+			sentencia.setString("nombre", nombre);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+		} catch (SQLException e){
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void writeProcurementLegislation(String code, String nombre){
+		Connection conn = conectarMySQL();
+		
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newProcurementLegislation(?, ?)}");
+			
+			// Parametros del procedimiento almacenado
+			sentencia.setString("code", code);
+			sentencia.setString("nombre", nombre);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+		} catch (SQLException e){
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	/* TABLAS GENERALES */
 	
 	public void writeExpediente(Entry entry, int ids) {
@@ -272,7 +441,8 @@ public class ConexionSQL {
 				}
 			}
 		} catch (SQLException e){
-			System.out.println(entry.getId() + " " + entry.getContractFolderStatus().getProcurementProject().getTypeCode());
+			System.out.println(entry.getId() + " " + entry.getContractFolderStatus().getProcurementProject().getTypeCode()
+					+ " " + entry.getContractFolderStatus().getProcurementProject().getSubTypeCode());
 			e.printStackTrace();
 		} finally {
 			// Cerramos las conexiones
@@ -313,7 +483,7 @@ public class ConexionSQL {
 		}
 	}
 
-	public void writeLugarDeEjecucion(Entry entry, int ids){
+	public void writeLugarDeEjecucion(Entry entry){
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -349,6 +519,81 @@ public class ConexionSQL {
 			// Ejecucion
 			sentencia.execute();
 			
+		} catch (SQLException | NullPointerException e){
+			System.out.println(entry.getId() + " ");
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void writeProcesoDeLicitacion(Entry entry){
+		Connection conn = conectarMySQL();
+		
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newProcesoDeLicitacion(?, ?, ?, ?, ?, ?, ?, ?)}");
+			
+			// Parametros
+			sentencia.setInt("expedientes", Integer.parseInt(entry.getId()));
+			sentencia.setInt("procedure_code", entry.getContractFolderStatus().getTenderingProcess().getProcedureCode());
+			
+			if (entry.getContractFolderStatus().getTenderingProcess().getContractingSystemTypeCode() > 0){
+				sentencia.setInt("contracting_system_type_code", entry.getContractFolderStatus().getTenderingProcess().getContractingSystemTypeCode());
+			}else{
+				sentencia.setNull("contracting_system_type_code", java.sql.Types.NULL);
+			}
+			
+			if (entry.getContractFolderStatus().getTenderingProcess().getUrgencyCode() > 0){
+				sentencia.setInt("urgency_code", entry.getContractFolderStatus().getTenderingProcess().getUrgencyCode());	
+			}else{
+				sentencia.setNull("urgency_code", java.sql.Types.NULL);
+			}
+			
+			if (entry.getContractFolderStatus().getTenderingProcess().getSubmissionMethodCode() > 0){
+				sentencia.setInt("submission_method_code", entry.getContractFolderStatus().getTenderingProcess().getSubmissionMethodCode());	
+			}else{
+				sentencia.setNull("submission_method_code", java.sql.Types.NULL);
+			}
+			
+			if (entry.getContractFolderStatus().getTenderingTerms().getProcurementLegislationDocumenteReference() != null){
+				sentencia.setString("procurement_legislation", entry.getContractFolderStatus().getTenderingTerms().getProcurementLegislationDocumenteReference().getId());
+			}else{
+				sentencia.setString("procurement_legislation", "N/A");
+			}
+			
+			if (entry.getContractFolderStatus().getTenderingProcess().getAuctionTerms() != null){
+				sentencia.setBoolean("subasta_electronica", entry.getContractFolderStatus().getTenderingProcess().getAuctionTerms().getAuctionConstraintIndicator());
+			}else{
+				sentencia.setNull("subasta_electronica", java.sql.Types.NULL);
+			}
+			
+			// Ejecucion
+			sentencia.execute();
+			
+			int procesoId = sentencia.getInt("proceso_de_licitacion");
+			
+			// LANGUAGES
+			Language[] languageList = entry.getContractFolderStatus().getTenderingTerms().getLanguageList();
+			if (languageList.length > 0){
+				for (int i = 0; i < languageList.length; i++){
+					sentencia = (CallableStatement) conn.prepareCall("{call newProcesoDeLicitacion_Idioma(?, ?)}");
+					
+					// Parametros
+					sentencia.setInt("proceso_de_licitacion", procesoId);
+					sentencia.setString("idioma", languageList[i].getId());
+					
+					// Ejecucion
+					sentencia.execute();
+				}
+			}
 		} catch (SQLException | NullPointerException e){
 			System.out.println(entry.getId() + " ");
 			e.printStackTrace();

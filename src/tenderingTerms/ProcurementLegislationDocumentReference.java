@@ -23,4 +23,8 @@ public class ProcurementLegislationDocumentReference {
 				 "---> ID: " + id + "\n" +
 				 "--------------------------------\n");
 	}
+	
+	public String getId() {
+		return id;
+	}
 }
