@@ -394,4 +394,8 @@ public class ContractFolderStatus {
 	public TenderingTerms getTenderingTerms(){
 		return tenderingTerms;
 	}
+
+	public LocatedContractingParty getLocatedContractingParty() {
+		return locatedContractingParty;
+	}
 }

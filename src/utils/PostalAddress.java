@@ -110,4 +110,20 @@ public class PostalAddress {
 				country.print();
 		System.out.print("--------------------------------\n");
 	}
+	
+	public AddressLine getAddressLine(){
+		return addressLine;
+	}
+
+	public String getPostalZone(){
+		return postalZone;
+	}
+
+	public Country getCountry(){
+		return country;
+	}
+	
+	public String getCityName(){
+		return cityName;
+	}
 }

@@ -99,4 +99,24 @@ public class Party {
 		postalAddress.print();
 		System.out.print("--------------------------------\n");
 	}
+
+	public PartyIdentification[] getPartyIdentificationList() {
+		return partyIdentificationList;
+	}
+	
+	public PartyName getPartyName(){
+		return partyName;
+	}
+	
+	public String getWebsiteURI(){
+		return websiteURI;
+	}
+	
+	public PostalAddress getPostalAddress(){
+		return postalAddress;
+	}
+	
+	public Contact getContact(){
+		return contact;
+	}
 }

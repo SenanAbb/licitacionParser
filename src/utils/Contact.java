@@ -51,4 +51,23 @@ public class Contact {
 						 "----> Telefax: " + telefax + "\n" +
 						 "--------------------------------\n");	
 	}
+
+	
+	public String getName() {
+		return name;
+	}
+
+	public String getElectronicMail() {
+		return electronicMail;
+	}
+
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public String getTelefax() {
+		return telefax;
+	}
+
+	
 }

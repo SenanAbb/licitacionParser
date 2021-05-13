@@ -151,10 +151,10 @@ public class Parser {
 		entries.add(newEntry);	
 		
 		
-		/* ----> CONEXION CON BD INIT <----
+		/* ----> CONEXION CON BD <----
 		 * Vamos a insertar en la BD la entry:
 		 * 	1. Debemos crear un registro en tbl_ids para guardar la fecha en que se produjo esta lectura
-		 * 	2. Guardamos el ids generado automáticamente para linkearlo en tbl_entrys (FK)
+		 * 	2. Guardamos el ids generado automáticamente para linkearlo con expedientes (FK)
 		 * 	3. Almacenamos los datos del entry
 		 * 	3.1. Creamos la conexion en la clase ConexionSQL
 		 * 	3.2. Le pasamos al entry el objeto sql para que pueda hacer la llamada a la creación de su sentencia, y ejecutarla
@@ -162,9 +162,8 @@ public class Parser {
 		
 		if (escribir){
 			ConexionSQL conn = new ConexionSQL();
+			
 			conn.writeExpediente(newEntry, ids);
-			conn.writeLugarDeEjecucion(newEntry);
-			conn.writeProcesoDeLicitacion(newEntry);
 		}
 	}
 
@@ -715,12 +714,155 @@ public class Parser {
 	    }
 	}
 
+	public void writeContractingPartyTypeCode() throws ParserConfigurationException, SAXException, TransformerException {
+		try {
+			String code = "", nombre = "";
+			ConexionSQL con = new ConexionSQL();
+			URL url;
+			URLConnection conexion;
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); 
+	        DocumentBuilder db = dbf.newDocumentBuilder(); 
+	        
+	        // Se abre la conexión
+	        url = new URL("https://contrataciondelestado.es/codice/cl/1.04/ContractingAuthorityCode-1.04.gc");
+	        conexion = url.openConnection();
+	        conexion.connect();
+	     
+	        Document doc = db.parse(conexion.getInputStream());
+	        
+	        Element codeList = (Element) doc.getElementsByTagName("gc:CodeList").item(POS_UNICO_ELEMENTO);
+	        Element simpleCodeList = (Element) codeList.getElementsByTagName("SimpleCodeList").item(POS_UNICO_ELEMENTO);
+	        NodeList rowsList = simpleCodeList.getElementsByTagName("Row");
+	        
+	        for (int i = 0; i < rowsList.getLength(); i++){
+	        	Element row = (Element) rowsList.item(i);
+	        	NodeList valueList = row.getElementsByTagName("Value");
+	        	for (int j = 0; j < valueList.getLength(); j++){
+	        		if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("code") == 0){
+	        			code = valueList.item(j).getTextContent().trim();
+	        		}else if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("nombre") == 0){
+	        			nombre = valueList.item(j).getTextContent().trim();
+	        		}
+	        	}
+	        	// Escribimos en la BD
+	        	con.writeContractingPartyTypeCode(code, nombre);
+	        }
+		}catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	public void writeModosId() {
+		ConexionSQL con = new ConexionSQL();
+		int modosid = 1;
+		String descripcion = "Automático";
+		
+		// Escribimos en la BD
+		con.writeModosId(modosid, descripcion);
+		
+		modosid = 2;
+		descripcion = "Manual";
+		con.writeModosId(modosid, descripcion);
+	}
+	
+	public void writeContractFolderStatusCode() throws ParserConfigurationException, SAXException, TransformerException{
+		try {
+			String code = "", nombre = "";
+			ConexionSQL con = new ConexionSQL();
+			URL url;
+			URLConnection conexion;
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); 
+	        DocumentBuilder db = dbf.newDocumentBuilder(); 
+	        
+	        // Se abre la conexión
+	        url = new URL("https://contrataciondelestado.es/codice/cl/2.03/ContractFolderStatusCode-2.03.gc");
+	        conexion = url.openConnection();
+	        conexion.connect();
+	     
+	        Document doc = db.parse(conexion.getInputStream());
+	        
+	        Element codeList = (Element) doc.getElementsByTagName("gc:CodeList").item(POS_UNICO_ELEMENTO);
+	        Element simpleCodeList = (Element) codeList.getElementsByTagName("SimpleCodeList").item(POS_UNICO_ELEMENTO);
+	        NodeList rowsList = simpleCodeList.getElementsByTagName("Row");
+	        
+	        for (int i = 0; i < rowsList.getLength(); i++){
+	        	Element row = (Element) rowsList.item(i);
+	        	NodeList valueList = row.getElementsByTagName("Value");
+	        	for (int j = 0; j < valueList.getLength(); j++){
+	        		if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("code") == 0){
+	        			code = valueList.item(j).getTextContent().trim();
+	        		}else if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("nombre") == 0){
+	        			nombre = valueList.item(j).getTextContent().trim();
+	        		}
+	        	}
+	        	// Escribimos en la BD
+	        	con.writeContractFolderStatusCode(code, nombre);
+	        }
+		}catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+		
+	public void writeTypeCode() throws ParserConfigurationException, SAXException, TransformerException{
+		try {
+			int code = 0;
+			String nombre = "";
+			ConexionSQL con = new ConexionSQL();
+			URL url;
+			URLConnection conexion;
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); 
+	        DocumentBuilder db = dbf.newDocumentBuilder(); 
+	        
+	        // Se abre la conexión
+	        url = new URL("https://contrataciondelestado.es/codice/cl/2.08/ContractCode-2.08.gc");
+	        conexion = url.openConnection();
+	        conexion.connect();
+	     
+	        Document doc = db.parse(conexion.getInputStream());
+	        
+	        Element codeList = (Element) doc.getElementsByTagName("gc:CodeList").item(POS_UNICO_ELEMENTO);
+	        Element simpleCodeList = (Element) codeList.getElementsByTagName("SimpleCodeList").item(POS_UNICO_ELEMENTO);
+	        NodeList rowsList = simpleCodeList.getElementsByTagName("Row");
+	        
+	        for (int i = 0; i < rowsList.getLength(); i++){
+	        	Element row = (Element) rowsList.item(i);
+	        	NodeList valueList = row.getElementsByTagName("Value");
+	        	for (int j = 0; j < valueList.getLength(); j++){
+	        		if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("code") == 0){
+	        			code = Integer.parseInt(valueList.item(j).getTextContent().trim());
+	        		}else if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("nombre") == 0){
+	        			nombre = valueList.item(j).getTextContent().trim();
+	        		}
+	        	}
+	        	// Escribimos en la BD
+	        	con.writeTypèCode(code, nombre);
+	        }
+		}catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	public void writeTipoPliego(){
+		ConexionSQL con = new ConexionSQL();
+		int id = 1;
+		String tipo = "Administrativo";
+		con.writeTipoPliego(id, tipo);
+		
+		id = 2;
+		tipo = "Técnico";
+		con.writeTipoPliego(id, tipo);
+		
+		id = 3;
+		tipo = "Adicional";
+		con.writeTipoPliego(id, tipo);
+	}
+	
 	
 	/******************/
 	/** CONSTRUCTORS **/
 	/******************/
 
-	
+	// Filtro por NIF
 	public Parser(String URL, String NIF, String modo){
 		this.URL = new File(URL);
 		this.NIF = NIF;
@@ -728,6 +870,7 @@ public class Parser {
 		this.ids = createIds();
 	}
 	
+	// Filtro por nº de expediente
 	public Parser(String URL, ArrayList<String> exp, String modo){
 		this.URL = new File(URL);
 		this.expedientes = exp;
@@ -735,17 +878,14 @@ public class Parser {
 		this.ids = createIds();
 	}
 	
-	public Parser(String NIF){
-		this.NIF = NIF;
-		this.ids = createIds();
-	}
-	
+	// Filtro por nº de expediente sin URL
 	public Parser(ArrayList<String> exp, String modo){
 		this.expedientes = exp;
 		this.modo_identificacion = modo;
 		this.ids = createIds();
 	}
 	
+	// Sin nada (leemos todo)
 	public Parser(){
 		this.ids = createIds();
 	};
@@ -921,6 +1061,5 @@ public class Parser {
 	public void setURL(File file) {
 		this.URL = file;
 	}
-
 
 }

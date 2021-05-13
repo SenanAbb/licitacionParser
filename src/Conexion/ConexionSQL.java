@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import procurementProject.RequiredCommodityClassification;
 import tenderingTerms.Language;
+import utils.PartyIdentification;
 import Entry.Entry;
 
 import com.mysql.cj.jdbc.CallableStatement;
@@ -16,6 +17,7 @@ public class ConexionSQL {
 	private static final int PLIEGO_ADMINISTRATIVO = 1;
 	private static final int PLIEGO_TECNICO = 2;
 	private static final int PLIEGO_ADICIONAL = 3;
+	private static final String UBICACION_ORGANICA = "DIR3";
 	
     private String driver = "com.mysql.jdbc.Driver"; // Librería de MySQL
     private String database = "licitacion"; // Nombre de la base de datos  
@@ -322,6 +324,146 @@ public class ConexionSQL {
 		}
 	}
 	
+	public void writeContractingPartyTypeCode(String code, String nombre) {
+		Connection conn = conectarMySQL();
+		
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newContractingPartyTypeCode(?, ?)}");
+			
+			// Parametros del procedimiento almacenado
+			sentencia.setString("code", code);
+			sentencia.setString("nombre", nombre);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+		} catch (SQLException e){
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void writeModosId(int code, String descripcion){
+		Connection conn = conectarMySQL();
+		
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newModosId(?, ?)}");
+			
+			// Parametros del procedimiento almacenado
+			sentencia.setInt("modosId", code);
+			sentencia.setString("description", descripcion);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+		} catch (SQLException e){
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void writeContractFolderStatusCode(String code, String nombre) {
+		Connection conn = conectarMySQL();
+		
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newContractFolderStatusCode(?, ?)}");
+			
+			// Parametros del procedimiento almacenado
+			sentencia.setString("code", code);
+			sentencia.setString("nombre", nombre);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+		} catch (SQLException e){
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void writeTypèCode(int code, String nombre) {
+		Connection conn = conectarMySQL();
+		
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newTypeCode(?, ?)}");
+			
+			// Parametros del procedimiento almacenado
+			sentencia.setInt("code", code);
+			sentencia.setString("nombre", nombre);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+		} catch (SQLException e){
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void writeTipoPliego(int id, String tipo){
+		Connection conn = conectarMySQL();
+		
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newTipoPliego(?, ?)}");
+			
+			// Parametros del procedimiento almacenado
+			sentencia.setInt("id", id);
+			sentencia.setString("tipo", tipo);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+		} catch (SQLException e){
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	/* TABLAS GENERALES */
 	
 	public void writeExpediente(Entry entry, int ids) {
@@ -461,6 +603,8 @@ public class ConexionSQL {
 		CallableStatement sentencia = null;
 		
 		try {
+			conn.setAutoCommit(false);
+			
 			sentencia = (CallableStatement) conn.prepareCall("{call newExpediente_Ids(?, ?, ?, ?, ?)}");
 			
 			sentencia.setInt("ids", ids);
@@ -469,7 +613,13 @@ public class ConexionSQL {
 			sentencia.setTimestamp("updated", entry.getUpdated());
 			sentencia.setString("estado", entry.getContractFolderStatus().getContractFolderStatusCode());
 			
+			writeLugarDeEjecucion(entry);
+			writeProcesoDeLicitacion(entry);
+			writeEntidadAdjudicadora(entry);
+
 			sentencia.execute();
+			
+			conn.commit();
 		} catch (SQLException e){
 			e.printStackTrace();
 		} finally {
@@ -493,10 +643,10 @@ public class ConexionSQL {
 			
 			// Parametros
 			sentencia.setInt("expedientes", Integer.parseInt(entry.getId()));
-			sentencia.setString("country_subentity_code", entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getCountrySubentityCode());
+			sentencia.setString("subentidad_territorial", entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getCountrySubentityCode());
 			
 			if (entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getAddress() != null){
-				sentencia.setString("country_identification_code", entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getAddress().getCountry().getIdentificationCode());
+				sentencia.setString("subentidad_nacional", entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getAddress().getCountry().getIdentificationCode());
 				sentencia.setString("pais", entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getAddress().getCountry().getName());
 				
 				if (entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getAddress().getAddressLine() != null){
@@ -508,13 +658,12 @@ public class ConexionSQL {
 				sentencia.setString("codigo_postal", entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getAddress().getPostalZone());
 				sentencia.setString("poblacion", entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getAddress().getCityName());
 			}else{
-				sentencia.setString("country_identification_code", null);	
+				sentencia.setString("subentidad_nacional", null);	
 				sentencia.setString("pais", null);
 				sentencia.setString("calle", null);
 				sentencia.setString("codigo_postal", null);
 				sentencia.setString("poblacion", null);
 			}
-			
 			
 			// Ejecucion
 			sentencia.execute();
@@ -608,7 +757,141 @@ public class ConexionSQL {
 		}
 	}
 	
+	public void writeEntidadAdjudicadora(Entry entry){
+		Connection conn = conectarMySQL();
+		
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newEntidadAdjudicadora(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+			
+			// Parametros
+			sentencia.setInt("expedientes", Integer.parseInt(entry.getId()));
+			
+			// ubicacion_organica
+			boolean encontrado = false;
+			PartyIdentification[] pi = entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPartyIdentificationList();
+			
+			for (int i = 0; i < pi.length; i++){
+				if (pi[i].getSchemeName().compareTo(UBICACION_ORGANICA) == 0){
+					encontrado = true;
+					sentencia.setString("ubicacion_organica", pi[i].getId());
+				// Parámetro NIF
+				}else if (pi[i].getSchemeName().compareTo("NIF") == 0){
+					sentencia.setString("NIF", pi[i].getId());
+				}
+			}
+			
+			if (!encontrado){
+				sentencia.setString("ubicacion_organica", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPartyName().getName());
+			}
+			
+			// nombre
+			sentencia.setString("nombre", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPartyName().getName());
+			
+			// tipo_administracion
+			sentencia.setInt("tipo_administracion", entry.getContractFolderStatus().getLocatedContractingParty().getContractingPartyTypeCode());
+			
+			// sitio_web
+			sentencia.setString("sitio_web", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getWebsiteURI());
+			
+			// calle
+			if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress() != null){
+				if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress().getAddressLine() != null){
+					sentencia.setString("calle", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress().getAddressLine().getLine());
+				}else{
+					sentencia.setString("calle", null);
+				}
+			}else{
+				sentencia.setString("calle", null);
+			}
+			
+			// codigo_postal
+			if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress() != null){
+				sentencia.setString("codigo_postal", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress().getPostalZone());
+			}else{
+				sentencia.setString("codigo_postal", null);
+			}
+			
+			// poblacion
+			if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress() != null){
+				sentencia.setString("poblacion", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress().getCityName());
+			}else{
+				sentencia.setString("poblacion", null);
+			}
+			
+			// pais
+			if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress() != null){
+				if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress().getCountry() != null){
+					sentencia.setString("pais", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress().getCountry().getIdentificationCode());
+				}else{
+					sentencia.setString("pais", null);
+				}
+			}else{
+				sentencia.setString("pais", null);
+			}
+
+			// nombre_contacto
+			if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact() != null){
+				sentencia.setString("nombre_contacto", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact().getName());
+			}else{
+				sentencia.setString("nombre_contacto", null);
+			}
+			
+			// telefono
+			if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact() != null){
+				sentencia.setString("telefono", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact().getTelephone());
+			}else{
+				sentencia.setString("telefono", null);
+			}
+			
+			// fax
+			if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact() != null){
+				sentencia.setString("fax", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact().getTelefax());
+			}else{
+				sentencia.setString("fax", null);
+			}
+			
+			// correo_electronico
+			if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact() != null){
+				sentencia.setString("correo_electronico", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact().getElectronicMail());
+			}else{
+				sentencia.setString("correo_electronico", null);
+			}
+			
+			// Ejecucion
+			sentencia.execute();
+			
+			int entidad_adjudicadora = sentencia.getInt("entidad_adjudicadora");
+			
+			// ID's
+			for (int i = 0; i < pi.length; i++){
+				sentencia = (CallableStatement) conn.prepareCall("{call newId(?, ?, ?)}");
+				
+				// Parametros
+				sentencia.setInt("entidad_adjudicadora", entidad_adjudicadora);
+				sentencia.setString("tipo_id", pi[i].getSchemeName());
+				sentencia.setString("valor", pi[i].getId());
+				
+				// Ejecucion
+				sentencia.execute();
+			}
+		} catch (SQLException | NullPointerException e){
+			System.out.println(entry.getId() + " ");
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	/* AUXILIARES */
+	
 	
 	private boolean searchExpediente(int id) {
 		Connection conn = conectarMySQL();

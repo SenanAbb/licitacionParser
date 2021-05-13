@@ -69,4 +69,12 @@ public class LocatedContractingParty {
 		}
 		System.out.print("===============================================================\n");
 	}
+
+	public Party getParty(){
+		return party;
+	}
+	
+	public int getContractingPartyTypeCode() {
+		return contractingPartyTypeCode;
+	}
 }

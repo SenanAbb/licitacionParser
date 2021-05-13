@@ -26,4 +26,12 @@ public class PartyIdentification {
 	public void print(){
 		System.out.print("----> Party Identification: " + id + " " + "(" + schemeName + ")" + "\n");
 	}
+
+	public String getId() {
+		return id;
+	}
+
+	public String getSchemeName() {
+		return schemeName;
+	}
 }

@@ -25,4 +25,8 @@ public class PartyName {
 						 "----> Party Name: " + name + "\n" +
 						 "--------------------------------\n");
 	}
+	
+	public String getName(){
+		return name;
+	}
 }
