@@ -55,4 +55,16 @@ public class DocumentAvailabilityPeriod {
 				 "---> End Time: " + endTime + "\n" +
 				 "--------------------------------\n");
 	}
+
+	public java.sql.Date getEndDate() {
+		if (endDate != null){
+			return new java.sql.Date(endDate.getTime());
+		}else{
+			return null;
+		}
+	}
+
+	public Time getEndTime() {
+		return endTime;
+	}
 }

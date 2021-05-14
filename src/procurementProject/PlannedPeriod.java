@@ -85,7 +85,7 @@ public class PlannedPeriod {
 
 	public java.sql.Date getEndDate() {
 		if (endDate != null){
-			return new java.sql.Date(endDate.getTime());
+			return new java.sql.Date(startDate.getTime());
 		}else{
 			return null;
 		}

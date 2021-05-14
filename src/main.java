@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,13 +13,13 @@ import org.xml.sax.SAXException;
 import Parser.Parser;
 
 public class main {
-	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, TransformerException {
+	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, TransformerException, SQLException {
 //		rellenar();
 //		leerDirectorio();
 		leerArchivo();
 	}
 
-	private static void leerDirectorio() throws FileNotFoundException, ParserConfigurationException, SAXException, IOException {
+	private static void leerDirectorio() throws FileNotFoundException, SAXException, IOException, SQLException {
 		/** PARSER DE DIRECTORIO */
 		String path = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/LicitacionParser/Licitaciones 20-21/";
 		String[] files = null;
@@ -63,7 +64,7 @@ public class main {
 		}
 	}
 	
-	private static void leerArchivo() throws FileNotFoundException, ParserConfigurationException, SAXException, IOException{
+	private static void leerArchivo() throws FileNotFoundException, ParserConfigurationException, SAXException, IOException, SQLException{
 		/** PARSER DE UN SOLO ARCHIVO */
 		String URL = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/Documentacion/Informacion/pruebas_licitacion.atom";
 		//String URL = "Licitaciones 20-21/2020_12/licitacionesPerfilesContratanteCompleto3_20201230_181906_1";
@@ -82,21 +83,22 @@ public class main {
 		Parser p = new Parser();
 		
 		// Rellenar las tablas TypeCode
-//		p.writeModosId();
-//		p.writeTypeCode();
-//		p.writeSubtypeCodes();
-//		p.writeCPV();
-//		p.writeCountryIdentificationCode();
-//		p.writeCountrySubentityCode();
-//		p.writeProcedureCode();
-//		p.writeContractingSystemTypeCode();
-//		p.writeUrgencyCode();
-//		p.writeSubmissionMethodCode();
-//		p.writeLanguage();
-//		p.writeProcurementLegislation();
-//		p.writeContractingPartyTypeCode();
-//		p.writeContractFolderStatusCode();
+		p.writeModosId();
+		p.writeTypeCode();
+		p.writeSubtypeCodes();
+		p.writeCPV();
+		p.writeCountryIdentificationCode();
+		p.writeCountrySubentityCode();
+		p.writeProcedureCode();
+		p.writeContractingSystemTypeCode();
+		p.writeUrgencyCode();
+		p.writeSubmissionMethodCode();
+		p.writeLanguage();
+		p.writeProcurementLegislation();
+		p.writeContractingPartyTypeCode();
+		p.writeContractFolderStatusCode();
 		p.writeTipoPliego();
+		p.writeTipoPlazo();
 	}
 	
 	private static String[] getFiles(String path) {

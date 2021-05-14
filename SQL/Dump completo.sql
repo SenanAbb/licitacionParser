@@ -214,7 +214,6 @@ DROP TABLE IF EXISTS `tbl_entidad_adjudicadora`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tbl_entidad_adjudicadora` (
   `entidad_adjudicadora` int(11) NOT NULL AUTO_INCREMENT,
-  `expedientes` int(11) NOT NULL,
   `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `ubicacion_organica` varchar(300) NOT NULL,
   `nombre` varchar(300) NOT NULL,
@@ -229,13 +228,14 @@ CREATE TABLE `tbl_entidad_adjudicadora` (
   `fax` varchar(55) DEFAULT NULL,
   `correo_electronico` varchar(500) DEFAULT NULL,
   `NIF` varchar(200) NOT NULL,
+  `ids` int(11) NOT NULL,
   PRIMARY KEY (`entidad_adjudicadora`),
-  KEY `fk_tbl_entidad_adjudicadora_tbl_expedientes1_idx` (`expedientes`),
   KEY `fk_tbl_entidad_adjudicadora_tbl_contracting_party_type_code_idx` (`tipo_administracion`),
   KEY `fk_tbl_entidad_adjudicadora_tbl_country_identification_code_idx` (`pais`),
+  KEY `fk_tbl_entidad_adjudicadora_tbl_ids_expedientes1_idx` (`ids`),
   CONSTRAINT `fk_tbl_entidad_adjudicadora_tbl_contracting_party_type_code1` FOREIGN KEY (`tipo_administracion`) REFERENCES `tbl_contracting_party_type_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_entidad_adjudicadora_tbl_country_identification_code1` FOREIGN KEY (`pais`) REFERENCES `tbl_country_identification_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tbl_entidad_adjudicadora_tbl_expedientes1` FOREIGN KEY (`expedientes`) REFERENCES `tbl_expedientes` (`expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_tbl_entidad_adjudicadora_tbl_ids_expedientes1` FOREIGN KEY (`ids`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -401,7 +401,7 @@ CREATE TABLE `tbl_ids` (
   PRIMARY KEY (`ids`),
   KEY `modosid_idx` (`modosid`),
   CONSTRAINT `modosid` FOREIGN KEY (`modosid`) REFERENCES `tbl_modosid` (`modosid`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -480,7 +480,6 @@ DROP TABLE IF EXISTS `tbl_lugar_de_ejecucion`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tbl_lugar_de_ejecucion` (
   `lugar_de_ejecucion` int(11) NOT NULL AUTO_INCREMENT,
-  `expedientes` int(11) NOT NULL,
   `subentidad_nacional` varchar(3) DEFAULT NULL,
   `subentidad_territorial` varchar(5) NOT NULL,
   `pais` varchar(100) DEFAULT NULL,
@@ -488,13 +487,14 @@ CREATE TABLE `tbl_lugar_de_ejecucion` (
   `codigo_postal` varchar(32) DEFAULT NULL,
   `poblacion` varchar(90) DEFAULT NULL,
   `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `ids` int(11) NOT NULL,
   PRIMARY KEY (`lugar_de_ejecucion`),
   KEY `fk_calle_tbl_country_identification_code1_idx` (`subentidad_nacional`),
   KEY `fk_calle_tbl_country_subentity_code1_idx` (`subentidad_territorial`),
-  KEY `fk_calle_tbl_expedientes1_idx` (`expedientes`),
+  KEY `fk_tbl_lugar_de_ejecucion_tbl_ids_expedientes1_idx` (`ids`),
   CONSTRAINT `fk_calle_tbl_country_identification_code1` FOREIGN KEY (`subentidad_nacional`) REFERENCES `tbl_country_identification_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_calle_tbl_country_subentity_code1` FOREIGN KEY (`subentidad_territorial`) REFERENCES `tbl_country_subentity_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_calle_tbl_expedientes1` FOREIGN KEY (`expedientes`) REFERENCES `tbl_expedientes` (`expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_tbl_lugar_de_ejecucion_tbl_ids_expedientes1` FOREIGN KEY (`ids`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -532,6 +532,37 @@ INSERT INTO `tbl_modosid` VALUES (1,'Automático'),(2,'Manual');
 UNLOCK TABLES;
 
 --
+-- Table structure for table `tbl_plazo_de_obtencion`
+--
+
+DROP TABLE IF EXISTS `tbl_plazo_de_obtencion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_plazo_de_obtencion` (
+  `id_plazo_de_obtencion` int(11) NOT NULL AUTO_INCREMENT,
+  `fecha` date DEFAULT NULL,
+  `hora` time DEFAULT NULL,
+  `observaciones` varchar(45) DEFAULT NULL,
+  `tipo_plazo` int(11) NOT NULL,
+  `ids` int(11) NOT NULL,
+  PRIMARY KEY (`id_plazo_de_obtencion`),
+  KEY `fk_tbl_plazo_de_obtencion_table11_idx` (`tipo_plazo`),
+  KEY `fk_tbl_plazo_de_obtencion_tbl_ids_expedientes1_idx` (`ids`),
+  CONSTRAINT `fk_tbl_plazo_de_obtencion_table11` FOREIGN KEY (`tipo_plazo`) REFERENCES `tbl_tipo_plazo` (`tipo_plazo`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbl_plazo_de_obtencion_tbl_ids_expedientes1` FOREIGN KEY (`ids`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_plazo_de_obtencion`
+--
+
+LOCK TABLES `tbl_plazo_de_obtencion` WRITE;
+/*!40000 ALTER TABLE `tbl_plazo_de_obtencion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_plazo_de_obtencion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tbl_pliegos`
 --
 
@@ -545,14 +576,14 @@ CREATE TABLE `tbl_pliegos` (
   `document_hash` varchar(2500) DEFAULT NULL,
   `file_name` varchar(2500) DEFAULT NULL,
   `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `expedientes` int(11) NOT NULL,
   `tipo_pliego` int(11) NOT NULL,
+  `expedientes` int(11) NOT NULL,
   PRIMARY KEY (`pliegos`),
-  KEY `fk_tbl_pliegos_tbl_expedientes1_idx` (`expedientes`),
   KEY `fk_tbl_pliegos_tbl_tipo_pliego1_idx` (`tipo_pliego`),
+  KEY `fk_tbl_pliegos_tbl_expedientes1_idx` (`expedientes`),
   CONSTRAINT `fk_tbl_pliegos_tbl_expedientes1` FOREIGN KEY (`expedientes`) REFERENCES `tbl_expedientes` (`expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_pliegos_tbl_tipo_pliego1` FOREIGN KEY (`tipo_pliego`) REFERENCES `tbl_tipo_pliego` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -597,7 +628,6 @@ DROP TABLE IF EXISTS `tbl_proceso_de_licitacion`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tbl_proceso_de_licitacion` (
   `proceso_de_licitacion` int(11) NOT NULL AUTO_INCREMENT,
-  `expedientes` int(11) NOT NULL,
   `tipo_procedimiento` int(11) NOT NULL,
   `sistema_contratacion` int(11) DEFAULT NULL,
   `tramitacion` int(11) DEFAULT NULL,
@@ -605,15 +635,16 @@ CREATE TABLE `tbl_proceso_de_licitacion` (
   `regulacion` varchar(15) DEFAULT NULL,
   `subasta_electronica` tinyint(4) DEFAULT NULL,
   `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `ids` int(11) NOT NULL,
   PRIMARY KEY (`proceso_de_licitacion`),
-  KEY `fk_tbl_proceso_de_licitacion_tbl_expedientes1_idx` (`expedientes`),
   KEY `fk_tbl_proceso_de_licitacion_tbl_procedure_code1_idx` (`tipo_procedimiento`),
   KEY `fk_tbl_proceso_de_licitacion_tbl_contracting_system_type_co_idx` (`sistema_contratacion`),
   KEY `fk_tbl_proceso_de_licitacion_tbl_urgency_code1_idx` (`tramitacion`),
   KEY `fk_tbl_proceso_de_licitacion_tbl_submission_method_code1_idx` (`presentacion_oferta`),
   KEY `fk_tbl_proceso_de_licitacion_tbl_procurement_legislation1_idx` (`regulacion`),
+  KEY `fk_tbl_proceso_de_licitacion_tbl_ids_expedientes1_idx` (`ids`),
   CONSTRAINT `fk_tbl_proceso_de_licitacion_tbl_contracting_system_type_code1` FOREIGN KEY (`sistema_contratacion`) REFERENCES `tbl_contracting_system_type_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tbl_proceso_de_licitacion_tbl_expedientes1` FOREIGN KEY (`expedientes`) REFERENCES `tbl_expedientes` (`expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbl_proceso_de_licitacion_tbl_ids_expedientes1` FOREIGN KEY (`ids`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_proceso_de_licitacion_tbl_procedure_code1` FOREIGN KEY (`tipo_procedimiento`) REFERENCES `tbl_procedure_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_proceso_de_licitacion_tbl_procurement_legislation1` FOREIGN KEY (`regulacion`) REFERENCES `tbl_procurement_legislation` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_proceso_de_licitacion_tbl_submission_method_code1` FOREIGN KEY (`presentacion_oferta`) REFERENCES `tbl_submission_method_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -713,9 +744,9 @@ DROP TABLE IF EXISTS `tbl_subtype_code`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tbl_subtype_code` (
   `code` int(11) NOT NULL,
-  `nombre` varchar(300) NOT NULL,
   `type_code` int(11) NOT NULL,
-  PRIMARY KEY (`code`),
+  `nombre` varchar(300) NOT NULL,
+  PRIMARY KEY (`code`,`type_code`),
   KEY `fk_tbl_subtype_code_tbl_type_code1_idx` (`type_code`),
   CONSTRAINT `fk_tbl_subtype_code_tbl_type_code1` FOREIGN KEY (`type_code`) REFERENCES `tbl_type_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -727,8 +758,32 @@ CREATE TABLE `tbl_subtype_code` (
 
 LOCK TABLES `tbl_subtype_code` WRITE;
 /*!40000 ALTER TABLE `tbl_subtype_code` DISABLE KEYS */;
-INSERT INTO `tbl_subtype_code` VALUES (1,'Alquiler',1),(2,'Adquisición',1),(3,'Servicios de transporte aéreo: transporte de pasajeros y carga, excepto el transporte de correo',2),(4,'Transporte de correo por vía terrestre y por vía aírea',2),(5,'Servicios de telecomunicación',2),(6,'Servicios financieros: a) servicios de seguros; b) servicios bancarios y de inversión',2),(7,'Servicios de informítica y servicios conexos',2),(8,'Servicios de investigación y desarrollo',2),(9,'Servicios de contabilidad, auditoría y teneduría de libros',2),(10,'Servicios de investigación de estudios y encuestas de la opinión pública',2),(11,'Servicios de consultores de dirección y servicios conexos',2),(12,'Servicios de arquitectura; servicios de ingeniería y servicios integrados de ingeniería; servicios de planificación urbana y servicios de arquitectura paisajista. Servicios conexos de consultores en ciencia y tecnología. Servicios de ensayos y anílisis tícnicos',2),(13,'Servicios de publicidad',2),(14,'Servicios de limpieza de edificios y servicios de administración de bienes raíces',2),(15,'Servicios editoriales y de imprenta, por tarifa o por contrato',2),(16,'Servicios de alcantarillado y eliminación de desperdicios: servicios de saneamiento y servicios similares',2),(17,'Servicios de hostelería y restaurante',2),(18,'Servicios de transporte por ferrocarril',2),(19,'Servicios de transporte fluvial y marítimo',2),(20,'Servicios de transporte complementarios y auxiliares',2),(21,'Servicios jurídicos',2),(22,'Servicios de colocación y suministro de personal',2),(23,'Servicios de investigación y seguridad, excepto los servicios de furgones blindados',2),(24,'Servicios de educación y formación profesional',2),(25,'Servicios sociales y de salud',2),(26,'Servicios de esparcimiento, culturales y deportivos',2),(27,'Otros servicios',2),(30,'Adquisición de inmuebles',50),(31,'Adquisición de derechos de propiedad incorporal',50),(40,'Arrendamiento de inmuebles',50),(50,'Enajenación de inmuebles',50),(51,'Enajenación de bienes muebles',50),(52,'Enajenación de derechos de propiedad incorporal',50),(60,'Permuta',50),(100,'Otros contratos patrimoniales',50),(4500,'Construcción',3),(4510,'Preparación de obras',3),(4511,'Demolición de inmuebles y movimientos de tierras',3),(4512,'Perforaciones y sondeos',3),(4520,'Construcción general de inmuebles y obras de ingeniería\n				civil',3),(4521,'Construcción general de edificios y obras singulares de ingeniería\n					civil (puentes, túneles, etc.)',3),(4522,'Construcción de cubiertas y estructuras de cerramiento',3),(4523,'Construcción de autopistas,carreteras, campos de aterrizaje, vías\n					férreas y centros deportivos',3),(4524,'Obras hidráulicas',3),(4525,'Otras construcciones especializadas',3),(4530,'Instalación de edificios y obras',3),(4531,'Instalación eléctrica',3),(4532,'Aislamiento térmico, acústico y antivibratorio',3),(4533,'Fontanería',3),(4534,'Otras instalaciones de edificios y obras',3),(4540,'Acabado de edificios y obras',3),(4541,'Revocamiento',3),(4542,'Instalaciones de carpintería',3),(4543,'Revestimiento de suelos y paredes',3),(4544,'Pintura y acristalamiento',3),(4545,'Otros acabados de edificios y obras',3),(4550,'Alquiler de equipo de construcción o demolición con\n				operario',3);
+INSERT INTO `tbl_subtype_code` VALUES (1,1,'Alquiler'),(1,2,'Servicios de mantenimiento y reparación'),(2,1,'Adquisición'),(2,2,'Servicios de transporte por vía terrestre, incluidos los servicios de furgones blindados y servicios de mensajería, excepto el transporte de correo'),(3,2,'Servicios de transporte aéreo: transporte de pasajeros y carga, excepto el transporte de correo'),(4,2,'Transporte de correo por vía terrestre y por vía aírea'),(5,2,'Servicios de telecomunicación'),(6,2,'Servicios financieros: a) servicios de seguros; b) servicios bancarios y de inversión'),(7,2,'Servicios de informítica y servicios conexos'),(8,2,'Servicios de investigación y desarrollo'),(9,2,'Servicios de contabilidad, auditoría y teneduría de libros'),(10,2,'Servicios de investigación de estudios y encuestas de la opinión pública'),(10,50,'Autorización demanial'),(11,2,'Servicios de consultores de dirección y servicios conexos'),(11,50,'Concesión demanial'),(12,2,'Servicios de arquitectura; servicios de ingeniería y servicios integrados de ingeniería; servicios de planificación urbana y servicios de arquitectura paisajista. Servicios conexos de consultores en ciencia y tecnología. Servicios de ensayos y anílisis tícnicos'),(13,2,'Servicios de publicidad'),(14,2,'Servicios de limpieza de edificios y servicios de administración de bienes raíces'),(15,2,'Servicios editoriales y de imprenta, por tarifa o por contrato'),(16,2,'Servicios de alcantarillado y eliminación de desperdicios: servicios de saneamiento y servicios similares'),(17,2,'Servicios de hostelería y restaurante'),(18,2,'Servicios de transporte por ferrocarril'),(19,2,'Servicios de transporte fluvial y marítimo'),(20,2,'Servicios de transporte complementarios y auxiliares'),(20,50,'Explotación de bienes inmuebles mediante arrendamiento'),(21,2,'Servicios jurídicos'),(21,50,'Explotación de bienes muebles mediante arrendamiento'),(22,2,'Servicios de colocación y suministro de personal'),(22,50,'Explotación de bienes de propiedad incorporal'),(23,2,'Servicios de investigación y seguridad, excepto los servicios de furgones blindados'),(23,50,'Cesión de uso/titularidad'),(24,2,'Servicios de educación y formación profesional'),(25,2,'Servicios sociales y de salud'),(26,2,'Servicios de esparcimiento, culturales y deportivos'),(27,2,'Otros servicios'),(30,50,'Adquisición de inmuebles'),(31,50,'Adquisición de derechos de propiedad incorporal'),(40,50,'Arrendamiento de inmuebles'),(50,50,'Enajenación de inmuebles'),(51,50,'Enajenación de bienes muebles'),(52,50,'Enajenación de derechos de propiedad incorporal'),(60,50,'Permuta'),(100,50,'Otros contratos patrimoniales'),(4500,3,'Construcción'),(4510,3,'Preparación de obras'),(4511,3,'Demolición de inmuebles y movimientos de tierras'),(4512,3,'Perforaciones y sondeos'),(4520,3,'Construcción general de inmuebles y obras de ingeniería\n				civil'),(4521,3,'Construcción general de edificios y obras singulares de ingeniería\n					civil (puentes, túneles, etc.)'),(4522,3,'Construcción de cubiertas y estructuras de cerramiento'),(4523,3,'Construcción de autopistas,carreteras, campos de aterrizaje, vías\n					férreas y centros deportivos'),(4524,3,'Obras hidráulicas'),(4525,3,'Otras construcciones especializadas'),(4530,3,'Instalación de edificios y obras'),(4531,3,'Instalación eléctrica'),(4532,3,'Aislamiento térmico, acústico y antivibratorio'),(4533,3,'Fontanería'),(4534,3,'Otras instalaciones de edificios y obras'),(4540,3,'Acabado de edificios y obras'),(4541,3,'Revocamiento'),(4542,3,'Instalaciones de carpintería'),(4543,3,'Revestimiento de suelos y paredes'),(4544,3,'Pintura y acristalamiento'),(4545,3,'Otros acabados de edificios y obras'),(4550,3,'Alquiler de equipo de construcción o demolición con\n				operario');
 /*!40000 ALTER TABLE `tbl_subtype_code` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_tipo_plazo`
+--
+
+DROP TABLE IF EXISTS `tbl_tipo_plazo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_tipo_plazo` (
+  `tipo_plazo` int(11) NOT NULL,
+  `descripcion` varchar(45) NOT NULL,
+  PRIMARY KEY (`tipo_plazo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_tipo_plazo`
+--
+
+LOCK TABLES `tbl_tipo_plazo` WRITE;
+/*!40000 ALTER TABLE `tbl_tipo_plazo` DISABLE KEYS */;
+INSERT INTO `tbl_tipo_plazo` VALUES (1,'Pliegos'),(2,'Oferta'),(3,'Solicitudes');
+/*!40000 ALTER TABLE `tbl_tipo_plazo` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -814,7 +869,7 @@ UNLOCK TABLES;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newContractFolderStatusCode`(
 	IN code VARCHAR(50),
@@ -838,7 +893,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newContractingPartyTypeCode`(
 	IN code INT,
@@ -958,10 +1013,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newEntidadAdjudicadora`(
-	IN expedientes INT,
+	IN ids INT,
     IN ubicacion_organica VARCHAR(300),
     IN nombre VARCHAR(300),
     IN tipo_administracion INT,
@@ -977,8 +1032,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `newEntidadAdjudicadora`(
     IN NIF VARCHAR(200),
     OUT entidad_adjudicadora INT)
 BEGIN
-		INSERT INTO tbl_entidad_adjudicadora (expedientes, ubicacion_organica, nombre, tipo_administracion, sitio_web, calle, codigo_postal, poblacion, pais, nombre_contacto, telefono, fax, correo_electronico, NIF)
-		VALUES (expedientes, ubicacion_organica, nombre, tipo_administracion, sitio_web, calle, codigo_postal, poblacion, pais, nombre_contacto, telefono, fax, correo_electronico, NIF);
+		INSERT INTO tbl_entidad_adjudicadora (ids, ubicacion_organica, nombre, tipo_administracion, sitio_web, calle, codigo_postal, poblacion, pais, nombre_contacto, telefono, fax, correo_electronico, NIF)
+		VALUES (ids, ubicacion_organica, nombre, tipo_administracion, sitio_web, calle, codigo_postal, poblacion, pais, nombre_contacto, telefono, fax, correo_electronico, NIF);
     
 		SET entidad_adjudicadora = last_insert_id();
    
@@ -996,7 +1051,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newEntidadAdjudicadora_ID`(
 	IN entidad_adjudicadora INT,
@@ -1081,17 +1136,19 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newExpediente_Ids`(
 	IN ids INT,
     IN expediente INT,
     IN summary VARCHAR(400),
     IN updated TIMESTAMP,
-    IN estado VARCHAR(45))
+    IN estado VARCHAR(45),
+    OUT ids_expediente INT)
 BEGIN
-		INSERT INTO tbl_ids_expedientes (ids, expediente, summary, updated, estado)
-        VALUES (ids, expediente, summary, updated, estado);
+	INSERT INTO tbl_ids_expedientes (ids, expediente, summary, updated, estado)
+	VALUES (ids, expediente, summary, updated, estado);
+	SET ids_expediente = last_insert_id();
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1106,7 +1163,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newId`(
 	IN entidad_adjudicadora INT,
@@ -1182,10 +1239,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newLugarDeEjecucion`(
-	IN expedientes INT,
+	IN ids INT,
     IN subentidad_nacional VARCHAR(3),
     IN subentidad_territorial VARCHAR(5),
     IN pais VARCHAR(100),
@@ -1193,8 +1250,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `newLugarDeEjecucion`(
     IN codigo_postal VARCHAR(32),
     IN poblacion VARCHAR(90))
 BEGIN
-		INSERT INTO tbl_lugar_de_ejecucion (expedientes, subentidad_nacional, subentidad_territorial, pais, calle, codigo_postal, poblacion)
-        VALUES (expedientes, subentidad_nacional, subentidad_territorial, pais, calle, codigo_postal, poblacion);
+		INSERT INTO tbl_lugar_de_ejecucion (ids, subentidad_nacional, subentidad_territorial, pais, calle, codigo_postal, poblacion)
+        VALUES (ids, subentidad_nacional, subentidad_territorial, pais, calle, codigo_postal, poblacion);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1209,7 +1266,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newModosId`(
 	IN modosId INT,
@@ -1219,6 +1276,30 @@ BEGIN
 		INSERT INTO tbl_modosid (modosid, description)
         VALUES (modosId, description);
     COMMIT;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newPlazoDeObtencion` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newPlazoDeObtencion`(
+	IN ids INT,
+    IN tipo_plazo INT,
+    IN fecha DATE, 
+    IN hora TIME,
+    IN observaciones VARCHAR(550))
+BEGIN
+	INSERT INTO tbl_plazo_de_obtencion (fecha, hora, observaciones, ids, tipo_plazo) VALUES (fecha, hora, observaciones, ids, tipo_plazo);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1287,10 +1368,10 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newProcesoDeLicitacion`(
-	IN expedientes INT,
+	IN ids INT,
     IN procedure_code INT,
     IN contracting_system_type_code INT,
     IN urgency_code INT,
@@ -1299,8 +1380,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `newProcesoDeLicitacion`(
     IN subasta_electronica TINYINT,
     OUT proceso_de_licitacion INT)
 BEGIN
-		INSERT INTO tbl_proceso_de_licitacion (expedientes, tipo_procedimiento, sistema_contratacion, tramitacion, presentacion_oferta, regulacion, subasta_electronica)
-        VALUES (expedientes, procedure_code, contracting_system_type_code, urgency_code, submission_method_code, procurement_legislation, subasta_electronica);
+		INSERT INTO tbl_proceso_de_licitacion (ids, tipo_procedimiento, sistema_contratacion, tramitacion, presentacion_oferta, regulacion, subasta_electronica)
+        VALUES (ids, procedure_code, contracting_system_type_code, urgency_code, submission_method_code, procurement_legislation, subasta_electronica);
     
 		SET proceso_de_licitacion = last_insert_id();
 END ;;
@@ -1317,7 +1398,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newProcesoDeLicitacion_Idioma`(
 	IN proceso_de_licitacion INT,
@@ -1402,6 +1483,29 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newTipoPlazo` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newTipoPlazo`(
+	IN tipo_plazo INT,
+    IN descripcion VARCHAR(45))
+BEGIN
+	START transaction;
+    INSERT INTO tbl_tipo_plazo (tipo_plazo, descripcion) VALUES (tipo_plazo, descripcion);
+    COMMIT;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `newTipoPliego` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1410,7 +1514,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newTipoPliego`(
 	IN id INT,
@@ -1434,7 +1538,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newTypeCode`(
 	IN code INT,
@@ -1510,4 +1614,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-13 13:32:18
+-- Dump completed on 2021-05-14 13:06:49

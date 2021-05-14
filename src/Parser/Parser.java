@@ -57,7 +57,7 @@ public class Parser {
 	/* Si escribir = true -> escribirá los datos en la BD */
 	private boolean escribir = true;
 
-	public void readEntries(){
+	public void readEntries() throws SQLException{
 		try {
     		//Iniciamos el DocumentBuilderFactory;
 			Document document = initDocumentBuilder(this.URL);
@@ -97,7 +97,7 @@ public class Parser {
 		}
 	}
 	
-	private void readAttributesAndWrite(Element e) {
+	private void readAttributesAndWrite(Element e) throws SQLException {
 		String[] idSplit = null;
 		String id = null, entryId = null, entryLink = null, entrySummary = null, entryTitle = null;
 		Timestamp entryUpdate = null;
@@ -855,6 +855,21 @@ public class Parser {
 		id = 3;
 		tipo = "Adicional";
 		con.writeTipoPliego(id, tipo);
+	}
+	
+	public void writeTipoPlazo(){
+		ConexionSQL con = new ConexionSQL();
+		int id = 1;
+		String tipo = "Pliegos";
+		con.writeTipoPlazo(id, tipo);
+		
+		id = 2;
+		tipo = "Oferta";
+		con.writeTipoPlazo(id, tipo);
+		
+		id = 3;
+		tipo = "Solicitudes";
+		con.writeTipoPlazo(id, tipo);
 	}
 	
 	

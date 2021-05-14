@@ -279,4 +279,16 @@ public class TenderingProcess {
 	public AuctionTerms getAuctionTerms() {
 		return auctionTerms;
 	}
+
+	public DocumentAvailabilityPeriod getDocumentAvailabilityPeriod(){
+		return documentAvailabilityPeriod;
+	}
+	
+	public TenderSubmissionDeadlinePeriod getTenderSubmissionDeadlinePeriod(){
+		return tenderSubmissionDeadlinePeriod;
+	}
+	
+	public ParticipationRequestReceptionPeriod getParticipationRequestReceptionPeriod(){
+		return participationRequestReceptionPeriod;
+	}
 }
