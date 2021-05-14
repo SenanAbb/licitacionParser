@@ -15,8 +15,8 @@ import Parser.Parser;
 public class main {
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, TransformerException, SQLException {
 //		rellenar();
-//		leerDirectorio();
-		leerArchivo();
+		leerDirectorio();
+//		leerArchivo();
 	}
 
 	private static void leerDirectorio() throws FileNotFoundException, SAXException, IOException, SQLException {

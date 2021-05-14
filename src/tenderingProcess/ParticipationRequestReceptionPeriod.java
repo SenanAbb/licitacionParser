@@ -79,7 +79,11 @@ public class ParticipationRequestReceptionPeriod {
 	}
 
 	public String getDescription() {
-		return description;
+		if (description != null){
+			return description.trim().replaceAll("\n", " - ");
+		}else{
+			return null;
+		}
 	}
 	
 }

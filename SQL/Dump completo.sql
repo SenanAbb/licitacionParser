@@ -542,7 +542,7 @@ CREATE TABLE `tbl_plazo_de_obtencion` (
   `id_plazo_de_obtencion` int(11) NOT NULL AUTO_INCREMENT,
   `fecha` date DEFAULT NULL,
   `hora` time DEFAULT NULL,
-  `observaciones` varchar(45) DEFAULT NULL,
+  `observaciones` varchar(550) DEFAULT NULL,
   `tipo_plazo` int(11) NOT NULL,
   `ids` int(11) NOT NULL,
   PRIMARY KEY (`id_plazo_de_obtencion`),
@@ -1614,4 +1614,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-14 13:06:49
+-- Dump completed on 2021-05-14 13:46:04

@@ -954,10 +954,14 @@ public class ConexionSQL {
 			
 			if (entry.getContractFolderStatus().getTenderingProcess().getDocumentAvailabilityPeriod() != null){
 				sentencia.setDate("fecha", entry.getContractFolderStatus().getTenderingProcess().getDocumentAvailabilityPeriod().getEndDate());
+			}else{
+				sentencia.setDate("fecha", null);
 			}
 			
 			if (entry.getContractFolderStatus().getTenderingProcess().getDocumentAvailabilityPeriod() != null){
 				sentencia.setTime("hora", entry.getContractFolderStatus().getTenderingProcess().getDocumentAvailabilityPeriod().getEndTime());
+			}else{
+				sentencia.setTime("hora", null);
 			}
 			
 			sentencia.setString("observaciones", null);
@@ -980,8 +984,10 @@ public class ConexionSQL {
 				sentencia.setTime("hora", null);
 			}
 			
-			if (entry.getContractFolderStatus().getTenderingProcess().getTenderSubmissionDeadlinePeriod() != null){
-				sentencia.setString("observaciones", entry.getContractFolderStatus().getTenderingProcess().getTenderSubmissionDeadlinePeriod().getDescription());
+			if (entry.getContractFolderStatus().getTenderingProcess().getTenderSubmissionDeadlinePeriod() != null
+					&& entry.getContractFolderStatus().getTenderingProcess().getTenderSubmissionDeadlinePeriod().getDescription() != null){
+				String cadena = entry.getContractFolderStatus().getTenderingProcess().getTenderSubmissionDeadlinePeriod().getDescription();
+				sentencia.setString("observaciones", cadena);
 			}
 			
 			sentencia.execute();
@@ -1002,7 +1008,8 @@ public class ConexionSQL {
 				sentencia.setTime("hora", null);
 			}
 			
-			if (entry.getContractFolderStatus().getTenderingProcess().getParticipationRequestReceptionPeriod() != null){
+			if (entry.getContractFolderStatus().getTenderingProcess().getParticipationRequestReceptionPeriod() != null
+					&& entry.getContractFolderStatus().getTenderingProcess().getParticipationRequestReceptionPeriod().getDescription() != null){
 				sentencia.setString("observaciones", entry.getContractFolderStatus().getTenderingProcess().getParticipationRequestReceptionPeriod().getDescription());
 			}else{
 				sentencia.setString("observaciones", null);
