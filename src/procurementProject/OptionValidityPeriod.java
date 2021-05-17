@@ -23,4 +23,8 @@ public class OptionValidityPeriod {
 				"----> Options Description: " + description + "\n" +
 				"--------------------------------\n");
 	}
+	
+	public String getDescription() {
+		return description;
+	}
 }

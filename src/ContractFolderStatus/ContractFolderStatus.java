@@ -367,6 +367,10 @@ public class ContractFolderStatus {
 		}
 	}
 
+	public String getContractFolderID(){
+		return contractFolderID;
+	}
+	
 	public LegalDocumentReference getLegalDocumentReference() {
 		return legalDocumentReference;
 	}

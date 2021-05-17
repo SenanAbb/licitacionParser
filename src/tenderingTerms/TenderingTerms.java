@@ -10,6 +10,8 @@ import utils.DocumentAvailabilityPeriod;
  * 		requiredCurriculaIndicator: bool[0..1]
  * 		variantConstraintIndicator: bool[0..1;
  * 		priceRevisionFormulaDescription: String[0..1]
+ * 		fundingProgramCode: String[0..1]
+ * 		fundingProgram: String[0..1]
  * 		allowedSubcontractTerms: AllowedSubcontractTerms[0..1]
  * 		procurementLegislationDocumentReference: ProcurementLegislationDocumentReference[0..1]
  * 		requiredFinancialGuaranteeList: RequiredFinancialGuarantee[] [0..3]
@@ -27,7 +29,7 @@ public class TenderingTerms {
 	private final static int MAX_REQUIRED_FINANCIAL_GUARANTEE = 3;
 	
 	private boolean requiredCurriculaIndicator, variantConstraintIndicator;
-	private String priceRevisionFormulaDescription;
+	private String priceRevisionFormulaDescription, fundingProgramCode, fundingProgram;
 	private AllowedSubcontractTerms allowedSubcontractTerms;
 	private ProcurementLegislationDocumentReference procurementLegislationDocumentReference;
 	private RequiredFinancialGuarantee[] requiredFinancialGuaranteeList;
@@ -43,6 +45,8 @@ public class TenderingTerms {
 	
 	public void readAttributes(Element tt, int POS_UNICO_ELEMENTO) {
 		this.priceRevisionFormulaDescription = null;
+		this.fundingProgram = null;
+		this.fundingProgramCode = null;
 		
 		/* REQUIRED CURRICULA INDICATOR */
 		Element rci = (Element) tt.getElementsByTagName("cbc:RequiredCurriculaIndicator").item(POS_UNICO_ELEMENTO);
@@ -60,6 +64,18 @@ public class TenderingTerms {
 		Element prfi = (Element) tt.getElementsByTagName("cbc:PriceRevisionFormulaDescription").item(POS_UNICO_ELEMENTO);
 		if (prfi != null){
 			this.priceRevisionFormulaDescription = prfi.getTextContent();
+		}
+		
+		/* FUNDING PROGRAM CODE */
+		Element fpc = (Element) tt.getElementsByTagName("cbc:FundingProgramCode").item(POS_UNICO_ELEMENTO);
+		if (fpc != null){
+			this.fundingProgramCode = fpc.getTextContent();
+		}
+		
+		/* FUNDING PROGRAM */
+		Element fp = (Element) tt.getElementsByTagName("cbc:FundingProgram").item(POS_UNICO_ELEMENTO);
+		if (fp != null){
+			this.fundingProgram = fpc.getTextContent();
 		}
 	}
 	
@@ -344,4 +360,31 @@ public class TenderingTerms {
 	public Language[] getLanguageList() {
 		return languageList;
 	}
+
+	
+	public boolean getRequiredCurriculaIndicator() {
+		return requiredCurriculaIndicator;
+	}
+
+	
+	public boolean getVariantConstraintIndicator() {
+		return variantConstraintIndicator;
+	}
+
+	
+	public String getPriceRevisionFormulaDescription() {
+		return priceRevisionFormulaDescription;
+	}
+
+	
+	public String getFundingProgramCode() {
+		return fundingProgramCode;
+	}
+
+	
+	public String getFundingProgram() {
+		return fundingProgram;
+	}
+
+	
 }

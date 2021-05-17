@@ -99,6 +99,7 @@ public class main {
 		p.writeContractFolderStatusCode();
 		p.writeTipoPliego();
 		p.writeTipoPlazo();
+		p.writeFundingProgramCode();
 	}
 	
 	private static String[] getFiles(String path) {

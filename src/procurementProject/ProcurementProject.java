@@ -199,4 +199,8 @@ public class ProcurementProject {
 	public RealizedLocation getRealizedLocation() {
 		return realizedLocation;
 	}
+	
+	public ContractExtension getContractExtension(){
+		return contractExtension;
+	}
 }

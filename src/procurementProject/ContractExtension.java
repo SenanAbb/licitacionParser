@@ -36,4 +36,13 @@ public class ContractExtension {
 			System.out.print("**** OPTION VALIDITY PERIOD: null ****\n");
 		}
 	}
+
+	public String getOptionsDescription() {
+		return optionsDescription;
+	}
+
+	public OptionValidityPeriod getOptionValidityPeriod() {
+		return optionValidityPeriod;
+	}
+	
 }

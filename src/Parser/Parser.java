@@ -371,7 +371,7 @@ public class Parser {
 	        DocumentBuilder db = dbf.newDocumentBuilder(); 
 	        
 	        // Se abre la conexión
-	        url = new URL("https://contrataciondelestado.es/codice/cl/1.04/CPV2007-1.04.gc");
+	        url = new URL("https://contrataciondelestado.es/codice/cl/2.04/CPV2008-2.04.gc");
 	        conexion = url.openConnection();
 	        conexion.connect();
 	     
@@ -872,6 +872,45 @@ public class Parser {
 		con.writeTipoPlazo(id, tipo);
 	}
 	
+	public void writeFundingProgramCode() throws ParserConfigurationException, SAXException, TransformerException{
+		try {
+			String code = "";
+			String nombre = "";
+			ConexionSQL con = new ConexionSQL();
+			URL url;
+			URLConnection conexion;
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); 
+	        DocumentBuilder db = dbf.newDocumentBuilder(); 
+	        
+	        // Se abre la conexión
+	        url = new URL("https://contrataciondelestado.es/codice/cl/2.02/FundingProgramCode-2.02.gc");
+	        conexion = url.openConnection();
+	        conexion.connect();
+	     
+	        Document doc = db.parse(conexion.getInputStream());
+	        
+	        Element codeList = (Element) doc.getElementsByTagName("gc:CodeList").item(POS_UNICO_ELEMENTO);
+	        Element simpleCodeList = (Element) codeList.getElementsByTagName("SimpleCodeList").item(POS_UNICO_ELEMENTO);
+	        NodeList rowsList = simpleCodeList.getElementsByTagName("Row");
+	        
+	        for (int i = 0; i < rowsList.getLength(); i++){
+	        	Element row = (Element) rowsList.item(i);
+	        	NodeList valueList = row.getElementsByTagName("Value");
+	        	for (int j = 0; j < valueList.getLength(); j++){
+	        		if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("code") == 0){
+	        			code = valueList.item(j).getTextContent().trim();
+	        		}else if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("nombre") == 0){
+	        			nombre = valueList.item(j).getTextContent().trim();
+	        		}
+	        	}
+	        	// Escribimos en la BD
+	        	con.writeFundingProgramCode(code, nombre);
+	        }
+		}catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
 	
 	/******************/
 	/** CONSTRUCTORS **/
@@ -935,16 +974,6 @@ public class Parser {
 		} catch (SQLException e) {
 			System.out.println("Error para rollback: " + e.getMessage());
 			e.printStackTrace();
-			
-			// Si algo ha fallado, hacemos rollback para deshacer todo y no grabar nada en la BD
-			if (conn != null){
-				try {
-					conn.rollback();
-				} catch (SQLException e1) {
-					System.out.println("Error haciendo rollback: " + e.getMessage());
-					e1.printStackTrace();
-				}
-			}
 		} finally {
 			// Cerramos las conexiones
 			try {
