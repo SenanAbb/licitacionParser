@@ -178,4 +178,28 @@ public class TendererQualificationRequest {
 		System.out.print("--------------------------------\n");
 	}
 
+	public String getPersonalSituation() {
+		return personalSituation;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+
+	public RequiredBusinessClassificationScheme getRequiredBusinessClassificationScheme() {
+		return requiredBusinessClassificationScheme;
+	}
+
+	public SpecificTendererRequirement[] getSpecificTendererRequirementList() {
+		return specificTendererRequirementList;
+	}
+
+	public FinancialEvaluationCriteria[] getFinancialEvaluationCriteriaList() {
+		return financialEvaluationCriteriaList;
+	}
+
+	public TechnicalEvaluationCriteria[] getTechnicalEvaluationCriteriaList() {
+		return technicalEvaluationCriteriaList;
+	}
+
 }

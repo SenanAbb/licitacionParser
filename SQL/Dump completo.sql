@@ -39,6 +39,58 @@ LOCK TABLES `tbl_address_format_code` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `tbl_clasificacion_empresarial`
+--
+
+DROP TABLE IF EXISTS `tbl_clasificacion_empresarial`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_clasificacion_empresarial` (
+  `required_business_profile_code` varchar(10) NOT NULL,
+  `requisitos_de_participacion` int(11) NOT NULL,
+  KEY `fk_tbl_clasificacion_empresarial_tbl_required_business_prof_idx` (`required_business_profile_code`),
+  KEY `fk_tbl_clasificacion_empresarial_tbl_requisitos_de_particip_idx` (`requisitos_de_participacion`),
+  CONSTRAINT `fk_tbl_clasificacion_empresarial_tbl_required_business_profil1` FOREIGN KEY (`required_business_profile_code`) REFERENCES `tbl_required_business_profile_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbl_clasificacion_empresarial_tbl_requisitos_de_participac1` FOREIGN KEY (`requisitos_de_participacion`) REFERENCES `tbl_requisitos_de_participacion` (`requisitos_de_participacion`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_clasificacion_empresarial`
+--
+
+LOCK TABLES `tbl_clasificacion_empresarial` WRITE;
+/*!40000 ALTER TABLE `tbl_clasificacion_empresarial` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_clasificacion_empresarial` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_condiciones_de_admision`
+--
+
+DROP TABLE IF EXISTS `tbl_condiciones_de_admision`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_condiciones_de_admision` (
+  `declaration_type_code` int(11) NOT NULL,
+  `requisitos_de_participacion` int(11) NOT NULL,
+  KEY `fk_tbl_condiciones_de_admision_tbl_declaration_type_code1_idx` (`declaration_type_code`),
+  KEY `fk_tbl_condiciones_de_admision_tbl_requisitos_de_participac_idx` (`requisitos_de_participacion`),
+  CONSTRAINT `fk_tbl_condiciones_de_admision_tbl_declaration_type_code1` FOREIGN KEY (`declaration_type_code`) REFERENCES `tbl_declaration_type_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbl_condiciones_de_admision_tbl_requisitos_de_participacion1` FOREIGN KEY (`requisitos_de_participacion`) REFERENCES `tbl_requisitos_de_participacion` (`requisitos_de_participacion`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_condiciones_de_admision`
+--
+
+LOCK TABLES `tbl_condiciones_de_admision` WRITE;
+/*!40000 ALTER TABLE `tbl_condiciones_de_admision` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_condiciones_de_admision` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tbl_condiciones_de_licitacion`
 --
 
@@ -216,6 +268,63 @@ INSERT INTO `tbl_cpv` VALUES (3000000,'Productos de la agricultura, ganadería, 
 UNLOCK TABLES;
 
 --
+-- Table structure for table `tbl_criterio_de_evaluacion`
+--
+
+DROP TABLE IF EXISTS `tbl_criterio_de_evaluacion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_criterio_de_evaluacion` (
+  `criterio_de_evaluacion` int(11) NOT NULL AUTO_INCREMENT,
+  `descripcion` varchar(2500) DEFAULT NULL,
+  `tipo_evaluacion` int(11) NOT NULL,
+  `tipo_technical` varchar(50) DEFAULT NULL,
+  `tipo_financial` varchar(10) DEFAULT NULL,
+  `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`criterio_de_evaluacion`),
+  KEY `fk_tbl_criterio_de_evaluacion_tbl_tipo_evaluacion1_idx` (`tipo_evaluacion`),
+  KEY `fk_tbl_criterio_de_evaluacion_tbl_technical_capability_type_idx` (`tipo_technical`),
+  KEY `fk_tbl_criterio_de_evaluacion_tbl_financial_capacibility_ty_idx` (`tipo_financial`),
+  CONSTRAINT `fk_tbl_criterio_de_evaluacion_tbl_financial_capacibility_type1` FOREIGN KEY (`tipo_financial`) REFERENCES `tbl_financial_capability_type_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbl_criterio_de_evaluacion_tbl_technical_capability_type_c1` FOREIGN KEY (`tipo_technical`) REFERENCES `tbl_technical_capability_type_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbl_criterio_de_evaluacion_tbl_tipo_evaluacion1` FOREIGN KEY (`tipo_evaluacion`) REFERENCES `tbl_tipo_evaluacion` (`tipo_evaluacion`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_criterio_de_evaluacion`
+--
+
+LOCK TABLES `tbl_criterio_de_evaluacion` WRITE;
+/*!40000 ALTER TABLE `tbl_criterio_de_evaluacion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_criterio_de_evaluacion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_declaration_type_code`
+--
+
+DROP TABLE IF EXISTS `tbl_declaration_type_code`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_declaration_type_code` (
+  `code` int(11) NOT NULL,
+  `nombre` varchar(200) NOT NULL,
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_declaration_type_code`
+--
+
+LOCK TABLES `tbl_declaration_type_code` WRITE;
+/*!40000 ALTER TABLE `tbl_declaration_type_code` DISABLE KEYS */;
+INSERT INTO `tbl_declaration_type_code` VALUES (1,'Capacidad de obrar'),(2,'No prohibición para contratar'),(3,'No estar incurso en incompatibilidades'),(4,'Cumplimiento con las obligaciones con la Seguridad Social'),(5,'Cumplimiento con las obligaciones tributarias'),(7,'No haber sido adjudicatario de los contratos anteriores de dirección y/o supervisión de la obra.'),(8,'Estar prerregistrado en el ROLECE, y declarar que no ha habido modificaciones en los datos registrados'),(9,'Para las empresas extranjeras, declaración de sometimiento a la legislación española.'),(10,'Contratos reservados. Reservado a Centros Especiales de Empleo, o talleres protegidos'),(11,'Contratos reservados. Reservado a programas de empleo protegido.'),(12,'Preferencia para empresas con trabajadores con discapacidad'),(13,'Preferencia para empresas dedicadas a la promoción e inserción laboral de personas en situación de exclusión social'),(14,'Contrato reservado a una profesión determinada'),(16,'Reservado a talleres protegidos y operadores económicos cuyo objetivo principal sea la integración social y profesional de personas discapacitadas o desfavorecidas'),(17,'Reservado a organizaciones que cumplan con las condiciones establecidas en el art. 77 de la Directiva 2014/24/UE o en el art. 94 de la Directiva 2014/25/UE');
+/*!40000 ALTER TABLE `tbl_declaration_type_code` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tbl_dgpe`
 --
 
@@ -342,7 +451,7 @@ DROP TABLE IF EXISTS `tbl_expedientes`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tbl_expedientes` (
   `expedientes` int(11) NOT NULL,
-  `numero_expediente` varchar(45) NOT NULL,
+  `numero_expediente` varchar(100) NOT NULL,
   `title` varchar(2000) NOT NULL,
   `link` varchar(2500) NOT NULL,
   `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -402,6 +511,30 @@ LOCK TABLES `tbl_extension_de_contrato` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `tbl_financial_capability_type_code`
+--
+
+DROP TABLE IF EXISTS `tbl_financial_capability_type_code`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_financial_capability_type_code` (
+  `code` varchar(10) NOT NULL,
+  `nombre` varchar(150) NOT NULL,
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_financial_capability_type_code`
+--
+
+LOCK TABLES `tbl_financial_capability_type_code` WRITE;
+/*!40000 ALTER TABLE `tbl_financial_capability_type_code` DISABLE KEYS */;
+INSERT INTO `tbl_financial_capability_type_code` VALUES ('2','Informe de entidades financieras'),('3','Seguro de indemnización'),('4','Fondos propios'),('5','Cifra anual de negocio'),('6','Patrimonio neto'),('ZZZ','Otros');
+/*!40000 ALTER TABLE `tbl_financial_capability_type_code` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tbl_funding_program_code`
 --
 
@@ -423,6 +556,59 @@ LOCK TABLES `tbl_funding_program_code` WRITE;
 /*!40000 ALTER TABLE `tbl_funding_program_code` DISABLE KEYS */;
 INSERT INTO `tbl_funding_program_code` VALUES ('AUT','Subvencionado por un programa autonómico'),('CPP','Compra Pública Precomercial'),('CPTI','Compra Pública de Tecnología Innovadora'),('EU','Financiación con fondos de la UE'),('LOC','Subvencionado por un programa local'),('NAC','Subvencionado por un programa nacional');
 /*!40000 ALTER TABLE `tbl_funding_program_code` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_garantia`
+--
+
+DROP TABLE IF EXISTS `tbl_garantia`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_garantia` (
+  `garantia` int(11) NOT NULL AUTO_INCREMENT,
+  `guarantee_type_code` int(11) NOT NULL,
+  `importe` decimal(12,2) DEFAULT NULL,
+  `moneda` varchar(5) DEFAULT NULL,
+  `porcentaje` decimal(8,2) DEFAULT NULL,
+  `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`garantia`),
+  KEY `fk_tbl_garantia_tbl_guarantee_type_code1_idx` (`guarantee_type_code`),
+  CONSTRAINT `fk_tbl_garantia_tbl_guarantee_type_code1` FOREIGN KEY (`guarantee_type_code`) REFERENCES `tbl_guarantee_type_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_garantia`
+--
+
+LOCK TABLES `tbl_garantia` WRITE;
+/*!40000 ALTER TABLE `tbl_garantia` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_garantia` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_guarantee_type_code`
+--
+
+DROP TABLE IF EXISTS `tbl_guarantee_type_code`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_guarantee_type_code` (
+  `code` int(11) NOT NULL,
+  `nombre` varchar(45) NOT NULL,
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_guarantee_type_code`
+--
+
+LOCK TABLES `tbl_guarantee_type_code` WRITE;
+/*!40000 ALTER TABLE `tbl_guarantee_type_code` DISABLE KEYS */;
+INSERT INTO `tbl_guarantee_type_code` VALUES (1,'Provisional'),(2,'Definitiva'),(3,'Especial');
+/*!40000 ALTER TABLE `tbl_guarantee_type_code` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -488,7 +674,7 @@ CREATE TABLE `tbl_ids` (
   PRIMARY KEY (`ids`),
   KEY `modosid_idx` (`modosid`),
   CONSTRAINT `modosid` FOREIGN KEY (`modosid`) REFERENCES `tbl_modosid` (`modosid`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -498,6 +684,32 @@ CREATE TABLE `tbl_ids` (
 LOCK TABLES `tbl_ids` WRITE;
 /*!40000 ALTER TABLE `tbl_ids` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tbl_ids` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_ids_criterio_de_evaluacion`
+--
+
+DROP TABLE IF EXISTS `tbl_ids_criterio_de_evaluacion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_ids_criterio_de_evaluacion` (
+  `criterio_de_evaluacion` int(11) NOT NULL,
+  `ids_expedientes` int(11) NOT NULL,
+  KEY `fk_tbl_ids_criterio_de_evaluacion_tbl_criterio_de_evaluacio_idx` (`criterio_de_evaluacion`),
+  KEY `fk_tbl_ids_criterio_de_evaluacion_tbl_ids_expedientes1_idx` (`ids_expedientes`),
+  CONSTRAINT `fk_tbl_ids_criterio_de_evaluacion_tbl_criterio_de_evaluacion1` FOREIGN KEY (`criterio_de_evaluacion`) REFERENCES `tbl_criterio_de_evaluacion` (`criterio_de_evaluacion`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbl_ids_criterio_de_evaluacion_tbl_ids_expedientes1` FOREIGN KEY (`ids_expedientes`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_ids_criterio_de_evaluacion`
+--
+
+LOCK TABLES `tbl_ids_criterio_de_evaluacion` WRITE;
+/*!40000 ALTER TABLE `tbl_ids_criterio_de_evaluacion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_ids_criterio_de_evaluacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -522,7 +734,7 @@ CREATE TABLE `tbl_ids_expedientes` (
   CONSTRAINT `estado` FOREIGN KEY (`estado`) REFERENCES `tbl_contract_folder_status_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `expediente` FOREIGN KEY (`expediente`) REFERENCES `tbl_expedientes` (`expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `ids` FOREIGN KEY (`ids`) REFERENCES `tbl_ids` (`ids`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -532,6 +744,32 @@ CREATE TABLE `tbl_ids_expedientes` (
 LOCK TABLES `tbl_ids_expedientes` WRITE;
 /*!40000 ALTER TABLE `tbl_ids_expedientes` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tbl_ids_expedientes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_ids_garantia`
+--
+
+DROP TABLE IF EXISTS `tbl_ids_garantia`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_ids_garantia` (
+  `garantia` int(11) NOT NULL,
+  `ids_expedientes` int(11) NOT NULL,
+  KEY `fk_tbl_ids_garantia_tbl_garantia1_idx` (`garantia`),
+  KEY `fk_tbl_ids_garantia_tbl_ids_expedientes1_idx` (`ids_expedientes`),
+  CONSTRAINT `fk_tbl_ids_garantia_tbl_garantia1` FOREIGN KEY (`garantia`) REFERENCES `tbl_garantia` (`garantia`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbl_ids_garantia_tbl_ids_expedientes1` FOREIGN KEY (`ids_expedientes`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_ids_garantia`
+--
+
+LOCK TABLES `tbl_ids_garantia` WRITE;
+/*!40000 ALTER TABLE `tbl_ids_garantia` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_ids_garantia` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -799,6 +1037,58 @@ INSERT INTO `tbl_procurement_legislation` VALUES ('2009/81/EC','Directiva 2009/8
 UNLOCK TABLES;
 
 --
+-- Table structure for table `tbl_required_business_profile_code`
+--
+
+DROP TABLE IF EXISTS `tbl_required_business_profile_code`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_required_business_profile_code` (
+  `code` varchar(10) NOT NULL,
+  `nombre` varchar(200) NOT NULL,
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_required_business_profile_code`
+--
+
+LOCK TABLES `tbl_required_business_profile_code` WRITE;
+/*!40000 ALTER TABLE `tbl_required_business_profile_code` DISABLE KEYS */;
+INSERT INTO `tbl_required_business_profile_code` VALUES ('A*-1','Movimiento de tierras y perforaciones.(inferior o igual 150.000 euros)'),('A*-2','Movimiento de tierras y perforaciones.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('A*-3','Movimiento de tierras y perforaciones.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('A*-4','Movimiento de tierras y perforaciones.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('A*-5','Movimiento de tierras y perforaciones.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('A*-6','Movimiento de tierras y perforaciones.(superior a cinco millones de euros)'),('A1-1','Desmontes y vaciados.(inferior o igual 150.000 euros)'),('A1-2','Desmontes y vaciados.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('A1-3','Desmontes y vaciados.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('A1-4','Desmontes y vaciados.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('A1-5','Desmontes y vaciados.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('A1-6','Desmontes y vaciados.(superior a cinco millones de euros)'),('A2-1','Explanaciones.(inferior o igual 150.000 euros)'),('A2-2','Explanaciones.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('A2-3','Explanaciones.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('A2-4','Explanaciones.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('A2-5','Explanaciones.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('A2-6','Explanaciones.(superior a cinco millones de euros)'),('A3-1','Canteras.(inferior o igual 150.000 euros)'),('A3-2','Canteras.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('A3-3','Canteras.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('A3-4','Canteras.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('A3-5','Canteras.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('A3-6','Canteras.(superior a cinco millones de euros)'),('A4-1','Pozos y galerías.(inferior o igual 150.000 euros)'),('A4-2','Pozos y galerías.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('A4-3','Pozos y galerías.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('A4-4','Pozos y galerías.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('A4-5','Pozos y galerías.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('A4-6','Pozos y galerías.(superior a cinco millones de euros)'),('A5-1','Túneles.(inferior o igual 150.000 euros)'),('A5-2','Túneles.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('A5-3','Túneles.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('A5-4','Túneles.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('A5-5','Túneles.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('A5-6','Túneles.(superior a cinco millones de euros)'),('B*-1','Puentes, viaductos y grandes estructuras.(inferior o igual 150.000 euros)'),('B*-2','Puentes, viaductos y grandes estructuras.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('B*-3','Puentes, viaductos y grandes estructuras.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('B*-4','Puentes, viaductos y grandes estructuras.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('B*-5','Puentes, viaductos y grandes estructuras.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('B*-6','Puentes, viaductos y grandes estructuras.(superior a cinco millones de euros)'),('B1-1','De fábrica u hormigón en masa.(inferior o igual 150.000 euros)'),('B1-2','De fábrica u hormigón en masa.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('B1-3','De fábrica u hormigón en masa.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('B1-4','De fábrica u hormigón en masa.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('B1-5','De fábrica u hormigón en masa.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('B1-6','De fábrica u hormigón en masa.(superior a cinco millones de euros)'),('B2-1','De hormigón armado.(inferior o igual 150.000 euros)'),('B2-2','De hormigón armado.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('B2-3','De hormigón armado.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('B2-4','De hormigón armado.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('B2-5','De hormigón armado.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('B2-6','De hormigón armado.(superior a cinco millones de euros)'),('B3-1','De hormigón pretensado.(inferior o igual 150.000 euros)'),('B3-2','De hormigón pretensado.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('B3-3','De hormigón pretensado.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('B3-4','De hormigón pretensado.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('B3-5','De hormigón pretensado.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('B3-6','De hormigón pretensado.(superior a cinco millones de euros)'),('B4-1','Metálicos.(inferior o igual 150.000 euros)'),('B4-2','Metálicos.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('B4-3','Metálicos.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('B4-4','Metálicos.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('B4-5','Metálicos.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('B4-6','Metálicos.(superior a cinco millones de euros)'),('C*-1','Edificaciones(inferior o igual 150.000 euros)'),('C*-2','Edificaciones(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('C*-3','Edificaciones(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('C*-4','Edificaciones(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('C*-5','Edificaciones(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('C*-6','Edificaciones(superior a cinco millones de euros)'),('C1-1','Demoliciones.(inferior o igual 150.000 euros)'),('C1-2','Demoliciones.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('C1-3','Demoliciones.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('C1-4','Demoliciones.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('C1-5','Demoliciones.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('C1-6','Demoliciones.(superior a cinco millones de euros)'),('C2-1','Estructuras de fábrica u hormigón.(inferior o igual 150.000 euros)'),('C2-2','Estructuras de fábrica u hormigón.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('C2-3','Estructuras de fábrica u hormigón.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('C2-4','Estructuras de fábrica u hormigón.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('C2-5','Estructuras de fábrica u hormigón.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('C2-6','Estructuras de fábrica u hormigón.(superior a cinco millones de euros)'),('C3-1','Estructuras metálicas.(inferior o igual 150.000 euros)'),('C3-2','Estructuras metálicas.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('C3-3','Estructuras metálicas.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('C3-4','Estructuras metálicas.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('C3-5','Estructuras metálicas.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('C3-6','Estructuras metálicas.(superior a cinco millones de euros)'),('C4-1','Albañilería, revocos y revestidos.(inferior o igual 150.000 euros)'),('C4-2','Albañilería, revocos y revestidos.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('C4-3','Albañilería, revocos y revestidos.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('C4-4','Albañilería, revocos y revestidos.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('C4-5','Albañilería, revocos y revestidos.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('C4-6','Albañilería, revocos y revestidos.(superior a cinco millones de euros)'),('C5-1','Cantería y marmolería.(inferior o igual 150.000 euros)'),('C5-2','Cantería y marmolería.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('C5-3','Cantería y marmolería.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('C5-4','Cantería y marmolería.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('C5-5','Cantería y marmolería.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('C5-6','Cantería y marmolería.(superior a cinco millones de euros)'),('C6-1','Pavimentos, solados y alicatados.(inferior o igual 150.000 euros)'),('C6-2','Pavimentos, solados y alicatados.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('C6-3','Pavimentos, solados y alicatados.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('C6-4','Pavimentos, solados y alicatados.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('C6-5','Pavimentos, solados y alicatados.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('C6-6','Pavimentos, solados y alicatados.(superior a cinco millones de euros)'),('C7-1','Aislamientos e impermeabilizaciones.(inferior o igual 150.000 euros)'),('C7-2','Aislamientos e impermeabilizaciones.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('C7-3','Aislamientos e impermeabilizaciones.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('C7-4','Aislamientos e impermeabilizaciones.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('C7-5','Aislamientos e impermeabilizaciones.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('C7-6','Aislamientos e impermeabilizaciones.(superior a cinco millones de euros)'),('C8-1','Carpintería de madera.(inferior o igual 150.000 euros)'),('C8-2','Carpintería de madera.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('C8-3','Carpintería de madera.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('C8-4','Carpintería de madera.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('C8-5','Carpintería de madera.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('C8-6','Carpintería de madera.(superior a cinco millones de euros)'),('C9-1','Carpintería metálica.(inferior o igual 150.000 euros)'),('C9-2','Carpintería metálica.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('C9-3','Carpintería metálica.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('C9-4','Carpintería metálica.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('C9-5','Carpintería metálica.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('C9-6','Carpintería metálica.(superior a cinco millones de euros)'),('D*-1','Ferrocarriles(inferior o igual 150.000 euros)'),('D*-2','Ferrocarriles(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('D*-3','Ferrocarriles(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('D*-4','Ferrocarriles(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('D*-5','Ferrocarriles(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('D*-6','Ferrocarriles(superior a cinco millones de euros)'),('D1-1','Tendido de vías.(inferior o igual 150.000 euros)'),('D1-2','Tendido de vías.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('D1-3','Tendido de vías.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('D1-4','Tendido de vías.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('D1-5','Tendido de vías.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('D1-6','Tendido de vías.(superior a cinco millones de euros)'),('D2-1','Elevados sobre carril o cable.(inferior o igual 150.000 euros)'),('D2-2','Elevados sobre carril o cable.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('D2-3','Elevados sobre carril o cable.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('D2-4','Elevados sobre carril o cable.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('D2-5','Elevados sobre carril o cable.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('D2-6','Elevados sobre carril o cable.(superior a cinco millones de euros)'),('D3-1','Señalizaciones y enclavamientos.(inferior o igual 150.000 euros)'),('D3-2','Señalizaciones y enclavamientos.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('D3-3','Señalizaciones y enclavamientos.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('D3-4','Señalizaciones y enclavamientos.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('D3-5','Señalizaciones y enclavamientos.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('D3-6','Señalizaciones y enclavamientos.(superior a cinco millones de euros)'),('D4-1','Electrificación de ferrocarriles.(inferior o igual 150.000 euros)'),('D4-2','Electrificación de ferrocarriles.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('D4-3','Electrificación de ferrocarriles.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('D4-4','Electrificación de ferrocarriles.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('D4-5','Electrificación de ferrocarriles.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('D4-6','Electrificación de ferrocarriles.(superior a cinco millones de euros)'),('D5-1','Obras de ferrocarriles sin cualificación específica.(inferior o igual 150.000 euros)'),('D5-2','Obras de ferrocarriles sin cualificación específica.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('D5-3','Obras de ferrocarriles sin cualificación específica.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('D5-4','Obras de ferrocarriles sin cualificación específica.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('D5-5','Obras de ferrocarriles sin cualificación específica.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('D5-6','Obras de ferrocarriles sin cualificación específica.(superior a cinco millones de euros)'),('E*-1','Hidráulicas(inferior o igual 150.000 euros)'),('E*-2','Hidráulicas(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('E*-3','Hidráulicas(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('E*-4','Hidráulicas(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('E*-5','Hidráulicas(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('E*-6','Hidráulicas(superior a cinco millones de euros)'),('E1-1','Abastecimientos y saneamientos.(inferior o igual 150.000 euros)'),('E1-2','Abastecimientos y saneamientos.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('E1-3','Abastecimientos y saneamientos.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('E1-4','Abastecimientos y saneamientos.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('E1-5','Abastecimientos y saneamientos.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('E1-6','Abastecimientos y saneamientos.(superior a cinco millones de euros)'),('E2-1','Presas.(inferior o igual 150.000 euros)'),('E2-2','Presas.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('E2-3','Presas.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('E2-4','Presas.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('E2-5','Presas.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('E2-6','Presas.(superior a cinco millones de euros)'),('E3-1','Canales.(inferior o igual 150.000 euros)'),('E3-2','Canales.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('E3-3','Canales.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('E3-4','Canales.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('E3-5','Canales.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('E3-6','Canales.(superior a cinco millones de euros)'),('E4-1','Acequias y desagües.(inferior o igual 150.000 euros)'),('E4-2','Acequias y desagües.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('E4-3','Acequias y desagües.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('E4-4','Acequias y desagües.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('E4-5','Acequias y desagües.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('E4-6','Acequias y desagües.(superior a cinco millones de euros)'),('E5-1','Defensas de márgenes y encauzamientos.(inferior o igual 150.000 euros)'),('E5-2','Defensas de márgenes y encauzamientos.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('E5-3','Defensas de márgenes y encauzamientos.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('E5-4','Defensas de márgenes y encauzamientos.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('E5-5','Defensas de márgenes y encauzamientos.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('E5-6','Defensas de márgenes y encauzamientos.(superior a cinco millones de euros)'),('E6-1','Conducciones con tubería de presión de gran diámetro.(inferior o igual 150.000 euros)'),('E6-2','Conducciones con tubería de presión de gran diámetro.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('E6-3','Conducciones con tubería de presión de gran diámetro.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('E6-4','Conducciones con tubería de presión de gran diámetro.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('E6-5','Conducciones con tubería de presión de gran diámetro.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('E6-6','Conducciones con tubería de presión de gran diámetro.(superior a cinco millones de euros)'),('E7-1','Obras hidráulicas sin cualificación específica.(inferior o igual 150.000 euros)'),('E7-2','Obras hidráulicas sin cualificación específica.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('E7-3','Obras hidráulicas sin cualificación específica.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('E7-4','Obras hidráulicas sin cualificación específica.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('E7-5','Obras hidráulicas sin cualificación específica.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('E7-6','Obras hidráulicas sin cualificación específica.(superior a cinco millones de euros)'),('F*-1','Marítimas(inferior o igual 150.000 euros)'),('F*-2','Marítimas(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('F*-3','Marítimas(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('F*-4','Marítimas(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('F*-5','Marítimas(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('F*-6','Marítimas(superior a cinco millones de euros)'),('F1-1','Dragados.(inferior o igual 150.000 euros)'),('F1-2','Dragados.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('F1-3','Dragados.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('F1-4','Dragados.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('F1-5','Dragados.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('F1-6','Dragados.(superior a cinco millones de euros)'),('F2-1','Escolleras.(inferior o igual 150.000 euros)'),('F2-2','Escolleras.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('F2-3','Escolleras.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('F2-4','Escolleras.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('F2-5','Escolleras.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('F2-6','Escolleras.(superior a cinco millones de euros)'),('F3-1','Con bloques de hormigón.(inferior o igual 150.000 euros)'),('F3-2','Con bloques de hormigón.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('F3-3','Con bloques de hormigón.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('F3-4','Con bloques de hormigón.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('F3-5','Con bloques de hormigón.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('F3-6','Con bloques de hormigón.(superior a cinco millones de euros)'),('F4-1','Con cajones de hormigón armado.(inferior o igual 150.000 euros)'),('F4-2','Con cajones de hormigón armado.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('F4-3','Con cajones de hormigón armado.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('F4-4','Con cajones de hormigón armado.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('F4-5','Con cajones de hormigón armado.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('F4-6','Con cajones de hormigón armado.(superior a cinco millones de euros)'),('F5-1','Con pilotes y tablestacas.(inferior o igual 150.000 euros)'),('F5-2','Con pilotes y tablestacas.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('F5-3','Con pilotes y tablestacas.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('F5-4','Con pilotes y tablestacas.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('F5-5','Con pilotes y tablestacas.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('F5-6','Con pilotes y tablestacas.(superior a cinco millones de euros)'),('F6-1','Faros, radiofaros y señalizaciones marítimas.(inferior o igual 150.000 euros)'),('F6-2','Faros, radiofaros y señalizaciones marítimas.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('F6-3','Faros, radiofaros y señalizaciones marítimas.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('F6-4','Faros, radiofaros y señalizaciones marítimas.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('F6-5','Faros, radiofaros y señalizaciones marítimas.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('F6-6','Faros, radiofaros y señalizaciones marítimas.(superior a cinco millones de euros)'),('F7-1','Obras marítimas sin cualificación específica.(inferior o igual 150.000 euros)'),('F7-2','Obras marítimas sin cualificación específica.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('F7-3','Obras marítimas sin cualificación específica.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('F7-4','Obras marítimas sin cualificación específica.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('F7-5','Obras marítimas sin cualificación específica.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('F7-6','Obras marítimas sin cualificación específica.(superior a cinco millones de euros)'),('F8-1','Emisarios submarinos.(inferior o igual 150.000 euros)'),('F8-2','Emisarios submarinos.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('F8-3','Emisarios submarinos.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('F8-4','Emisarios submarinos.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('F8-5','Emisarios submarinos.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('F8-6','Emisarios submarinos.(superior a cinco millones de euros)'),('G*-1','Viales y pistas(inferior o igual 150.000 euros)'),('G*-2','Viales y pistas(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('G*-3','Viales y pistas(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('G*-4','Viales y pistas(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('G*-5','Viales y pistas(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('G*-6','Viales y pistas(superior a cinco millones de euros)'),('G1-1','Autopistas, autovías.(inferior o igual 150.000 euros)'),('G1-2','Autopistas, autovías.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('G1-3','Autopistas, autovías.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('G1-4','Autopistas, autovías.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('G1-5','Autopistas, autovías.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('G1-6','Autopistas, autovías.(superior a cinco millones de euros)'),('G2-1','Pistas de aterrizaje.(inferior o igual 150.000 euros)'),('G2-2','Pistas de aterrizaje.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('G2-3','Pistas de aterrizaje.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('G2-4','Pistas de aterrizaje.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('G2-5','Pistas de aterrizaje.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('G2-6','Pistas de aterrizaje.(superior a cinco millones de euros)'),('G3-1','Con firmes de hormigón hidráulico.(inferior o igual 150.000 euros)'),('G3-2','Con firmes de hormigón hidráulico.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('G3-3','Con firmes de hormigón hidráulico.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('G3-4','Con firmes de hormigón hidráulico.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('G3-5','Con firmes de hormigón hidráulico.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('G3-6','Con firmes de hormigón hidráulico.(superior a cinco millones de euros)'),('G4-1','Con firmes de mezclas bituminosas.(inferior o igual 150.000 euros)'),('G4-2','Con firmes de mezclas bituminosas.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('G4-3','Con firmes de mezclas bituminosas.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('G4-4','Con firmes de mezclas bituminosas.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('G4-5','Con firmes de mezclas bituminosas.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('G4-6','Con firmes de mezclas bituminosas.(superior a cinco millones de euros)'),('G5-1','Señalizaciones y balizamientos viales.(inferior o igual 150.000 euros)'),('G5-2','Señalizaciones y balizamientos viales.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('G5-3','Señalizaciones y balizamientos viales.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('G5-4','Señalizaciones y balizamientos viales.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('G5-5','Señalizaciones y balizamientos viales.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('G5-6','Señalizaciones y balizamientos viales.(superior a cinco millones de euros)'),('G6-1','Obras viales sin cualificación específica.(inferior o igual 150.000 euros)'),('G6-2','Obras viales sin cualificación específica.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('G6-3','Obras viales sin cualificación específica.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('G6-4','Obras viales sin cualificación específica.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('G6-5','Obras viales sin cualificación específica.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('G6-6','Obras viales sin cualificación específica.(superior a cinco millones de euros)'),('H*-1','Transportes de productos petrolíferos y gaseosos(inferior o igual 150.000 euros)'),('H*-2','Transportes de productos petrolíferos y gaseosos(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('H*-3','Transportes de productos petrolíferos y gaseosos(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('H*-4','Transportes de productos petrolíferos y gaseosos(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('H*-5','Transportes de productos petrolíferos y gaseosos(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('H*-6','Transportes de productos petrolíferos y gaseosos(superior a cinco millones de euros)'),('H1-1','Oleoductos.(inferior o igual 150.000 euros)'),('H1-2','Oleoductos.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('H1-3','Oleoductos.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('H1-4','Oleoductos.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('H1-5','Oleoductos.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('H1-6','Oleoductos.(superior a cinco millones de euros)'),('H2-1','Gasoductos.(inferior o igual 150.000 euros)'),('H2-2','Gasoductos.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('H2-3','Gasoductos.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('H2-4','Gasoductos.(superior a 840.000 euros e inferior o igual a 2.400.000 euros)'),('H2-5','Gasoductos.(superior a 2.400.000 euros e inferior o igual a cinco millones de euros)'),('H2-6','Gasoductos.(superior a cinco millones de euros)'),('I*-1','Instalaciones eléctricas(inferior o igual 150.000 euros)'),('I*-2','Instalaciones eléctricas(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('I*-3','Instalaciones eléctricas(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('I*-4','Instalaciones eléctricas(superior a 840.000 euros)'),('I1-1','Alumbrados, iluminaciones y balizamientos luminosos.(inferior o igual 150.000 euros)'),('I1-2','Alumbrados, iluminaciones y balizamientos luminosos.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('I1-3','Alumbrados, iluminaciones y balizamientos luminosos.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('I1-4','Alumbrados, iluminaciones y balizamientos luminosos.(superior a 840.000 euros)'),('I2-1','Centrales de producción de energía.(inferior o igual 150.000 euros)'),('I2-2','Centrales de producción de energía.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('I2-3','Centrales de producción de energía.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('I2-4','Centrales de producción de energía.(superior a 840.000 euros)'),('I3-1','Líneas eléctricas de transporte.(inferior o igual 150.000 euros)'),('I3-2','Líneas eléctricas de transporte.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('I3-3','Líneas eléctricas de transporte.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('I3-4','Líneas eléctricas de transporte.(superior a 840.000 euros)'),('I4-1','Subestaciones.(inferior o igual 150.000 euros)'),('I4-2','Subestaciones.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('I4-3','Subestaciones.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('I4-4','Subestaciones.(superior a 840.000 euros)'),('I5-1','Centros de transformación y distribución en alta tensión.(inferior o igual 150.000 euros)'),('I5-2','Centros de transformación y distribución en alta tensión.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('I5-3','Centros de transformación y distribución en alta tensión.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('I5-4','Centros de transformación y distribución en alta tensión.(superior a 840.000 euros)'),('I6-1','Distribución en baja tensión.(inferior o igual 150.000 euros)'),('I6-2','Distribución en baja tensión.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('I6-3','Distribución en baja tensión.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('I6-4','Distribución en baja tensión.(superior a 840.000 euros)'),('I7-1','Telecomunicaciones e instalaciones radioeléctricas.(inferior o igual 150.000 euros)'),('I7-2','Telecomunicaciones e instalaciones radioeléctricas.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('I7-3','Telecomunicaciones e instalaciones radioeléctricas.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('I7-4','Telecomunicaciones e instalaciones radioeléctricas.(superior a 840.000 euros)'),('I8-1','Instalaciones electrónicas.(inferior o igual 150.000 euros)'),('I8-2','Instalaciones electrónicas.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('I8-3','Instalaciones electrónicas.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('I8-4','Instalaciones electrónicas.(superior a 840.000 euros)'),('I9-1','Instalaciones eléctricas sin cualificación específica.(inferior o igual 150.000 euros)'),('I9-2','Instalaciones eléctricas sin cualificación específica.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('I9-3','Instalaciones eléctricas sin cualificación específica.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('I9-4','Instalaciones eléctricas sin cualificación específica.(superior a 840.000 euros)'),('J*-1','Instalaciones mecánicas(inferior o igual 150.000 euros)'),('J*-2','Instalaciones mecánicas(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('J*-3','Instalaciones mecánicas(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('J*-4','Instalaciones mecánicas(superior a 840.000 euros)'),('J1-1','Elevadoras o transportadoras.(inferior o igual 150.000 euros)'),('J1-2','Elevadoras o transportadoras.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('J1-3','Elevadoras o transportadoras.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('J1-4','Elevadoras o transportadoras.(superior a 840.000 euros)'),('J2-1','De ventilación, calefacción y climatización.(inferior o igual 150.000 euros)'),('J2-2','De ventilación, calefacción y climatización.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('J2-3','De ventilación, calefacción y climatización.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('J2-4','De ventilación, calefacción y climatización.(superior a 840.000 euros)'),('J3-1','Frigoríficas.(inferior o igual 150.000 euros)'),('J3-2','Frigoríficas.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('J3-3','Frigoríficas.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('J3-4','Frigoríficas.(superior a 840.000 euros)'),('J4-1','De fontanería y sanitarias.(inferior o igual 150.000 euros)'),('J4-2','De fontanería y sanitarias.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('J4-3','De fontanería y sanitarias.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('J4-4','De fontanería y sanitarias.(superior a 840.000 euros)'),('J5-1','Instalaciones mecánicas sin cualificación específica.(inferior o igual 150.000 euros)'),('J5-2','Instalaciones mecánicas sin cualificación específica.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('J5-3','Instalaciones mecánicas sin cualificación específica.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('J5-4','Instalaciones mecánicas sin cualificación específica.(superior a 840.000 euros)'),('K*-1','Especiales(inferior o igual 150.000 euros)'),('K*-2','Especiales(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('K*-3','Especiales(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('K*-4','Especiales(superior a 840.000 euros)'),('K1-1','Cimentaciones especiales.(inferior o igual 150.000 euros)'),('K1-2','Cimentaciones especiales.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('K1-3','Cimentaciones especiales.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('K1-4','Cimentaciones especiales.(superior a 840.000 euros)'),('K2-1','Sondeos, inyecciones y pilotajes.(inferior o igual 150.000 euros)'),('K2-2','Sondeos, inyecciones y pilotajes.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('K2-3','Sondeos, inyecciones y pilotajes.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('K2-4','Sondeos, inyecciones y pilotajes.(superior a 840.000 euros)'),('K3-1','Tablestacados.(inferior o igual 150.000 euros)'),('K3-2','Tablestacados.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('K3-3','Tablestacados.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('K3-4','Tablestacados.(superior a 840.000 euros)'),('K4-1','Pinturas y metalizaciones.(inferior o igual 150.000 euros)'),('K4-2','Pinturas y metalizaciones.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('K4-3','Pinturas y metalizaciones.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('K4-4','Pinturas y metalizaciones.(superior a 840.000 euros)'),('K5-1','Ornamentaciones y decoraciones.(inferior o igual 150.000 euros)'),('K5-2','Ornamentaciones y decoraciones.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('K5-3','Ornamentaciones y decoraciones.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('K5-4','Ornamentaciones y decoraciones.(superior a 840.000 euros)'),('K6-1','Jardinería y plantaciones.(inferior o igual 150.000 euros)'),('K6-2','Jardinería y plantaciones.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('K6-3','Jardinería y plantaciones.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('K6-4','Jardinería y plantaciones.(superior a 840.000 euros)'),('K7-1','Restauración de bienes inmuebles histórico-artísticos.(inferior o igual 150.000 euros)'),('K7-2','Restauración de bienes inmuebles histórico-artísticos.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('K7-3','Restauración de bienes inmuebles histórico-artísticos.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('K7-4','Restauración de bienes inmuebles histórico-artísticos.(superior a 840.000 euros)'),('K8-1','Estaciones de tratamiento de aguas.(inferior o igual 150.000 euros)'),('K8-2','Estaciones de tratamiento de aguas.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('K8-3','Estaciones de tratamiento de aguas.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('K8-4','Estaciones de tratamiento de aguas.(superior a 840.000 euros)'),('K9-1','Instalaciones contra incendios.(inferior o igual 150.000 euros)'),('K9-2','Instalaciones contra incendios.(superior a 150.000 euros e inferior o igual a 360.000 euros)'),('K9-3','Instalaciones contra incendios.(superior a 360.000 euros e inferior o igual a 840.000 euros)'),('K9-4','Instalaciones contra incendios.(superior a 840.000 euros)'),('L*-1','Servicios administrativos(inferior a 150.000 euros)'),('L*-2','Servicios administrativos(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('L*-3','Servicios administrativos(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('L*-4','Servicios administrativos(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('L*-5','Servicios administrativos(igual o superior a 1.200.000 euros)'),('L1-1','Servicios auxiliares para trabajos administrativos de archivo y similares.(inferior a 150.000 euros)'),('L1-2','Servicios auxiliares para trabajos administrativos de archivo y similares.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('L1-3','Servicios auxiliares para trabajos administrativos de archivo y similares.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('L1-4','Servicios auxiliares para trabajos administrativos de archivo y similares.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('L1-5','Servicios auxiliares para trabajos administrativos de archivo y similares.(igual o superior a 1.200.000 euros)'),('L3-1','Encuestas, toma de datos y servicios análogos.(inferior a 150.000 euros)'),('L3-2','Encuestas, toma de datos y servicios análogos.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('L3-3','Encuestas, toma de datos y servicios análogos.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('L3-4','Encuestas, toma de datos y servicios análogos.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('L3-5','Encuestas, toma de datos y servicios análogos.(igual o superior a 1.200.000 euros)'),('L5-1','Organización y promoción de congresos, ferias y exposiciones.(inferior a 150.000 euros)'),('L5-2','Organización y promoción de congresos, ferias y exposiciones.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('L5-3','Organización y promoción de congresos, ferias y exposiciones.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('L5-4','Organización y promoción de congresos, ferias y exposiciones.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('L5-5','Organización y promoción de congresos, ferias y exposiciones.(igual o superior a 1.200.000 euros)'),('L6-1','Servicios de portería, control de accesos e información al público.(inferior a 150.000 euros)'),('L6-2','Servicios de portería, control de accesos e información al público.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('L6-3','Servicios de portería, control de accesos e información al público.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('L6-4','Servicios de portería, control de accesos e información al público.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('L6-5','Servicios de portería, control de accesos e información al público.(igual o superior a 1.200.000 euros)'),('M*-1','Servicios especializados(inferior a 150.000 euros)'),('M*-2','Servicios especializados(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('M*-3','Servicios especializados(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('M*-4','Servicios especializados(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('M*-5','Servicios especializados(igual o superior a 1.200.000 euros)'),('M1-1','Higienización, desinfección, desinsectación y desratización.(inferior a 150.000 euros)'),('M1-2','Higienización, desinfección, desinsectación y desratización.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('M1-3','Higienización, desinfección, desinsectación y desratización.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('M1-4','Higienización, desinfección, desinsectación y desratización.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('M1-5','Higienización, desinfección, desinsectación y desratización.(igual o superior a 1.200.000 euros)'),('M2-1','Servicios de seguridad, custodia y protección.(inferior a 150.000 euros)'),('M2-2','Servicios de seguridad, custodia y protección.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('M2-3','Servicios de seguridad, custodia y protección.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('M2-4','Servicios de seguridad, custodia y protección.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('M2-5','Servicios de seguridad, custodia y protección.(igual o superior a 1.200.000 euros)'),('M4-1','Artes gráficas.(inferior a 150.000 euros)'),('M4-2','Artes gráficas.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('M4-3','Artes gráficas.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('M4-4','Artes gráficas.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('M4-5','Artes gráficas.(igual o superior a 1.200.000 euros)'),('M5-1','Servicios de bibliotecas, archivos y museos.(inferior a 150.000 euros)'),('M5-2','Servicios de bibliotecas, archivos y museos.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('M5-3','Servicios de bibliotecas, archivos y museos.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('M5-4','Servicios de bibliotecas, archivos y museos.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('M5-5','Servicios de bibliotecas, archivos y museos.(igual o superior a 1.200.000 euros)'),('M6-1','Hostelería y servicios de comida.(inferior a 150.000 euros)'),('M6-2','Hostelería y servicios de comida.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('M6-3','Hostelería y servicios de comida.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('M6-4','Hostelería y servicios de comida.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('M6-5','Hostelería y servicios de comida.(igual o superior a 1.200.000 euros)'),('O*-1','Servicios de conservación y mantenimiento de bienes inmuebles(inferior a 150.000 euros)'),('O*-2','Servicios de conservación y mantenimiento de bienes inmuebles(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('O*-3','Servicios de conservación y mantenimiento de bienes inmuebles(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('O*-4','Servicios de conservación y mantenimiento de bienes inmuebles(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('O*-5','Servicios de conservación y mantenimiento de bienes inmuebles(igual o superior a 1.200.000 euros)'),('O1-1','Servicios de conservación y mantenimiento de bienes inmuebles(inferior a 150.000 euros)'),('O1-2','Servicios de conservación y mantenimiento de bienes inmuebles(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('O1-3','Servicios de conservación y mantenimiento de bienes inmuebles(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('O1-4','Servicios de conservación y mantenimiento de bienes inmuebles(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('O1-5','Servicios de conservación y mantenimiento de bienes inmuebles(igual o superior a 1.200.000 euros)'),('O2-1','Conservación y mantenimiento de carreteras, pistas, autopistas, autovías, calzadas y vías férreas.(inferior a 150.000 euros)'),('O2-2','Conservación y mantenimiento de carreteras, pistas, autopistas, autovías, calzadas y vías férreas.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('O2-3','Conservación y mantenimiento de carreteras, pistas, autopistas, autovías, calzadas y vías férreas.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('O2-4','Conservación y mantenimiento de carreteras, pistas, autopistas, autovías, calzadas y vías férreas.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('O2-5','Conservación y mantenimiento de carreteras, pistas, autopistas, autovías, calzadas y vías férreas.(igual o superior a 1.200.000 euros)'),('O3-1','Conservación y mantenimiento de redes de agua y alcantarillado.(inferior a 150.000 euros)'),('O3-2','Conservación y mantenimiento de redes de agua y alcantarillado.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('O3-3','Conservación y mantenimiento de redes de agua y alcantarillado.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('O3-4','Conservación y mantenimiento de redes de agua y alcantarillado.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('O3-5','Conservación y mantenimiento de redes de agua y alcantarillado.(igual o superior a 1.200.000 euros)'),('O4-1','Conservación y mantenimiento integral de estaciones depuradoras.(inferior a 150.000 euros)'),('O4-2','Conservación y mantenimiento integral de estaciones depuradoras.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('O4-3','Conservación y mantenimiento integral de estaciones depuradoras.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('O4-4','Conservación y mantenimiento integral de estaciones depuradoras.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('O4-5','Conservación y mantenimiento integral de estaciones depuradoras.(igual o superior a 1.200.000 euros)'),('O6-1','Conservación y mantenimiento de montes y jardines.(inferior a 150.000 euros)'),('O6-2','Conservación y mantenimiento de montes y jardines.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('O6-3','Conservación y mantenimiento de montes y jardines.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('O6-4','Conservación y mantenimiento de montes y jardines.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('O6-5','Conservación y mantenimiento de montes y jardines.(igual o superior a 1.200.000 euros)'),('P*-1','Servicios de mantenimiento y reparación de equipos e instalaciones(inferior a 150.000 euros)'),('P*-2','Servicios de mantenimiento y reparación de equipos e instalaciones(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('P*-3','Servicios de mantenimiento y reparación de equipos e instalaciones(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('P*-4','Servicios de mantenimiento y reparación de equipos e instalaciones(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('P*-5','Servicios de mantenimiento y reparación de equipos e instalaciones(igual o superior a 1.200.000 euros)'),('P1-1','Mantenimiento y reparación de equipos e instalaciones eléctricas y electrónicas.(inferior a 150.000 euros)'),('P1-2','Mantenimiento y reparación de equipos e instalaciones eléctricas y electrónicas.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('P1-3','Mantenimiento y reparación de equipos e instalaciones eléctricas y electrónicas.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('P1-4','Mantenimiento y reparación de equipos e instalaciones eléctricas y electrónicas.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('P1-5','Mantenimiento y reparación de equipos e instalaciones eléctricas y electrónicas.(igual o superior a 1.200.000 euros)'),('P2-1','Mantenimiento y reparación de equipos e instalaciones de fontanería, conducciones de agua y gas.(inferior a 150.000 euros)'),('P2-2','Mantenimiento y reparación de equipos e instalaciones de fontanería, conducciones de agua y gas.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('P2-3','Mantenimiento y reparación de equipos e instalaciones de fontanería, conducciones de agua y gas.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('P2-4','Mantenimiento y reparación de equipos e instalaciones de fontanería, conducciones de agua y gas.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('P2-5','Mantenimiento y reparación de equipos e instalaciones de fontanería, conducciones de agua y gas.(igual o superior a 1.200.000 euros)'),('P3-1','Mantenimiento y reparación de equipos e instalaciones de calefacción y aire acondicionado.(inferior a 150.000 euros)'),('P3-2','Mantenimiento y reparación de equipos e instalaciones de calefacción y aire acondicionado.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('P3-3','Mantenimiento y reparación de equipos e instalaciones de calefacción y aire acondicionado.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('P3-4','Mantenimiento y reparación de equipos e instalaciones de calefacción y aire acondicionado.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('P3-5','Mantenimiento y reparación de equipos e instalaciones de calefacción y aire acondicionado.(igual o superior a 1.200.000 euros)'),('P5-1','Mantenimiento y reparación de equipos e instalaciones de seguridad y contra incendios.(inferior a 150.000 euros)'),('P5-2','Mantenimiento y reparación de equipos e instalaciones de seguridad y contra incendios.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('P5-3','Mantenimiento y reparación de equipos e instalaciones de seguridad y contra incendios.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('P5-4','Mantenimiento y reparación de equipos e instalaciones de seguridad y contra incendios.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('P5-5','Mantenimiento y reparación de equipos e instalaciones de seguridad y contra incendios.(igual o superior a 1.200.000 euros)'),('P7-1','Mantenimiento y reparación de equipos e instalaciones de aparatos elevadores y de traslación horizontal.(inferior a 150.000 euros)'),('P7-2','Mantenimiento y reparación de equipos e instalaciones de aparatos elevadores y de traslación horizontal.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('P7-3','Mantenimiento y reparación de equipos e instalaciones de aparatos elevadores y de traslación horizontal.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('P7-4','Mantenimiento y reparación de equipos e instalaciones de aparatos elevadores y de traslación horizontal.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('P7-5','Mantenimiento y reparación de equipos e instalaciones de aparatos elevadores y de traslación horizontal.(igual o superior a 1.200.000 euros)'),('Q*-1','Servicios de mantenimiento y reparación de maquinaria(inferior a 150.000 euros)'),('Q*-2','Servicios de mantenimiento y reparación de maquinaria(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('Q*-3','Servicios de mantenimiento y reparación de maquinaria(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('Q*-4','Servicios de mantenimiento y reparación de maquinaria(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('Q*-5','Servicios de mantenimiento y reparación de maquinaria(igual o superior a 1.200.000 euros)'),('Q1-1','Mantenimiento y reparación de maquinaria.(inferior a 150.000 euros)'),('Q1-2','Mantenimiento y reparación de maquinaria.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('Q1-3','Mantenimiento y reparación de maquinaria.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('Q1-4','Mantenimiento y reparación de maquinaria.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('Q1-5','Mantenimiento y reparación de maquinaria.(igual o superior a 1.200.000 euros)'),('Q2-1','Mantenimiento y reparación de vehículos.(inferior a 150.000 euros)'),('Q2-2','Mantenimiento y reparación de vehículos.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('Q2-3','Mantenimiento y reparación de vehículos.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('Q2-4','Mantenimiento y reparación de vehículos.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('Q2-5','Mantenimiento y reparación de vehículos.(igual o superior a 1.200.000 euros)'),('R*-1','Servicios de transportes(inferior a 150.000 euros)'),('R*-2','Servicios de transportes(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('R*-3','Servicios de transportes(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('R*-4','Servicios de transportes(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('R*-5','Servicios de transportes(igual o superior a 1.200.000 euros)'),('R1-1','Transporte en general.(inferior a 150.000 euros)'),('R1-2','Transporte en general.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('R1-3','Transporte en general.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('R1-4','Transporte en general.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('R1-5','Transporte en general.(igual o superior a 1.200.000 euros)'),('R2-1','Traslado de enfermos por cualquier medio de transporte.(inferior a 150.000 euros)'),('R2-2','Traslado de enfermos por cualquier medio de transporte.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('R2-3','Traslado de enfermos por cualquier medio de transporte.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('R2-4','Traslado de enfermos por cualquier medio de transporte.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('R2-5','Traslado de enfermos por cualquier medio de transporte.(igual o superior a 1.200.000 euros)'),('R5-1','Recogida y transporte de residuos.(inferior a 150.000 euros)'),('R5-2','Recogida y transporte de residuos.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('R5-3','Recogida y transporte de residuos.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('R5-4','Recogida y transporte de residuos.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('R5-5','Recogida y transporte de residuos.(igual o superior a 1.200.000 euros)'),('R6-1','Servicios aéreos.(inferior a 150.000 euros)'),('R6-2','Servicios aéreos.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('R6-3','Servicios aéreos.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('R6-4','Servicios aéreos.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('R6-5','Servicios aéreos.(igual o superior a 1.200.000 euros)'),('R9-1','Servicios de mensajería, correspondencia y distribución.(inferior a 150.000 euros)'),('R9-2','Servicios de mensajería, correspondencia y distribución.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('R9-3','Servicios de mensajería, correspondencia y distribución.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('R9-4','Servicios de mensajería, correspondencia y distribución.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('R9-5','Servicios de mensajería, correspondencia y distribución.(igual o superior a 1.200.000 euros)'),('T*-1','Servicios de contenido(inferior a 150.000 euros)'),('T*-2','Servicios de contenido(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('T*-3','Servicios de contenido(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('T*-4','Servicios de contenido(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('T*-5','Servicios de contenido(igual o superior a 1.200.000 euros)'),('T1-1','Servicios de publicidad.(inferior a 150.000 euros)'),('T1-2','Servicios de publicidad.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('T1-3','Servicios de publicidad.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('T1-4','Servicios de publicidad.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('T1-5','Servicios de publicidad.(igual o superior a 1.200.000 euros)'),('T5-1','Servicios de traductores e intérpretes.(inferior a 150.000 euros)'),('T5-2','Servicios de traductores e intérpretes.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('T5-3','Servicios de traductores e intérpretes.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('T5-4','Servicios de traductores e intérpretes.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('T5-5','Servicios de traductores e intérpretes.(igual o superior a 1.200.000 euros)'),('U*-1','Servicios generales(inferior a 150.000 euros)'),('U*-2','Servicios generales(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('U*-3','Servicios generales(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('U*-4','Servicios generales(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('U*-5','Servicios generales(igual o superior a 1.200.000 euros)'),('U1-1','Servicios de limpieza en general.(inferior a 150.000 euros)'),('U1-2','Servicios de limpieza en general.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('U1-3','Servicios de limpieza en general.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('U1-4','Servicios de limpieza en general.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('U1-5','Servicios de limpieza en general.(igual o superior a 1.200.000 euros)'),('U4-1','Agencias de viajes.(inferior a 150.000 euros)'),('U4-2','Agencias de viajes.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('U4-3','Agencias de viajes.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('U4-4','Agencias de viajes.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('U4-5','Agencias de viajes.(igual o superior a 1.200.000 euros)'),('U8-1','Servicios de información y asistencia telefónicas(inferior a 150.000 euros)'),('U8-2','Servicios de información y asistencia telefónicas(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('U8-3','Servicios de información y asistencia telefónicas(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('U8-4','Servicios de información y asistencia telefónicas(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('U8-5','Servicios de información y asistencia telefónicas(igual o superior a 1.200.000 euros)'),('V*-1','Servicios de Tecnologías de la Información y las Comunicaciones(inferior a 150.000 euros)'),('V*-2','Servicios de Tecnologías de la Información y las Comunicaciones(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('V*-3','Servicios de Tecnologías de la Información y las Comunicaciones(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('V*-4','Servicios de Tecnologías de la Información y las Comunicaciones(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('V*-5','Servicios de Tecnologías de la Información y las Comunicaciones(igual o superior a 1.200.000 euros)'),('V3-1','Mantenimiento y reparación de equipos e instalaciones informáticas y de telecomunicaciones.(inferior a 150.000 euros)'),('V3-2','Mantenimiento y reparación de equipos e instalaciones informáticas y de telecomunicaciones.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('V3-3','Mantenimiento y reparación de equipos e instalaciones informáticas y de telecomunicaciones.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('V3-4','Mantenimiento y reparación de equipos e instalaciones informáticas y de telecomunicaciones.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('V3-5','Mantenimiento y reparación de equipos e instalaciones informáticas y de telecomunicaciones.(igual o superior a 1.200.000 euros)'),('V4-1','Servicios de telecomunicaciones.(inferior a 150.000 euros)'),('V4-2','Servicios de telecomunicaciones.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('V4-3','Servicios de telecomunicaciones.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('V4-4','Servicios de telecomunicaciones.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('V4-5','Servicios de telecomunicaciones.(igual o superior a 1.200.000 euros)'),('V5-1','Explotación y control de sistemas informáticos e infraestructuras telemáticas.(inferior a 150.000 euros)'),('V5-2','Explotación y control de sistemas informáticos e infraestructuras telemáticas.(igual o superior a 150.000 euros e inferior a 300.000 euros)'),('V5-3','Explotación y control de sistemas informáticos e infraestructuras telemáticas.(igual o superior a 300.000 euros e inferior a 600.000 euros)'),('V5-4','Explotación y control de sistemas informáticos e infraestructuras telemáticas.(igual o superior a 600.000 euros e inferior a 1.200.000 euros)'),('V5-5','Explotación y control de sistemas informáticos e infraestructuras telemáticas.(igual o superior a 1.200.000 euros)');
+/*!40000 ALTER TABLE `tbl_required_business_profile_code` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_requisitos_de_participacion`
+--
+
+DROP TABLE IF EXISTS `tbl_requisitos_de_participacion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_requisitos_de_participacion` (
+  `requisitos_de_participacion` int(11) NOT NULL AUTO_INCREMENT,
+  `titulo_habilitante` varchar(3500) DEFAULT NULL,
+  `solvencia_requerida` varchar(2500) DEFAULT NULL,
+  `ids_expedientes` int(11) NOT NULL,
+  `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`requisitos_de_participacion`),
+  KEY `fk_tbl_requisitos_de_participacion_tbl_ids_expedientes1_idx` (`ids_expedientes`),
+  CONSTRAINT `fk_tbl_requisitos_de_participacion_tbl_ids_expedientes1` FOREIGN KEY (`ids_expedientes`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_requisitos_de_participacion`
+--
+
+LOCK TABLES `tbl_requisitos_de_participacion` WRITE;
+/*!40000 ALTER TABLE `tbl_requisitos_de_participacion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_requisitos_de_participacion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tbl_submission_method_code`
 --
 
@@ -845,8 +1135,56 @@ CREATE TABLE `tbl_subtype_code` (
 
 LOCK TABLES `tbl_subtype_code` WRITE;
 /*!40000 ALTER TABLE `tbl_subtype_code` DISABLE KEYS */;
-INSERT INTO `tbl_subtype_code` VALUES (1,1,'Alquiler'),(1,2,'Servicios de mantenimiento y reparación'),(2,1,'Adquisición'),(2,2,'Servicios de transporte por vía terrestre, incluidos los servicios de furgones blindados y servicios de mensajería, excepto el transporte de correo'),(3,2,'Servicios de transporte aéreo: transporte de pasajeros y carga, excepto el transporte de correo'),(4,2,'Transporte de correo por vía terrestre y por vía aírea'),(5,2,'Servicios de telecomunicación'),(6,2,'Servicios financieros: a) servicios de seguros; b) servicios bancarios y de inversión'),(7,2,'Servicios de informítica y servicios conexos'),(8,2,'Servicios de investigación y desarrollo'),(9,2,'Servicios de contabilidad, auditoría y teneduría de libros'),(10,2,'Servicios de investigación de estudios y encuestas de la opinión pública'),(10,50,'Autorización demanial'),(11,2,'Servicios de consultores de dirección y servicios conexos'),(11,50,'Concesión demanial'),(12,2,'Servicios de arquitectura; servicios de ingeniería y servicios integrados de ingeniería; servicios de planificación urbana y servicios de arquitectura paisajista. Servicios conexos de consultores en ciencia y tecnología. Servicios de ensayos y anílisis tícnicos'),(13,2,'Servicios de publicidad'),(14,2,'Servicios de limpieza de edificios y servicios de administración de bienes raíces'),(15,2,'Servicios editoriales y de imprenta, por tarifa o por contrato'),(16,2,'Servicios de alcantarillado y eliminación de desperdicios: servicios de saneamiento y servicios similares'),(17,2,'Servicios de hostelería y restaurante'),(18,2,'Servicios de transporte por ferrocarril'),(19,2,'Servicios de transporte fluvial y marítimo'),(20,2,'Servicios de transporte complementarios y auxiliares'),(20,50,'Explotación de bienes inmuebles mediante arrendamiento'),(21,2,'Servicios jurídicos'),(21,50,'Explotación de bienes muebles mediante arrendamiento'),(22,2,'Servicios de colocación y suministro de personal'),(22,50,'Explotación de bienes de propiedad incorporal'),(23,2,'Servicios de investigación y seguridad, excepto los servicios de furgones blindados'),(23,50,'Cesión de uso/titularidad'),(24,2,'Servicios de educación y formación profesional'),(25,2,'Servicios sociales y de salud'),(26,2,'Servicios de esparcimiento, culturales y deportivos'),(27,2,'Otros servicios'),(30,50,'Adquisición de inmuebles'),(31,50,'Adquisición de derechos de propiedad incorporal'),(40,50,'Arrendamiento de inmuebles'),(50,50,'Enajenación de inmuebles'),(51,50,'Enajenación de bienes muebles'),(52,50,'Enajenación de derechos de propiedad incorporal'),(60,50,'Permuta'),(100,50,'Otros contratos patrimoniales'),(4500,3,'Construcción'),(4510,3,'Preparación de obras'),(4511,3,'Demolición de inmuebles y movimientos de tierras'),(4512,3,'Perforaciones y sondeos'),(4520,3,'Construcción general de inmuebles y obras de ingeniería\n				civil'),(4521,3,'Construcción general de edificios y obras singulares de ingeniería\n					civil (puentes, túneles, etc.)'),(4522,3,'Construcción de cubiertas y estructuras de cerramiento'),(4523,3,'Construcción de autopistas,carreteras, campos de aterrizaje, vías\n					férreas y centros deportivos'),(4524,3,'Obras hidráulicas'),(4525,3,'Otras construcciones especializadas'),(4530,3,'Instalación de edificios y obras'),(4531,3,'Instalación eléctrica'),(4532,3,'Aislamiento térmico, acústico y antivibratorio'),(4533,3,'Fontanería'),(4534,3,'Otras instalaciones de edificios y obras'),(4540,3,'Acabado de edificios y obras'),(4541,3,'Revocamiento'),(4542,3,'Instalaciones de carpintería'),(4543,3,'Revestimiento de suelos y paredes'),(4544,3,'Pintura y acristalamiento'),(4545,3,'Otros acabados de edificios y obras'),(4550,3,'Alquiler de equipo de construcción o demolición con\n				operario');
+INSERT INTO `tbl_subtype_code` VALUES (0,0,'nulo'),(1,1,'Alquiler'),(1,2,'Servicios de mantenimiento y reparación'),(2,1,'Adquisición'),(2,2,'Servicios de transporte por vía terrestre, incluidos los servicios de furgones blindados y servicios de mensajería, excepto el transporte de correo'),(3,2,'Servicios de transporte aéreo: transporte de pasajeros y carga, excepto el transporte de correo'),(4,2,'Transporte de correo por vía terrestre y por vía aírea'),(5,2,'Servicios de telecomunicación'),(6,2,'Servicios financieros: a) servicios de seguros; b) servicios bancarios y de inversión'),(7,2,'Servicios de informítica y servicios conexos'),(8,2,'Servicios de investigación y desarrollo'),(9,2,'Servicios de contabilidad, auditoría y teneduría de libros'),(10,2,'Servicios de investigación de estudios y encuestas de la opinión pública'),(10,50,'Autorización demanial'),(11,2,'Servicios de consultores de dirección y servicios conexos'),(11,50,'Concesión demanial'),(12,2,'Servicios de arquitectura; servicios de ingeniería y servicios integrados de ingeniería; servicios de planificación urbana y servicios de arquitectura paisajista. Servicios conexos de consultores en ciencia y tecnología. Servicios de ensayos y anílisis tícnicos'),(13,2,'Servicios de publicidad'),(14,2,'Servicios de limpieza de edificios y servicios de administración de bienes raíces'),(15,2,'Servicios editoriales y de imprenta, por tarifa o por contrato'),(16,2,'Servicios de alcantarillado y eliminación de desperdicios: servicios de saneamiento y servicios similares'),(17,2,'Servicios de hostelería y restaurante'),(18,2,'Servicios de transporte por ferrocarril'),(19,2,'Servicios de transporte fluvial y marítimo'),(20,2,'Servicios de transporte complementarios y auxiliares'),(20,50,'Explotación de bienes inmuebles mediante arrendamiento'),(21,2,'Servicios jurídicos'),(21,50,'Explotación de bienes muebles mediante arrendamiento'),(22,2,'Servicios de colocación y suministro de personal'),(22,50,'Explotación de bienes de propiedad incorporal'),(23,2,'Servicios de investigación y seguridad, excepto los servicios de furgones blindados'),(23,50,'Cesión de uso/titularidad'),(24,2,'Servicios de educación y formación profesional'),(25,2,'Servicios sociales y de salud'),(26,2,'Servicios de esparcimiento, culturales y deportivos'),(27,2,'Otros servicios'),(30,50,'Adquisición de inmuebles'),(31,50,'Adquisición de derechos de propiedad incorporal'),(40,50,'Arrendamiento de inmuebles'),(50,50,'Enajenación de inmuebles'),(51,50,'Enajenación de bienes muebles'),(52,50,'Enajenación de derechos de propiedad incorporal'),(60,50,'Permuta'),(100,50,'Otros contratos patrimoniales'),(4500,3,'Construcción'),(4510,3,'Preparación de obras'),(4511,3,'Demolición de inmuebles y movimientos de tierras'),(4512,3,'Perforaciones y sondeos'),(4520,3,'Construcción general de inmuebles y obras de ingeniería\n				civil'),(4521,3,'Construcción general de edificios y obras singulares de ingeniería\n					civil (puentes, túneles, etc.)'),(4522,3,'Construcción de cubiertas y estructuras de cerramiento'),(4523,3,'Construcción de autopistas,carreteras, campos de aterrizaje, vías\n					férreas y centros deportivos'),(4524,3,'Obras hidráulicas'),(4525,3,'Otras construcciones especializadas'),(4530,3,'Instalación de edificios y obras'),(4531,3,'Instalación eléctrica'),(4532,3,'Aislamiento térmico, acústico y antivibratorio'),(4533,3,'Fontanería'),(4534,3,'Otras instalaciones de edificios y obras'),(4540,3,'Acabado de edificios y obras'),(4541,3,'Revocamiento'),(4542,3,'Instalaciones de carpintería'),(4543,3,'Revestimiento de suelos y paredes'),(4544,3,'Pintura y acristalamiento'),(4545,3,'Otros acabados de edificios y obras'),(4550,3,'Alquiler de equipo de construcción o demolición con\n				operario');
 /*!40000 ALTER TABLE `tbl_subtype_code` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_technical_capability_type_code`
+--
+
+DROP TABLE IF EXISTS `tbl_technical_capability_type_code`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_technical_capability_type_code` (
+  `code` varchar(50) NOT NULL,
+  `nombre` varchar(150) NOT NULL,
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_technical_capability_type_code`
+--
+
+LOCK TABLES `tbl_technical_capability_type_code` WRITE;
+/*!40000 ALTER TABLE `tbl_technical_capability_type_code` DISABLE KEYS */;
+INSERT INTO `tbl_technical_capability_type_code` VALUES ('OSR-COMPTASK','Trabajos realizados'),('OSR-TECH','Técnicos o unidades técnicas'),('OXR-GESTMEDIOAMB','Medidas de gestión medioambiental'),('OXR-MEDIOS','Maquinaria, material y equipo técnico para la ejecución del contrato'),('OXR-PLANTILLA','Plantilla media anual'),('OXR-TITULOS','Títulos académicos y profesionales del empresario y directivos, o responsables de la ejecución'),('XSR-CALIDAD','Instalaciones técnicas y medidas para garantizar la calidad'),('XSR-CONTROL','Control por la entidad contratante sobre la capacidad del empresario'),('XSR-MUESTRAS','Muestras, descripciones y fotografías de los productos a suministrar'),('XSX-CERTCALIDAD','Certificados de control de calidad expedidos por los institutos o servicios oficiales'),('XXR-SUBCONT','Indicación de la parte del contrato que se pretende subcontratar'),('ZZZ','Otros');
+/*!40000 ALTER TABLE `tbl_technical_capability_type_code` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_tipo_evaluacion`
+--
+
+DROP TABLE IF EXISTS `tbl_tipo_evaluacion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_tipo_evaluacion` (
+  `tipo_evaluacion` int(11) NOT NULL,
+  `descripcion` varchar(45) NOT NULL,
+  PRIMARY KEY (`tipo_evaluacion`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_tipo_evaluacion`
+--
+
+LOCK TABLES `tbl_tipo_evaluacion` WRITE;
+/*!40000 ALTER TABLE `tbl_tipo_evaluacion` DISABLE KEYS */;
+INSERT INTO `tbl_tipo_evaluacion` VALUES (1,'Técnica'),(2,'Económica-Financiera');
+/*!40000 ALTER TABLE `tbl_tipo_evaluacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -917,7 +1255,7 @@ CREATE TABLE `tbl_type_code` (
 
 LOCK TABLES `tbl_type_code` WRITE;
 /*!40000 ALTER TABLE `tbl_type_code` DISABLE KEYS */;
-INSERT INTO `tbl_type_code` VALUES (1,'Suministros'),(2,'Servicios'),(3,'Obras'),(7,'Administrativo especial'),(8,'Privado'),(21,'Gestión de Servicios Públicos'),(22,'Concesión de Servicios'),(31,'Concesión de Obras Públicas'),(32,'Concesión de Obras'),(40,'Colaboración entre el sector público y sector privado'),(50,'Patrimonial');
+INSERT INTO `tbl_type_code` VALUES (0,'nulo'),(1,'Suministros'),(2,'Servicios'),(3,'Obras'),(7,'Administrativo especial'),(8,'Privado'),(21,'Gestión de Servicios Públicos'),(22,'Concesión de Servicios'),(31,'Concesión de Obras Públicas'),(32,'Concesión de Obras'),(40,'Colaboración entre el sector público y sector privado'),(50,'Patrimonial');
 /*!40000 ALTER TABLE `tbl_type_code` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -948,6 +1286,50 @@ UNLOCK TABLES;
 --
 -- Dumping routines for database 'licitacion'
 --
+/*!50003 DROP PROCEDURE IF EXISTS `newClasificacionEmpresarial` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newClasificacionEmpresarial`(
+	IN required_business_profile_code VARCHAR(10),
+    IN requisitos_de_participacion INT)
+BEGIN
+	INSERT INTO tbl_clasificacion_empresarial (required_business_profile_code, requisitos_de_participacion)
+    VALUES (required_business_profile_code, requisitos_de_participacion);
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newCondicionesDeAdmision` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newCondicionesDeAdmision`(
+	IN declaration_type_code INT,
+    IN requisitos_de_participacion INT)
+BEGIN
+	INSERT INTO tbl_condiciones_de_admision (declaration_type_code, requisitos_de_participacion)
+    VALUES (declaration_type_code, requisitos_de_participacion);
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `newCondicionesDeLicitacion` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1118,6 +1500,56 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newCriterioDeEvaluacion` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newCriterioDeEvaluacion`(
+	IN descripcion VARCHAR(2500),
+    IN tipo_evaluacion INT,
+    IN tipo_technical VARCHAR(50),
+    IN tipo_financial VARCHAR(10),
+    OUT criterio INT)
+BEGIN
+	INSERT INTO tbl_criterio_de_evaluacion (descripcion, tipo_evaluacion, tipo_technical, tipo_financial) 
+    VALUES (descripcion, tipo_evaluacion, tipo_technical, tipo_financial);
+    
+    SET criterio = last_insert_id();
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newDeclarationTypeCode` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newDeclarationTypeCode`(
+	IN code INT, 
+    IN nombre VARCHAR(200))
+BEGIN
+	START TRANSACTION;
+    INSERT INTO tbl_declaration_type_code (code, nombre) VALUES (code, nombre);
+    COMMIT;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `newEntidadAdjudicadora` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1186,11 +1618,11 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newExpediente`(
 	IN expedientes INT, 
-    IN numero_expediente VARCHAR(45),
+    IN numero_expediente VARCHAR(100),
 	IN title VARCHAR(2000),
     IN link VARCHAR(2500),
     IN objeto_contrato VARCHAR(2000),
@@ -1292,6 +1724,29 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newFinancialCapabilityTypeCode` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newFinancialCapabilityTypeCode`(
+	IN code VARCHAR(10),
+    IN nombre VARCHAR(150))
+BEGIN
+	START TRANSACTION;
+	INSERT INTO tbl_financial_capability_type_code (code, nombre) VALUES (code, nombre);
+    COMMIT;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `newFundingProgramCode` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1308,6 +1763,54 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `newFundingProgramCode`(
 BEGIN
 	START TRANSACTION;
     INSERT INTO tbl_funding_program_code VALUES (code, nombre);
+    COMMIT;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newGarantia` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newGarantia`(
+	IN guarantee_type_code INT,
+    IN importe DECIMAL(12,2),
+    IN moneda VARCHAR(5),
+    IN porcentaje DECIMAL(8,2),
+    OUT garantia INT)
+BEGIN
+	INSERT INTO tbl_garantia (guarantee_type_code, importe, moneda, porcentaje) VALUES (guarantee_type_code, importe, moneda, porcentaje);
+    SET garantia = last_insert_id();
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newGuaranteeTypeCode` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newGuaranteeTypeCode`(
+	IN code INT,
+    IN nombre VARCHAR(45))
+BEGIN
+	START TRANSACTION;
+    INSERT INTO tbl_guarantee_type_code (code, nombre) VALUES (code, nombre);
     COMMIT;
 END ;;
 DELIMITER ;
@@ -1361,6 +1864,49 @@ BEGIN
     
     SET ids = last_insert_id();
     COMMIT;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newIds_CriterioDeEvaluacion` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newIds_CriterioDeEvaluacion`(
+	IN criterio_de_evaluacion INT,
+    IN ids_expedientes INT)
+BEGIN
+	INSERT INTO tbl_ids_criterio_de_evaluacion (criterio_de_evaluacion, ids_expedientes)
+    VALUES (criterio_de_evaluacion, ids_expedientes);
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newIds_Garantia` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newIds_Garantia`(
+	IN ids INT,
+    IN garantia INT)
+BEGIN
+	INSERT INTO tbl_ids_garantia (ids_expedientes, garantia) VALUES (ids, garantia);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1596,6 +2142,55 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newRequiredBusinessProfileCode` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newRequiredBusinessProfileCode`(
+	IN code VARCHAR(10),
+    IN nombre VARCHAR(200))
+BEGIN
+	START TRANSACTION;
+    INSERT INTO tbl_required_business_profile_code (code, nombre) VALUES (code, nombre);
+    COMMIT;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newRequisitosDeParticipacion` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newRequisitosDeParticipacion`(
+	IN titulo_habilitante VARCHAR(3500),
+    IN solvencia_requerida VARCHAR(2500),
+    IN ids_expedientes INT,
+    OUT requisitos INT)
+BEGIN
+	INSERT INTO tbl_requisitos_de_participacion (titulo_habilitante, solvencia_requerida, ids_expedientes)
+	VALUES (titulo_habilitante, solvencia_requerida, ids_expedientes);
+    
+    SET requisitos = last_insert_id();
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `newSubmissionMethodCode` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1637,6 +2232,52 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `newSubtypeCode`(
 BEGIN 
 	INSERT INTO tbl_subtype_code (code, nombre, type_code)
     VALUES (code, nombre, type_code);
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newTechnicalCapabilityTypeCode` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newTechnicalCapabilityTypeCode`(
+	IN code VARCHAR(50),
+    IN nombre VARCHAR(150))
+BEGIN
+	START TRANSACTION;
+	INSERT INTO tbl_technical_capability_type_code (code, nombre) VALUES (code, nombre);
+	COMMIT;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newTipoEvaluacion` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newTipoEvaluacion`(
+	IN tipo_evaluacion INT,
+    IN descripcion VARCHAR(45))
+BEGIN
+	START TRANSACTION;
+	INSERT INTO tbl_tipo_evaluacion (tipo_evaluacion, descripcion) VALUES (tipo_evaluacion, descripcion);
+    COMMIT;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1774,4 +2415,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-17 12:56:35
+-- Dump completed on 2021-05-18 13:12:04

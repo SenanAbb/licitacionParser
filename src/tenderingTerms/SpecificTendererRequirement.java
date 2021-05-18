@@ -23,4 +23,8 @@ public class SpecificTendererRequirement {
 						 "----> Requirement Type Code: " + requirementTypeCode + "\n" +
 						 "--------------------------------\n");
 	}
+
+	public int getRequirementTypeCode() {
+		return requirementTypeCode;
+	}
 }

@@ -11,11 +11,13 @@ import org.w3c.dom.Element;
 public class RequiredFinancialGuarantee {
 	private int guaranteeTypeCode;
 	private double amountRate, liabilityAmount;
+	private String liabilityAmountCurrencyID;
 	
 	public void readAttributes(Element rfg, int POS_UNICO_ELEMENTO) {
 		this.guaranteeTypeCode = -1;
 		this.amountRate = -1;
 		this.liabilityAmount = -1;
+		this.liabilityAmountCurrencyID = null;
 		
 		/* GUARANTEE TYPE CODE */
 		Element gtc = (Element) rfg.getElementsByTagName("cbc:GuaranteeTypeCode").item(POS_UNICO_ELEMENTO);
@@ -35,7 +37,8 @@ public class RequiredFinancialGuarantee {
 		Element lr = (Element) rfg.getElementsByTagName("cbc:LiabilityAmount").item(POS_UNICO_ELEMENTO);
 		if (lr != null){
 			this.liabilityAmount = Double.parseDouble(lr.getTextContent());
-		}
+			this.liabilityAmountCurrencyID = lr.getAttributes().getNamedItem("currencyID").getTextContent();
+		}	
 	}
 
 	public void print(){
@@ -44,5 +47,21 @@ public class RequiredFinancialGuarantee {
 						 "---> Amount Rate: " + amountRate + "\n" +
 						 "---> Liability Amount: " + liabilityAmount + "\n" +
 					 	 "--------------------------------\n");
+	}
+
+	public int getGuaranteeTypeCode() {
+		return guaranteeTypeCode;
+	}
+
+	public double getAmountRate() {
+		return amountRate;
+	}
+
+	public double getLiabilityAmount() {
+		return liabilityAmount;
+	}
+
+	public String getLiabilityAmountCurrencyID() {
+		return liabilityAmountCurrencyID;
 	}
 }

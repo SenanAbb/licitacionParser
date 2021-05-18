@@ -47,10 +47,11 @@ public class TechnicalEvaluationCriteria {
 						 "--------------------------------\n");
 	}
 
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	public TechnicalEvaluationCriteria(){}
+	public String getEvaluationCriteriaTypeCode() {
+		return evaluationCriteriaTypeCode;
+	}
+
+	public String getDescription() {
+		return description;
+	}
 }

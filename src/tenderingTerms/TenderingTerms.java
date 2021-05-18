@@ -360,31 +360,32 @@ public class TenderingTerms {
 	public Language[] getLanguageList() {
 		return languageList;
 	}
-
 	
 	public boolean getRequiredCurriculaIndicator() {
 		return requiredCurriculaIndicator;
 	}
-
 	
 	public boolean getVariantConstraintIndicator() {
 		return variantConstraintIndicator;
 	}
-
 	
 	public String getPriceRevisionFormulaDescription() {
 		return priceRevisionFormulaDescription;
 	}
-
 	
 	public String getFundingProgramCode() {
 		return fundingProgramCode;
 	}
 
-	
 	public String getFundingProgram() {
 		return fundingProgram;
 	}
-
 	
+	public RequiredFinancialGuarantee[] getRequiredFinancialGuaranteeList(){
+		return requiredFinancialGuaranteeList;
+	}
+	
+	public TendererQualificationRequest getTendererQualificationRequest(){
+		return tendererQualificationRequest;
+	}
 }

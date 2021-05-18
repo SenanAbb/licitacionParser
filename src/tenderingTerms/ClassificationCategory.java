@@ -42,4 +42,8 @@ public class ClassificationCategory {
 						 "----->Description: " + description + "\n" +
 						 "--------------------------------\n");
 	}
+
+	public String getCodeValue() {
+		return codeValue;
+	}
 }

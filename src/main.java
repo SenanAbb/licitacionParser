@@ -15,8 +15,8 @@ import Parser.Parser;
 public class main {
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, TransformerException, SQLException {
 //		rellenar();
-		leerDirectorio();
-//		leerArchivo();
+//		leerDirectorio();
+		leerArchivo();
 	}
 
 	private static void leerDirectorio() throws FileNotFoundException, SAXException, IOException, SQLException {
@@ -83,23 +83,29 @@ public class main {
 		Parser p = new Parser();
 		
 		// Rellenar las tablas TypeCode
-		p.writeModosId();
-		p.writeTypeCode();
-		p.writeSubtypeCodes();
-		p.writeCPV();
-		p.writeCountryIdentificationCode();
-		p.writeCountrySubentityCode();
-		p.writeProcedureCode();
-		p.writeContractingSystemTypeCode();
-		p.writeUrgencyCode();
-		p.writeSubmissionMethodCode();
-		p.writeLanguage();
-		p.writeProcurementLegislation();
-		p.writeContractingPartyTypeCode();
-		p.writeContractFolderStatusCode();
-		p.writeTipoPliego();
-		p.writeTipoPlazo();
-		p.writeFundingProgramCode();
+//		p.writeModosId();
+//		p.writeTypeCode();
+//		p.writeSubtypeCodes();
+//		p.writeCPV();
+//		p.writeCountryIdentificationCode();
+//		p.writeCountrySubentityCode();
+//		p.writeProcedureCode();
+//		p.writeContractingSystemTypeCode();
+//		p.writeUrgencyCode();
+//		p.writeSubmissionMethodCode();
+//		p.writeLanguage();
+//		p.writeProcurementLegislation();
+//		p.writeContractingPartyTypeCode();
+//		p.writeContractFolderStatusCode();
+//		p.writeTipoPliego();
+//		p.writeTipoPlazo();
+//		p.writeFundingProgramCode();
+//		p.writeGuaranteeTypeCode();
+//		p.writeRequiredBusinessProfileCode();
+//		p.writeDeclarationTypeCode();
+//		p.writeTechnicalCapabilityTypeCode();
+//		p.writeFinancialCapabilityTypeCode();
+//		p.writeTipoEvaluacion();
 	}
 	
 	private static String[] getFiles(String path) {

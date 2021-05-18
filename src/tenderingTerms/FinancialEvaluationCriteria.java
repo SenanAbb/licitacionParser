@@ -47,4 +47,12 @@ public class FinancialEvaluationCriteria {
 						 "--------------------------------\n");
 	}
 
+	public String getEvaluationCriteriaTypeCode() {
+		return evaluationCriteriaTypeCode;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
 }

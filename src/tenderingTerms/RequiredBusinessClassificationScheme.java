@@ -106,4 +106,8 @@ public class RequiredBusinessClassificationScheme {
 			System.out.print("***** CLASSIFICATION CATEGORY: null *****\n");
 		}
 	}
+
+	public ClassificationCategory[] getClassificationCategoryList() {
+		return classificationCategoryList;
+	}
 }
