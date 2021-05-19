@@ -388,4 +388,12 @@ public class TenderingTerms {
 	public TendererQualificationRequest getTendererQualificationRequest(){
 		return tendererQualificationRequest;
 	}
+
+	public AllowedSubcontractTerms getAllowedSubcontractTerms(){
+		return allowedSubcontractTerms;
+	}
+	
+	public AwardingTerms getAwardingTerms(){
+		return awardingTerms;
+	}
 }

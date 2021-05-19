@@ -36,4 +36,12 @@ public class AwardingCriteria {
 				 "---> Weight Numeric: " + weightNumeric + "\n" +
 				 "--------------------------------\n");
 	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public double getWeightNumeric() {
+		return weightNumeric;
+	}
 }

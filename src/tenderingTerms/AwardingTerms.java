@@ -34,4 +34,8 @@ public class AwardingTerms {
 			ac.print();
 		}
 	}
+
+	public AwardingCriteria[] getAwardingCriteriaList() {
+		return awardingCriteriaList;
+	}
 }

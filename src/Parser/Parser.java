@@ -1122,6 +1122,45 @@ public class Parser {
 		con.writeTipoEvaluacion(id, tipo);
 	}
 	
+	public void writeTenderResultCode() throws ParserConfigurationException, SAXException, TransformerException{
+		try {
+			int code = 0;
+			String nombre = "";
+			ConexionSQL con = new ConexionSQL();
+			URL url;
+			URLConnection conexion;
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); 
+	        DocumentBuilder db = dbf.newDocumentBuilder(); 
+	        
+	        // Se abre la conexión
+	        url = new URL("https://contrataciondelestado.es/codice/cl/2.02/TenderResultCode-2.02.gc");
+	        conexion = url.openConnection();
+	        conexion.connect();
+	     
+	        Document doc = db.parse(conexion.getInputStream());
+	        
+	        Element codeList = (Element) doc.getElementsByTagName("gc:CodeList").item(POS_UNICO_ELEMENTO);
+	        Element simpleCodeList = (Element) codeList.getElementsByTagName("SimpleCodeList").item(POS_UNICO_ELEMENTO);
+	        NodeList rowsList = simpleCodeList.getElementsByTagName("Row");
+	        
+	        for (int i = 0; i < rowsList.getLength(); i++){
+	        	Element row = (Element) rowsList.item(i);
+	        	NodeList valueList = row.getElementsByTagName("Value");
+	        	for (int j = 0; j < valueList.getLength(); j++){
+	        		if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("code") == 0){
+	        			code = Integer.parseInt(valueList.item(j).getTextContent().trim());
+	        		}else if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("nombre") == 0){
+	        			nombre = valueList.item(j).getTextContent().trim();
+	        		}
+	        	}
+	        	// Escribimos en la BD
+	        	con.writeTenderResultCode(code, nombre);
+	        }
+		}catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
 	/******************/
 	/** CONSTRUCTORS **/
 	/******************/

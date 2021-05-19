@@ -402,4 +402,9 @@ public class ContractFolderStatus {
 	public LocatedContractingParty getLocatedContractingParty() {
 		return locatedContractingParty;
 	}
+
+	
+	public TenderResult[] getTenderResultList() {
+		return tenderResultList;
+	}
 }

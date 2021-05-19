@@ -212,4 +212,36 @@ public class TenderResult {
 		}
 		System.out.print("===============================================================\n");
 	}
+
+	public int getResultCode() {
+		return resultCode;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public int getReceivedTenderQuantity() {
+		return receivedTenderQuantity;
+	}
+
+	public double getLowerTenderAmount() {
+		return lowerTenderAmount;
+	}
+
+	public double getHigherTenderAmount() {
+		return higherTenderAmount;
+	}
+
+	public boolean getAbnormallyLowTenderIndicator() {
+		return abnormallyLowTenderIndicator;
+	}
+
+	public java.sql.Date getAwardDate() {
+		if (awardDate != null){
+			return new java.sql.Date(awardDate.getTime());	
+		}else{
+			return null;
+		}
+	}
 }

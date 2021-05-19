@@ -71,4 +71,12 @@ public class AllowedSubcontractTerms {
 						 "---> Maximum Rate: " + maximumRate + "\n" +
 						 "--------------------------------\n");
 	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public double getRate() {
+		return rate;
+	}
 }
