@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import procurementProject.RequiredCommodityClassification;
+import tenderResult.Contract;
 import tenderResult.TenderResult;
 import tenderingTerms.AwardingCriteria;
 import tenderingTerms.ClassificationCategory;
@@ -1630,9 +1631,61 @@ public class ConexionSQL {
 					sentencia.setInt("resultado_del_procedimiento", resultado);
 					
 					sentencia.execute();
+					
+					// Información sobre el contrato
+					Contract[] c = tr[i].getContractList();
+					if (c != null){
+						writeInformacionDelContrato(resultado, tr[i].getStartDate(), c, entry_conn);
+					}
 				}
 			}
 			
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void writeInformacionDelContrato(int resultado, java.sql.Date startDate, Contract[] c, Connection entry_conn) throws SQLException {
+		CallableStatement sentencia = null;
+		
+		try {
+			for (int i = 0; i < c.length; i++){
+				sentencia = (CallableStatement) entry_conn.prepareCall("{call newContrato(?, ?, ?, ?)}");
+				
+				if (c[i].getId() != null){
+					sentencia.setString("numero_contrato", c[i].getId());
+				}else{
+					sentencia.setString("numero_contrato", null);
+				}
+				
+				if (c[i].getIssueDate() != null){
+					sentencia.setDate("fecha_formalizacion", c[i].getIssueDate());
+				}else{
+					sentencia.setNull("fecha_formalizacion", java.sql.Types.NULL);
+				}
+				
+				if (startDate != null){
+					sentencia.setDate("fecha_entrada_vigor", startDate);
+				}else{
+					sentencia.setNull("fecha_entrada_vigor", java.sql.Types.NULL);
+				}
+				
+				sentencia.execute();
+				
+				int contrato = sentencia.getInt("contrato");
+				
+				sentencia.close();
+				
+				sentencia = (CallableStatement) entry_conn.prepareCall("{call newResultado_Contrato(?, ?)}");
+				sentencia.setInt("resultado", resultado);
+				sentencia.setInt("contrato", contrato);
+				sentencia.execute();
+			}
 		} finally {
 			// Cerramos las conexiones
 			try {

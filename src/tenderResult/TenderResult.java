@@ -244,4 +244,17 @@ public class TenderResult {
 			return null;
 		}
 	}
+
+	
+	public Contract[] getContractList() {
+		return contractList;
+	}
+	
+	public java.sql.Date getStartDate() {
+		if (startDate != null){
+			return new java.sql.Date(startDate.getTime());	
+		}else{
+			return null;
+		}
+	}
 }

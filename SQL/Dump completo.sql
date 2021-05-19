@@ -196,6 +196,32 @@ INSERT INTO `tbl_contracting_system_type_code` VALUES (0,'No aplica'),(1,'Establ
 UNLOCK TABLES;
 
 --
+-- Table structure for table `tbl_contrato`
+--
+
+DROP TABLE IF EXISTS `tbl_contrato`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_contrato` (
+  `contrato` int(11) NOT NULL AUTO_INCREMENT,
+  `numero_de_contrato` varchar(40) DEFAULT NULL,
+  `fecha_formalizacion` date DEFAULT NULL,
+  `fecha_entrada_vigor` date DEFAULT NULL,
+  `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`contrato`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_contrato`
+--
+
+LOCK TABLES `tbl_contrato` WRITE;
+/*!40000 ALTER TABLE `tbl_contrato` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_contrato` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tbl_country_identification_code`
 --
 
@@ -699,7 +725,7 @@ CREATE TABLE `tbl_ids` (
   PRIMARY KEY (`ids`),
   KEY `modosid_idx` (`modosid`),
   CONSTRAINT `modosid` FOREIGN KEY (`modosid`) REFERENCES `tbl_modosid` (`modosid`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -785,7 +811,7 @@ CREATE TABLE `tbl_ids_expedientes` (
   CONSTRAINT `estado` FOREIGN KEY (`estado`) REFERENCES `tbl_contract_folder_status_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `expediente` FOREIGN KEY (`expediente`) REFERENCES `tbl_expedientes` (`expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `ids` FOREIGN KEY (`ids`) REFERENCES `tbl_ids` (`ids`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1163,6 +1189,32 @@ CREATE TABLE `tbl_requisitos_de_participacion` (
 LOCK TABLES `tbl_requisitos_de_participacion` WRITE;
 /*!40000 ALTER TABLE `tbl_requisitos_de_participacion` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tbl_requisitos_de_participacion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_resultado_contrato`
+--
+
+DROP TABLE IF EXISTS `tbl_resultado_contrato`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_resultado_contrato` (
+  `contrato` int(11) NOT NULL,
+  `resultado_del_procedimiento` int(11) NOT NULL,
+  KEY `fk_tbl_ids_contrato_tbl_contrato1_idx` (`contrato`),
+  KEY `fk_tbl_ids_contrato_tbl_resultado_del_procedimiento1_idx` (`resultado_del_procedimiento`),
+  CONSTRAINT `fk_tbl_ids_contrato_tbl_contrato1` FOREIGN KEY (`contrato`) REFERENCES `tbl_contrato` (`contrato`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbl_ids_contrato_tbl_resultado_del_procedimiento1` FOREIGN KEY (`resultado_del_procedimiento`) REFERENCES `tbl_resultado_del_procedimiento` (`resultado_del_procedimiento`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_resultado_contrato`
+--
+
+LOCK TABLES `tbl_resultado_contrato` WRITE;
+/*!40000 ALTER TABLE `tbl_resultado_contrato` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_resultado_contrato` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1589,6 +1641,30 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newContrato` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newContrato`(
+	IN numero_contrato VARCHAR(40),
+    IN fecha_formalizacion DATE,
+    IN fecha_entrada_vigor DATE,
+    OUT contrato INT)
+BEGIN
+	INSERT INTO tbl_contrato (numero_de_contrato, fecha_formalizacion, fecha_entrada_vigor) VALUES (numero_contrato, fecha_formalizacion, fecha_entrada_vigor);
+    SET contrato = last_insert_id();
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `newCountryIdentificationCode` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1669,7 +1745,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newCriterioDeAdjudicacion`(
 	IN descripcion VARCHAR(1800),
@@ -1693,7 +1769,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newCriterioDeEvaluacion`(
 	IN descripcion VARCHAR(2500),
@@ -1704,8 +1780,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `newCriterioDeEvaluacion`(
 BEGIN
 	INSERT INTO tbl_criterio_de_evaluacion (descripcion, tipo_evaluacion, tipo_technical, tipo_financial) 
     VALUES (descripcion, tipo_evaluacion, tipo_technical, tipo_financial);
-    
-    SET criterio = last_insert_id();
+
+	 SET criterio = last_insert_id();
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1803,7 +1879,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newExpediente`(
 	IN expedientes INT, 
@@ -1894,7 +1970,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newExtensionDeContrato`(
 	IN ids_expedientes INT, 
@@ -2107,7 +2183,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newIds_Garantia`(
 	IN ids INT,
@@ -2427,7 +2503,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newResultadoDelProcedimiento`(
 	IN resultado INT,
@@ -2443,6 +2519,27 @@ BEGIN
     VALUES (resultado, motivacion, fecha_acuerdo, ofertas_recibidas, precio_oferta_mas_baja, precio_oferta_mas_alta, excluidos);
     
     SET resultado_del_procedimiento = last_insert_id();
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newResultado_Contrato` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newResultado_Contrato`(
+	IN resultado INT,
+    IN contrato INT)
+BEGIN
+	INSERT INTO tbl_resultado_contrato (resultado_del_procedimiento, contrato) VALUES (resultado, contrato);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2550,7 +2647,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newTenderResultCode`(
 	IN code INT,
@@ -2719,4 +2816,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-19 12:11:21
+-- Dump completed on 2021-05-19 13:54:27

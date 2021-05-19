@@ -43,4 +43,16 @@ public class Contract {
 				"---> Issue Date: " + issueDate + "\n" +
 				"--------------------------------\n");
 	}
+
+	public String getId() {
+		return id;
+	}
+
+	public java.sql.Date getIssueDate() {
+		if (issueDate != null){
+			return new java.sql.Date(issueDate.getTime());	
+		}else{
+			return null;
+		}
+	}
 }
