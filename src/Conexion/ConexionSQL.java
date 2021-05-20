@@ -6,7 +6,9 @@ import java.sql.SQLException;
 
 import procurementProject.RequiredCommodityClassification;
 import tenderResult.Contract;
+import tenderResult.LegalMonetaryTotal;
 import tenderResult.TenderResult;
+import tenderResult.WinningParty;
 import tenderingTerms.AwardingCriteria;
 import tenderingTerms.ClassificationCategory;
 import tenderingTerms.FinancialEvaluationCriteria;
@@ -1146,11 +1148,19 @@ public class ConexionSQL {
 				sentencia = (CallableStatement) entry_conn.prepareCall("{call newId(?, ?, ?)}");
 				
 				// Parametros
-				sentencia.setInt("entidad_adjudicadora", entidad_adjudicadora);
 				sentencia.setString("tipo_id", pi[i].getSchemeName());
 				sentencia.setString("valor", pi[i].getId());
 				
 				// Ejecucion
+				sentencia.execute();
+				
+				int id = sentencia.getInt("id");
+				
+				sentencia.close();
+				
+				sentencia = (CallableStatement) entry_conn.prepareCall("{call newEntidadAdjudicadora_ID(?, ?)}");
+				sentencia.setInt("entidad_adjudicadora", entidad_adjudicadora);
+				sentencia.setInt("id", id);
 				sentencia.execute();
 			}
 		} finally {
@@ -1592,8 +1602,9 @@ public class ConexionSQL {
 			TenderResult[] tr = entry.getContractFolderStatus().getTenderResultList();
 			if (tr != null){
 				for (int i = 0; i < tr.length; i++){
-					sentencia = (CallableStatement) entry_conn.prepareCall("{call newResultadoDelProcedimiento(?, ?, ?, ?, ?, ?, ?, ?)}");
+					sentencia = (CallableStatement) entry_conn.prepareCall("{call newResultadoDelProcedimiento(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 					
+					sentencia.setInt("ids_expedientes", ids_expediente);
 					sentencia.setInt("resultado", tr[i].getResultCode());
 					
 					if (tr[i].getDescription() != null){
@@ -1626,17 +1637,26 @@ public class ConexionSQL {
 					
 					sentencia.close();
 					
-					sentencia = (CallableStatement) entry_conn.prepareCall("{call newIds_Resultado(?, ?)}");
-					sentencia.setInt("ids_expedientes", ids_expediente);
-					sentencia.setInt("resultado_del_procedimiento", resultado);
-					
-					sentencia.execute();
-					
 					// Información sobre el contrato
 					Contract[] c = tr[i].getContractList();
 					if (c != null){
 						writeInformacionDelContrato(resultado, tr[i].getStartDate(), c, entry_conn);
 					}
+					
+					// Adjudicatario
+					WinningParty wp = tr[i].getWinningParty();
+					if (wp != null){
+						writeAdjudicatario(resultado, wp, tr[i].getSMEAwardedIndicator(), entry_conn);
+					}
+					
+					// Importe de adjudicación
+					if (tr[i].getAwardedTenderedProject() != null && tr[i].getAwardedTenderedProject().getLegalMonetaryTotalList() != null){
+						LegalMonetaryTotal[] lmt = tr[i].getAwardedTenderedProject().getLegalMonetaryTotalList();
+						for(int j = 0; j < lmt.length; j++){
+							writeImporteDeAdjudicacion(resultado, lmt[j].getPayableAmount(), lmt[j].getTaxExclusiveAmount(), lmt[j].getCurrencyID(), entry_conn);
+						}
+					}
+					
 				}
 			}
 			
@@ -1655,7 +1675,9 @@ public class ConexionSQL {
 		
 		try {
 			for (int i = 0; i < c.length; i++){
-				sentencia = (CallableStatement) entry_conn.prepareCall("{call newContrato(?, ?, ?, ?)}");
+				sentencia = (CallableStatement) entry_conn.prepareCall("{call newContrato(?, ?, ?, ?, ?)}");
+				
+				sentencia.setInt("resultado", resultado);
 				
 				if (c[i].getId() != null){
 					sentencia.setString("numero_contrato", c[i].getId());
@@ -1680,12 +1702,73 @@ public class ConexionSQL {
 				int contrato = sentencia.getInt("contrato");
 				
 				sentencia.close();
+			}
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void writeAdjudicatario(int resultado, WinningParty wp, boolean pyme, Connection entry_conn) throws SQLException{
+		CallableStatement sentencia = null;
+		
+		try {
+			// Adjudicatorio
+			sentencia = (CallableStatement) entry_conn.prepareCall("{call newAdjudicatario(?, ?, ?, ?)}");
+			
+			sentencia.setInt("resultado", resultado);
+			sentencia.setString("nombre", wp.getPartyName().getName());
+			sentencia.setBoolean("pyme", pyme);
+			
+			sentencia.execute();
+			
+			int adjudicatario = sentencia.getInt("adjudicatario");
+			
+			sentencia.close();
+			
+			// ID
+			PartyIdentification[] pi = wp.getPartyIdentificationList();
+			for (int i = 0; i < pi.length; i++){
+				sentencia = (CallableStatement) entry_conn.prepareCall("{call newId(?, ?, ?)}");
+				sentencia.setString("tipo_id", pi[i].getSchemeName());
+				sentencia.setString("valor", pi[i].getId());
+				sentencia.execute();
 				
-				sentencia = (CallableStatement) entry_conn.prepareCall("{call newResultado_Contrato(?, ?)}");
-				sentencia.setInt("resultado", resultado);
-				sentencia.setInt("contrato", contrato);
+				int id = sentencia.getInt("id");
+				
+				sentencia.close();
+				
+				// Linkeamos con tbl_adjudicatario
+				sentencia = (CallableStatement) entry_conn.prepareCall("{call newAdjudicatario_ID(?, ?)}");
+				sentencia.setInt("adjudicatario", adjudicatario);
+				sentencia.setInt("id", id);
 				sentencia.execute();
 			}
+			
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void writeImporteDeAdjudicacion(int resultado, double con_imp, double sin_imp, String currencyID, Connection entry_conn) throws SQLException{
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) entry_conn.prepareCall("{call newImportesDeAdjudicacion(?, ?, ?, ?)}");
+			sentencia.setInt("resultado", resultado);
+			sentencia.setDouble("total_sin_impuestos", sin_imp);
+			sentencia.setDouble("total_con_impuestos", con_imp);
+			sentencia.setString("currencyID", currencyID);
+			sentencia.execute();
 		} finally {
 			// Cerramos las conexiones
 			try {

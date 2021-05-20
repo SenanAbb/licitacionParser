@@ -53,4 +53,12 @@ public class WinningParty {
 		}
 		partyName.print();
 	}
+
+	public PartyIdentification[] getPartyIdentificationList() {
+		return partyIdentificationList;
+	}
+
+	public PartyName getPartyName() {
+		return partyName;
+	}
 }

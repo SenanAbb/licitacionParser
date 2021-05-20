@@ -59,4 +59,8 @@ public class AwardedTenderedProject {
 		}
 		System.out.print("--------------------------------\n");
 	}
+
+	public LegalMonetaryTotal[] getLegalMonetaryTotalList() {
+		return legalMonetaryTotalList;
+	}
 }

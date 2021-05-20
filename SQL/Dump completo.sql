@@ -39,6 +39,60 @@ LOCK TABLES `tbl_address_format_code` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `tbl_adjudicatario`
+--
+
+DROP TABLE IF EXISTS `tbl_adjudicatario`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_adjudicatario` (
+  `adjudicatario` int(11) NOT NULL AUTO_INCREMENT,
+  `resultado` int(11) NOT NULL,
+  `nombre` varchar(300) NOT NULL,
+  `pyme` tinyint(4) DEFAULT NULL,
+  `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`adjudicatario`),
+  KEY `fk_tbl_adjudicatario_tbl_resultado_del_procedimiento1_idx` (`resultado`),
+  CONSTRAINT `fk_tbl_adjudicatario_tbl_resultado_del_procedimiento1` FOREIGN KEY (`resultado`) REFERENCES `tbl_resultado_del_procedimiento` (`resultado_del_procedimiento`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_adjudicatario`
+--
+
+LOCK TABLES `tbl_adjudicatario` WRITE;
+/*!40000 ALTER TABLE `tbl_adjudicatario` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_adjudicatario` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_adjudicatario_id`
+--
+
+DROP TABLE IF EXISTS `tbl_adjudicatario_id`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_adjudicatario_id` (
+  `adjudicatario` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
+  KEY `fk_tbl_adjudicatario_id_tbl_id1_idx` (`id`),
+  KEY `fk_tbl_adjudicatario_id_tbl_adjudicatario1_idx` (`adjudicatario`),
+  CONSTRAINT `fk_tbl_adjudicatario_id_tbl_adjudicatario1` FOREIGN KEY (`adjudicatario`) REFERENCES `tbl_adjudicatario` (`adjudicatario`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbl_adjudicatario_id_tbl_id1` FOREIGN KEY (`id`) REFERENCES `tbl_id` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_adjudicatario_id`
+--
+
+LOCK TABLES `tbl_adjudicatario_id` WRITE;
+/*!40000 ALTER TABLE `tbl_adjudicatario_id` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_adjudicatario_id` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tbl_clasificacion_empresarial`
 --
 
@@ -111,7 +165,7 @@ CREATE TABLE `tbl_condiciones_de_licitacion` (
   KEY `fk_tbl_condiciones_de_licitacion_tbl_ids_expedientes1_idx` (`ids_expedientes`),
   CONSTRAINT `fk_tbl_condiciones_de_licitacion_tbl_funding_program_code1` FOREIGN KEY (`programa_de_financiacion`) REFERENCES `tbl_funding_program_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_condiciones_de_licitacion_tbl_ids_expedientes1` FOREIGN KEY (`ids_expedientes`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -204,11 +258,14 @@ DROP TABLE IF EXISTS `tbl_contrato`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tbl_contrato` (
   `contrato` int(11) NOT NULL AUTO_INCREMENT,
+  `resultado` int(11) NOT NULL,
   `numero_de_contrato` varchar(40) DEFAULT NULL,
   `fecha_formalizacion` date DEFAULT NULL,
   `fecha_entrada_vigor` date DEFAULT NULL,
   `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`contrato`)
+  PRIMARY KEY (`contrato`),
+  KEY `fk_tbl_contrato_tbl_resultado_del_procedimiento1_idx` (`resultado`),
+  CONSTRAINT `fk_tbl_contrato_tbl_resultado_del_procedimiento1` FOREIGN KEY (`resultado`) REFERENCES `tbl_resultado_del_procedimiento` (`resultado_del_procedimiento`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -306,7 +363,7 @@ CREATE TABLE `tbl_criterio_de_adjudicacion` (
   `ponderacion` decimal(12,2) DEFAULT NULL,
   `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`criterio_de_adjudicacion`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -339,7 +396,7 @@ CREATE TABLE `tbl_criterio_de_evaluacion` (
   CONSTRAINT `fk_tbl_criterio_de_evaluacion_tbl_financial_capacibility_type1` FOREIGN KEY (`tipo_financial`) REFERENCES `tbl_financial_capability_type_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_criterio_de_evaluacion_tbl_technical_capability_type_c1` FOREIGN KEY (`tipo_technical`) REFERENCES `tbl_technical_capability_type_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_criterio_de_evaluacion_tbl_tipo_evaluacion1` FOREIGN KEY (`tipo_evaluacion`) REFERENCES `tbl_tipo_evaluacion` (`tipo_evaluacion`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -429,7 +486,7 @@ CREATE TABLE `tbl_entidad_adjudicadora` (
   CONSTRAINT `fk_tbl_entidad_adjudicadora_tbl_contracting_party_type_code1` FOREIGN KEY (`tipo_administracion`) REFERENCES `tbl_contracting_party_type_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_entidad_adjudicadora_tbl_country_identification_code1` FOREIGN KEY (`pais`) REFERENCES `tbl_country_identification_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_entidad_adjudicadora_tbl_ids_expedientes1` FOREIGN KEY (`ids_expedientes`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -549,7 +606,7 @@ CREATE TABLE `tbl_extension_de_contrato` (
   PRIMARY KEY (`extension_de_contrato`),
   KEY `fk_tbl_extension_de_contrato_tbl_ids_expedientes1_idx` (`ids_expedientes`),
   CONSTRAINT `fk_tbl_extension_de_contrato_tbl_ids_expedientes1` FOREIGN KEY (`ids_expedientes`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -626,7 +683,7 @@ CREATE TABLE `tbl_garantia` (
   PRIMARY KEY (`garantia`),
   KEY `fk_tbl_garantia_tbl_guarantee_type_code1_idx` (`guarantee_type_code`),
   CONSTRAINT `fk_tbl_garantia_tbl_guarantee_type_code1` FOREIGN KEY (`guarantee_type_code`) REFERENCES `tbl_guarantee_type_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -675,7 +732,7 @@ CREATE TABLE `tbl_id` (
   `valor` varchar(45) NOT NULL,
   `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -725,7 +782,7 @@ CREATE TABLE `tbl_ids` (
   PRIMARY KEY (`ids`),
   KEY `modosid_idx` (`modosid`),
   CONSTRAINT `modosid` FOREIGN KEY (`modosid`) REFERENCES `tbl_modosid` (`modosid`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -734,6 +791,7 @@ CREATE TABLE `tbl_ids` (
 
 LOCK TABLES `tbl_ids` WRITE;
 /*!40000 ALTER TABLE `tbl_ids` DISABLE KEYS */;
+INSERT INTO `tbl_ids` VALUES (17,2,'2021-05-20 09:25:08'),(18,2,'2021-05-20 09:34:16');
 /*!40000 ALTER TABLE `tbl_ids` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -811,7 +869,7 @@ CREATE TABLE `tbl_ids_expedientes` (
   CONSTRAINT `estado` FOREIGN KEY (`estado`) REFERENCES `tbl_contract_folder_status_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `expediente` FOREIGN KEY (`expediente`) REFERENCES `tbl_expedientes` (`expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `ids` FOREIGN KEY (`ids`) REFERENCES `tbl_ids` (`ids`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -850,29 +908,32 @@ LOCK TABLES `tbl_ids_garantia` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `tbl_ids_resultado`
+-- Table structure for table `tbl_importes_de_adjudicacion`
 --
 
-DROP TABLE IF EXISTS `tbl_ids_resultado`;
+DROP TABLE IF EXISTS `tbl_importes_de_adjudicacion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tbl_ids_resultado` (
-  `ids_expedientes` int(11) NOT NULL,
-  `resultado_del_procedimiento` int(11) NOT NULL,
-  KEY `fk_tbl_ids_resultado_tbl_ids_expedientes1_idx` (`ids_expedientes`),
-  KEY `fk_tbl_ids_resultado_tbl_resultado_del_procedimiento1_idx` (`resultado_del_procedimiento`),
-  CONSTRAINT `fk_tbl_ids_resultado_tbl_ids_expedientes1` FOREIGN KEY (`ids_expedientes`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tbl_ids_resultado_tbl_resultado_del_procedimiento1` FOREIGN KEY (`resultado_del_procedimiento`) REFERENCES `tbl_resultado_del_procedimiento` (`resultado_del_procedimiento`) ON DELETE NO ACTION ON UPDATE NO ACTION
+CREATE TABLE `tbl_importes_de_adjudicacion` (
+  `importes_de_adjudicacion` int(11) NOT NULL AUTO_INCREMENT,
+  `resultado` int(11) NOT NULL,
+  `total_sin_impuestos` decimal(12,2) NOT NULL,
+  `total_con_impuestos` decimal(12,2) NOT NULL,
+  `currencyID` varchar(5) NOT NULL,
+  `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`importes_de_adjudicacion`),
+  KEY `fk_tbl_importes_de_adjudicacion_tbl_resultado_del_procedimi_idx` (`resultado`),
+  CONSTRAINT `fk_tbl_importes_de_adjudicacion_tbl_resultado_del_procedimien1` FOREIGN KEY (`resultado`) REFERENCES `tbl_resultado_del_procedimiento` (`resultado_del_procedimiento`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `tbl_ids_resultado`
+-- Dumping data for table `tbl_importes_de_adjudicacion`
 --
 
-LOCK TABLES `tbl_ids_resultado` WRITE;
-/*!40000 ALTER TABLE `tbl_ids_resultado` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tbl_ids_resultado` ENABLE KEYS */;
+LOCK TABLES `tbl_importes_de_adjudicacion` WRITE;
+/*!40000 ALTER TABLE `tbl_importes_de_adjudicacion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_importes_de_adjudicacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -923,7 +984,7 @@ CREATE TABLE `tbl_lugar_de_ejecucion` (
   CONSTRAINT `fk_calle_tbl_country_identification_code1` FOREIGN KEY (`subentidad_nacional`) REFERENCES `tbl_country_identification_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_calle_tbl_country_subentity_code1` FOREIGN KEY (`subentidad_territorial`) REFERENCES `tbl_country_subentity_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_lugar_de_ejecucion_tbl_ids_expedientes1` FOREIGN KEY (`ids_expedientes`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -978,7 +1039,7 @@ CREATE TABLE `tbl_plazo_de_obtencion` (
   KEY `fk_tbl_plazo_de_obtencion_tbl_ids_expedientes1_idx` (`ids_expedientes`),
   CONSTRAINT `fk_tbl_plazo_de_obtencion_table11` FOREIGN KEY (`tipo_plazo`) REFERENCES `tbl_tipo_plazo` (`tipo_plazo`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_plazo_de_obtencion_tbl_ids_expedientes1` FOREIGN KEY (`ids_expedientes`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1011,7 +1072,7 @@ CREATE TABLE `tbl_pliegos` (
   KEY `fk_tbl_pliegos_tbl_expedientes1_idx` (`expedientes`),
   CONSTRAINT `fk_tbl_pliegos_tbl_expedientes1` FOREIGN KEY (`expedientes`) REFERENCES `tbl_expedientes` (`expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_pliegos_tbl_tipo_pliego1` FOREIGN KEY (`tipo_pliego`) REFERENCES `tbl_tipo_pliego` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1077,7 +1138,7 @@ CREATE TABLE `tbl_proceso_de_licitacion` (
   CONSTRAINT `fk_tbl_proceso_de_licitacion_tbl_procurement_legislation1` FOREIGN KEY (`regulacion`) REFERENCES `tbl_procurement_legislation` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_proceso_de_licitacion_tbl_submission_method_code1` FOREIGN KEY (`presentacion_oferta`) REFERENCES `tbl_submission_method_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_proceso_de_licitacion_tbl_urgency_code1` FOREIGN KEY (`tramitacion`) REFERENCES `tbl_urgency_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1179,7 +1240,7 @@ CREATE TABLE `tbl_requisitos_de_participacion` (
   PRIMARY KEY (`requisitos_de_participacion`),
   KEY `fk_tbl_requisitos_de_participacion_tbl_ids_expedientes1_idx` (`ids_expedientes`),
   CONSTRAINT `fk_tbl_requisitos_de_participacion_tbl_ids_expedientes1` FOREIGN KEY (`ids_expedientes`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1192,32 +1253,6 @@ LOCK TABLES `tbl_requisitos_de_participacion` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `tbl_resultado_contrato`
---
-
-DROP TABLE IF EXISTS `tbl_resultado_contrato`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tbl_resultado_contrato` (
-  `contrato` int(11) NOT NULL,
-  `resultado_del_procedimiento` int(11) NOT NULL,
-  KEY `fk_tbl_ids_contrato_tbl_contrato1_idx` (`contrato`),
-  KEY `fk_tbl_ids_contrato_tbl_resultado_del_procedimiento1_idx` (`resultado_del_procedimiento`),
-  CONSTRAINT `fk_tbl_ids_contrato_tbl_contrato1` FOREIGN KEY (`contrato`) REFERENCES `tbl_contrato` (`contrato`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tbl_ids_contrato_tbl_resultado_del_procedimiento1` FOREIGN KEY (`resultado_del_procedimiento`) REFERENCES `tbl_resultado_del_procedimiento` (`resultado_del_procedimiento`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tbl_resultado_contrato`
---
-
-LOCK TABLES `tbl_resultado_contrato` WRITE;
-/*!40000 ALTER TABLE `tbl_resultado_contrato` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tbl_resultado_contrato` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `tbl_resultado_del_procedimiento`
 --
 
@@ -1226,6 +1261,7 @@ DROP TABLE IF EXISTS `tbl_resultado_del_procedimiento`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tbl_resultado_del_procedimiento` (
   `resultado_del_procedimiento` int(11) NOT NULL AUTO_INCREMENT,
+  `ids_expedientes` int(11) NOT NULL,
   `resultado` int(11) NOT NULL,
   `motivacion` varchar(3500) DEFAULT NULL,
   `fecha_acuerdo` date NOT NULL,
@@ -1236,8 +1272,10 @@ CREATE TABLE `tbl_resultado_del_procedimiento` (
   `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`resultado_del_procedimiento`),
   KEY `fk_tbl_resultado_del_procedimiento_tbl_tender_result_code1_idx` (`resultado`),
+  KEY `fk_tbl_resultado_del_procedimiento_tbl_ids_expedientes1_idx` (`ids_expedientes`),
+  CONSTRAINT `fk_tbl_resultado_del_procedimiento_tbl_ids_expedientes1` FOREIGN KEY (`ids_expedientes`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_resultado_del_procedimiento_tbl_tender_result_code1` FOREIGN KEY (`resultado`) REFERENCES `tbl_tender_result_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1265,7 +1303,7 @@ CREATE TABLE `tbl_subcontratacion_permitida` (
   PRIMARY KEY (`subcontratacion_permitida`),
   KEY `fk_tbl_subcontratacion_permitida_tbl_ids_expedientes1_idx` (`ids_expedientes`),
   CONSTRAINT `fk_tbl_subcontratacion_permitida_tbl_ids_expedientes1` FOREIGN KEY (`ids_expedientes`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1499,6 +1537,51 @@ UNLOCK TABLES;
 --
 -- Dumping routines for database 'licitacion'
 --
+/*!50003 DROP PROCEDURE IF EXISTS `newAdjudicatario` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newAdjudicatario`(
+	IN resultado INT,
+	IN nombre VARCHAR(300),
+    IN pyme BOOLEAN, 
+    OUT adjudicatario INT)
+BEGIN
+	INSERT INTO tbl_adjudicatario (resultado, nombre, pyme) VALUES (resultado, nombre, pyme);
+    SET adjudicatario = last_insert_id();
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newAdjudicatario_ID` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newAdjudicatario_ID`(
+	IN adjudicatario INT,
+    IN id INT)
+BEGIN
+	INSERT INTO tbl_adjudicatario_id (adjudicatario, id) VALUES (adjudicatario, id);
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `newClasificacionEmpresarial` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1652,12 +1735,13 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newContrato`(
+	IN resultado INT,
 	IN numero_contrato VARCHAR(40),
     IN fecha_formalizacion DATE,
     IN fecha_entrada_vigor DATE,
     OUT contrato INT)
 BEGIN
-	INSERT INTO tbl_contrato (numero_de_contrato, fecha_formalizacion, fecha_entrada_vigor) VALUES (numero_contrato, fecha_formalizacion, fecha_entrada_vigor);
+	INSERT INTO tbl_contrato (resultado, numero_de_contrato, fecha_formalizacion, fecha_entrada_vigor) VALUES (resultado, numero_contrato, fecha_formalizacion, fecha_entrada_vigor);
     SET contrato = last_insert_id();
 END ;;
 DELIMITER ;
@@ -1842,7 +1926,6 @@ BEGIN
 		VALUES (ids_expedientes, ubicacion_organica, nombre, tipo_administracion, sitio_web, calle, codigo_postal, poblacion, pais, nombre_contacto, telefono, fax, correo_electronico, NIF);
     
 		SET entidad_adjudicadora = last_insert_id();
-   
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1863,8 +1946,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `newEntidadAdjudicadora_ID`(
 	IN entidad_adjudicadora INT,
     IN id INT)
 BEGIN
-        INSERT INTO tbl_entidad_adjudicadora_id (entidad_adjudicadora, id) VALUES (entidad_adjudicadora, id);
-
+	INSERT INTO tbl_entidad_adjudicadora_id (entidad_adjudicadora, id) VALUES (entidad_adjudicadora, id);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2090,15 +2172,12 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newId`(
-	IN entidad_adjudicadora INT,
     IN tipo_id VARCHAR(20),
-    IN valor VARCHAR(45))
+    IN valor VARCHAR(45),
+    OUT id INT)
 BEGIN
-    
-		INSERT INTO tbl_id (tipo_id, valor) VALUES (tipo_id, valor);
-        CALL newEntidadAdjudicadora_ID ( entidad_adjudicadora, last_insert_id());
-    
-
+	INSERT INTO tbl_id (tipo_id, valor) VALUES (tipo_id, valor);
+    SET id = last_insert_id();
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2196,7 +2275,7 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `newIds_Resultado` */;
+/*!50003 DROP PROCEDURE IF EXISTS `newImportesDeAdjudicacion` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -2206,11 +2285,14 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `newIds_Resultado`(
-	IN ids_expedientes INT,
-    in resultado_del_procedimiento INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newImportesDeAdjudicacion`(
+	IN resultado INT,
+    IN total_sin_impuestos DECIMAL(12,2),
+    IN total_con_impuestos DECIMAL(12,2),
+    IN currencyID VARCHAR(5))
 BEGIN
-	INSERT INTO tbl_ids_resultado (ids_expedientes, resultado_del_procedimiento) VALUES (ids_expedientes, resultado_del_procedimiento);
+	INSERT INTO tbl_importes_de_adjudicacion (resultado, total_sin_impuestos, total_con_impuestos, currencyID)
+    VALUES (resultado, total_sin_impuestos, total_con_impuestos, currencyID);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2506,6 +2588,7 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newResultadoDelProcedimiento`(
+	IN ids_expedientes INT,
 	IN resultado INT,
     IN motivacion VARCHAR(3500),
     IN fecha_acuerdo DATE,
@@ -2515,31 +2598,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `newResultadoDelProcedimiento`(
     IN excluidos BOOLEAN,
     OUT resultado_del_procedimiento INT)
 BEGIN
-	INSERT INTO tbl_resultado_del_procedimiento (resultado, motivacion, fecha_acuerdo, ofertas_recibidas, precio_oferta_mas_baja, precio_oferta_mas_alta, excluidos)
-    VALUES (resultado, motivacion, fecha_acuerdo, ofertas_recibidas, precio_oferta_mas_baja, precio_oferta_mas_alta, excluidos);
+	INSERT INTO tbl_resultado_del_procedimiento (ids_expedientes, resultado, motivacion, fecha_acuerdo, ofertas_recibidas, precio_oferta_mas_baja, precio_oferta_mas_alta, excluidos)
+    VALUES (ids_expedientes, resultado, motivacion, fecha_acuerdo, ofertas_recibidas, precio_oferta_mas_baja, precio_oferta_mas_alta, excluidos);
     
     SET resultado_del_procedimiento = last_insert_id();
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `newResultado_Contrato` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `newResultado_Contrato`(
-	IN resultado INT,
-    IN contrato INT)
-BEGIN
-	INSERT INTO tbl_resultado_contrato (resultado_del_procedimiento, contrato) VALUES (resultado, contrato);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2816,4 +2878,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-19 13:54:27
+-- Dump completed on 2021-05-20 11:42:03

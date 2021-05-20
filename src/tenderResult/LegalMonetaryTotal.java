@@ -40,4 +40,16 @@ public class LegalMonetaryTotal {
 		System.out.print("----> Tax Exclusive Amount: " + taxExclusiveAmount + " " + "(" + taxExclusiveAmountCurrencyID + ")\n");
 		System.out.print("----> Tax Exclusive Amount: " + payableAmount + " " + "(" + payableAmountCurrencyID + ")\n");
 	}
+	
+	public double getTaxExclusiveAmount() {
+		return taxExclusiveAmount;
+	}
+
+	public double getPayableAmount() {
+		return payableAmount;
+	}
+
+	public String getCurrencyID() {
+		return payableAmountCurrencyID;
+	}
 }

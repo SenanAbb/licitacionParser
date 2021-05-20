@@ -83,30 +83,30 @@ public class main {
 		Parser p = new Parser();
 		
 		// Rellenar las tablas TypeCode
-		p.writeModosId();
-		p.writeTypeCode();
-		p.writeSubtypeCodes();
-		p.writeCPV();
-		p.writeCountryIdentificationCode();
-		p.writeCountrySubentityCode();
-		p.writeProcedureCode();
-		p.writeContractingSystemTypeCode();
-		p.writeUrgencyCode();
-		p.writeSubmissionMethodCode();
-		p.writeLanguage();
-		p.writeProcurementLegislation();
-		p.writeContractingPartyTypeCode();
-		p.writeContractFolderStatusCode();
-		p.writeTipoPliego();
-		p.writeTipoPlazo();
-		p.writeFundingProgramCode();
-		p.writeGuaranteeTypeCode();
-		p.writeRequiredBusinessProfileCode();
-		p.writeDeclarationTypeCode();
-		p.writeTechnicalCapabilityTypeCode();
-		p.writeFinancialCapabilityTypeCode();
-		p.writeTipoEvaluacion();
-		p.writeTenderResultCode();
+		System.out.println("ModosID"); p.writeModosId();
+		System.out.println("TypeCode"); p.writeTypeCode();
+		System.out.println("SubtypeCode"); p.writeSubtypeCodes();
+		System.out.println("CPV"); p.writeCPV();
+		System.out.println("CountryID"); p.writeCountryIdentificationCode();
+		System.out.println("CountrySubID"); p.writeCountrySubentityCode();
+		System.out.println("ProcedureCode"); p.writeProcedureCode();
+		System.out.println("ContractingSystem"); p.writeContractingSystemTypeCode();
+		System.out.println("Urgency"); p.writeUrgencyCode();
+		System.out.println("Submission"); p.writeSubmissionMethodCode();
+		System.out.println("Language"); p.writeLanguage();
+		System.out.println("Procurement"); p.writeProcurementLegislation();
+		System.out.println("ContractingParty"); p.writeContractingPartyTypeCode();
+		System.out.println("ContractFolderStatus"); p.writeContractFolderStatusCode();
+		System.out.println("TipoPliego"); p.writeTipoPliego();
+		System.out.println("TipoPlazo"); p.writeTipoPlazo();
+		System.out.println("FundingProgram"); p.writeFundingProgramCode();
+		System.out.println("Guarantee"); p.writeGuaranteeTypeCode();
+		System.out.println("RequiredBusiness"); p.writeRequiredBusinessProfileCode();
+		System.out.println("Declaration"); p.writeDeclarationTypeCode();
+		System.out.println("Technical"); p.writeTechnicalCapabilityTypeCode();
+		System.out.println("Financial"); p.writeFinancialCapabilityTypeCode();
+		System.out.println("TipoEvaluacion"); p.writeTipoEvaluacion();
+		System.out.println("TenderResult"); p.writeTenderResultCode();
 	}
 	
 	private static String[] getFiles(String path) {

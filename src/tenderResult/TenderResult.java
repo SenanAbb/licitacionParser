@@ -245,7 +245,6 @@ public class TenderResult {
 		}
 	}
 
-	
 	public Contract[] getContractList() {
 		return contractList;
 	}
@@ -256,5 +255,18 @@ public class TenderResult {
 		}else{
 			return null;
 		}
+	}
+
+	
+	public WinningParty getWinningParty() {
+		return winningParty;
+	}
+
+	public boolean getSMEAwardedIndicator() {
+		return SMEAwardedIndicator;
+	}
+
+	public AwardedTenderedProject getAwardedTenderedProject() {
+		return awardedTenderedProject;
 	}
 }
