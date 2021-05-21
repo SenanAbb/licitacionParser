@@ -8,16 +8,16 @@ import org.w3c.dom.Element;
  *		description: String[0..1]
  */
 public class ProcessJustification {
-	private int reasonCode;
+	private String reasonCode;
 	private String description;
 	
 	public void readAttributes(Element pj, int POS_UNICO_ELEMENTO) {
-		this.reasonCode = -1;
+		this.reasonCode = null;
 		this.description = null;
 		
 		Element rc = (Element) pj.getElementsByTagName("cbc:ReasonCode").item(POS_UNICO_ELEMENTO);
 		if (rc != null){
-			this.reasonCode = Integer.parseInt(rc.getTextContent());
+			this.reasonCode = rc.getTextContent();
 		}
 		
 		Element desc = (Element) pj.getElementsByTagName("cbc:Description").item(POS_UNICO_ELEMENTO);
@@ -31,5 +31,13 @@ public class ProcessJustification {
 						 "---> Reason Code: " + reasonCode + "\n" +
 						 "---> Description: " + description + "\n" +
 						 "--------------------------------\n");
+	}
+
+	public String getReasonCode() {
+		return reasonCode;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 }

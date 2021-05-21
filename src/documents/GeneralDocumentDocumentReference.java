@@ -39,4 +39,12 @@ public class GeneralDocumentDocumentReference {
 						 "---> ID: " + id + "\n");
 		attachment.print();
 	}
+
+	public String getId() {
+		return id;
+	}
+
+	public Attachment getAttachment() {
+		return attachment;
+	}
 }

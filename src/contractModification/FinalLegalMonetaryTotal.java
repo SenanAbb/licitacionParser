@@ -28,4 +28,11 @@ public class FinalLegalMonetaryTotal {
 						 "--------------------------------\n");
 	}
 
+	public double getTaxExclusiveAmount() {
+		return taxExclusiveAmount;
+	}
+
+	public String getCurrencyID() {
+		return currencyID;
+	}
 }

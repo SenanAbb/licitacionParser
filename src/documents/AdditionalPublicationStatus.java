@@ -81,4 +81,19 @@ public class AdditionalPublicationStatus {
 			System.out.println("**** ADDITIONAL PUBLICATION REQUEST: null ****");
 		}
 	}
+
+	
+	public String getPublicationMediaName() {
+		return publicationMediaName;
+	}
+
+	
+	public AdditionalPublicationDocumentReference[] getAdditionalPublicationDocumentReferenceList() {
+		return additionalPublicationDocumentReferenceList;
+	}
+
+	
+	public AdditionalPublicationRequest[] getAdditionalPublicationRequestList() {
+		return additionalPublicationRequestList;
+	}
 }

@@ -72,7 +72,7 @@ public class Parser {
 					// Lo transformo a element
 					Element e = (Element) entry;
 					
-					System.out.print("Leyendo entry " + (i+1) + "/" + entriesNodes.getLength());
+					System.out.println("Leyendo entry " + (i+1) + "/" + entriesNodes.getLength());
 					
 					String result = "";
 					if (modo_identificacion == "NIF"){
@@ -1155,6 +1155,123 @@ public class Parser {
 	        	}
 	        	// Escribimos en la BD
 	        	con.writeTenderResultCode(code, nombre);
+	        }
+		}catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	public void writeReasonCode() throws ParserConfigurationException, SAXException, TransformerException{
+		try {
+			String code = "";
+			String nombre = "";
+			ConexionSQL con = new ConexionSQL();
+			URL url;
+			URLConnection conexion;
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); 
+	        DocumentBuilder db = dbf.newDocumentBuilder(); 
+	        
+	        // Se abre la conexión
+	        url = new URL("https://contrataciondelestado.es/codice/cl/2.0/ProcessJustificationReasonCode-2.0.gc");
+	        conexion = url.openConnection();
+	        conexion.connect();
+	     
+	        Document doc = db.parse(conexion.getInputStream());
+	        
+	        Element codeList = (Element) doc.getElementsByTagName("gc:CodeList").item(POS_UNICO_ELEMENTO);
+	        Element simpleCodeList = (Element) codeList.getElementsByTagName("SimpleCodeList").item(POS_UNICO_ELEMENTO);
+	        NodeList rowsList = simpleCodeList.getElementsByTagName("Row");
+	        
+	        for (int i = 0; i < rowsList.getLength(); i++){
+	        	Element row = (Element) rowsList.item(i);
+	        	NodeList valueList = row.getElementsByTagName("Value");
+	        	for (int j = 0; j < valueList.getLength(); j++){
+	        		if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("code") == 0){
+	        			code = valueList.item(j).getTextContent().trim();
+	        		}else if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("nombre") == 0){
+	        			nombre = valueList.item(j).getTextContent().trim();
+	        		}
+	        	}
+	        	// Escribimos en la BD
+	        	con.writeReasonCode(code, nombre);
+	        }
+		}catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	public void writeNoticeTypeCode() throws ParserConfigurationException, SAXException, TransformerException{
+		try {
+			String code = "";
+			String nombre = "";
+			ConexionSQL con = new ConexionSQL();
+			URL url;
+			URLConnection conexion;
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); 
+	        DocumentBuilder db = dbf.newDocumentBuilder(); 
+	        
+	        // Se abre la conexión
+	        url = new URL("https://contrataciondelestado.es/codice/cl/2.04/TenderingNoticeTypeCode-2.04.gc");
+	        conexion = url.openConnection();
+	        conexion.connect();
+	     
+	        Document doc = db.parse(conexion.getInputStream());
+	        
+	        Element codeList = (Element) doc.getElementsByTagName("gc:CodeList").item(POS_UNICO_ELEMENTO);
+	        Element simpleCodeList = (Element) codeList.getElementsByTagName("SimpleCodeList").item(POS_UNICO_ELEMENTO);
+	        NodeList rowsList = simpleCodeList.getElementsByTagName("Row");
+	        
+	        for (int i = 0; i < rowsList.getLength(); i++){
+	        	Element row = (Element) rowsList.item(i);
+	        	NodeList valueList = row.getElementsByTagName("Value");
+	        	for (int j = 0; j < valueList.getLength(); j++){
+	        		if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("code") == 0){
+	        			code = valueList.item(j).getTextContent().trim();
+	        		}else if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("nombre") == 0){
+	        			nombre = valueList.item(j).getTextContent().trim();
+	        		}
+	        	}
+	        	// Escribimos en la BD
+	        	con.writeNoticeTypeCode(code, nombre);
+	        }
+		}catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+
+	public void writeDocumentTypeCode() throws ParserConfigurationException, SAXException, TransformerException{
+		try {
+			String code = "";
+			String nombre = "";
+			ConexionSQL con = new ConexionSQL();
+			URL url;
+			URLConnection conexion;
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); 
+	        DocumentBuilder db = dbf.newDocumentBuilder(); 
+	        
+	        // Se abre la conexión
+	        url = new URL("https://contrataciondelestado.es/codice/cl/2.07/TenderingDocumentTypeCode-2.07.gc");
+	        conexion = url.openConnection();
+	        conexion.connect();
+	     
+	        Document doc = db.parse(conexion.getInputStream());
+	        
+	        Element codeList = (Element) doc.getElementsByTagName("gc:CodeList").item(POS_UNICO_ELEMENTO);
+	        Element simpleCodeList = (Element) codeList.getElementsByTagName("SimpleCodeList").item(POS_UNICO_ELEMENTO);
+	        NodeList rowsList = simpleCodeList.getElementsByTagName("Row");
+	        
+	        for (int i = 0; i < rowsList.getLength(); i++){
+	        	Element row = (Element) rowsList.item(i);
+	        	NodeList valueList = row.getElementsByTagName("Value");
+	        	for (int j = 0; j < valueList.getLength(); j++){
+	        		if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("code") == 0){
+	        			code = valueList.item(j).getTextContent().trim();
+	        		}else if (valueList.item(j).getAttributes().getNamedItem("ColumnRef").getTextContent().compareTo("nombre") == 0){
+	        			nombre = valueList.item(j).getTextContent().trim();
+	        		}
+	        	}
+	        	// Escribimos en la BD
+	        	con.writeDocumentTypeCode(code, nombre);
 	        }
 		}catch (IOException e) {
 	        e.printStackTrace();

@@ -1,6 +1,7 @@
 package documents;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * @params
@@ -9,7 +10,7 @@ import org.w3c.dom.Element;
  */
 public class ValidNoticeInfo {
 	private String noticeTypeCode;
-	private AdditionalPublicationStatus additionalPublicationStatus;
+	private AdditionalPublicationStatus[] additionalPublicationStatusList;
 	
 	public void readAttributes(Element vni, int POS_UNICO_ELEMENTO){
 		this.noticeTypeCode = null;
@@ -23,14 +24,22 @@ public class ValidNoticeInfo {
 	}
 	
 	public void readAdditionalPublicationStatus(Element vni, int POS_UNICO_ELEMENTO){
-		this.additionalPublicationStatus = null;
+		this.additionalPublicationStatusList = null;
 		
-		Element aps = (Element) vni.getElementsByTagName("cac-place-ext:AdditionalPublicationStatus").item(POS_UNICO_ELEMENTO);
-		if (aps != null){
-			this.additionalPublicationStatus = new AdditionalPublicationStatus();
-			this.additionalPublicationStatus.readAttributes(aps, POS_UNICO_ELEMENTO);
-			this.additionalPublicationStatus.readAdditionalPublicationDocumentReference(aps, POS_UNICO_ELEMENTO);
-			this.additionalPublicationStatus.readAdditionalPublicationRequest(aps, POS_UNICO_ELEMENTO);
+		NodeList apsList = vni.getElementsByTagName("cac-place-ext:AdditionalPublicationStatus");
+		if (apsList.getLength() > 0){
+			this.additionalPublicationStatusList = new AdditionalPublicationStatus[apsList.getLength()];
+			
+			for (int i = 0; i < apsList.getLength(); i++){
+				AdditionalPublicationStatus aps = new AdditionalPublicationStatus();
+				
+				Element apsElement = (Element) apsList.item(i);
+				aps.readAttributes(apsElement, POS_UNICO_ELEMENTO);
+				aps.readAdditionalPublicationDocumentReference(apsElement, POS_UNICO_ELEMENTO);
+				aps.readAdditionalPublicationRequest(apsElement, POS_UNICO_ELEMENTO);
+
+				this.additionalPublicationStatusList[i] = aps;
+			}
 		}
 	}
 	
@@ -38,7 +47,17 @@ public class ValidNoticeInfo {
 		System.out.print("** VALID NOTICE INFO **\n" +
 						 "---> Notice Type Code: " + noticeTypeCode + "\n" +
 						 "--------------------------------\n");
-		additionalPublicationStatus.print();
+		//additionalPublicationStatus.print();
 		System.out.print("===============================================================\n");
+	}
+
+	
+	public String getNoticeTypeCode() {
+		return noticeTypeCode;
+	}
+
+	
+	public AdditionalPublicationStatus[] getAdditionalPublicationStatusList() {
+		return additionalPublicationStatusList;
 	}
 }

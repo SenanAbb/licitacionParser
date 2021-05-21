@@ -291,4 +291,8 @@ public class TenderingProcess {
 	public ParticipationRequestReceptionPeriod getParticipationRequestReceptionPeriod(){
 		return participationRequestReceptionPeriod;
 	}
+
+	public ProcessJustification getProcessJustification() {
+		return processJustification;
+	}
 }

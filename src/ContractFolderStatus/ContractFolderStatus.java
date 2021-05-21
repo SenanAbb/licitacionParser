@@ -402,9 +402,21 @@ public class ContractFolderStatus {
 	public LocatedContractingParty getLocatedContractingParty() {
 		return locatedContractingParty;
 	}
-
 	
 	public TenderResult[] getTenderResultList() {
 		return tenderResultList;
+	}
+
+	public ContractModification[] getContractModificationList() {
+		return contractModificationList;
+	}
+
+	
+	public ValidNoticeInfo[] getValidNoticeInfoList() {
+		return validNoticeInfoList;
+	}
+
+	public GeneralDocument[] getGeneralDocumentList() {
+		return generalDocumentList;
 	}
 }

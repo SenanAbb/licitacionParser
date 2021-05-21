@@ -28,4 +28,8 @@ public class GeneralDocument {
 			System.out.print("*** GENERAL DOCUMENT DOCUMENT REFERENCE: null ***\n");
 		}
 	}
+
+	public GeneralDocumentDocumentReference getGeneralDocumentDocumentReference() {
+		return generalDocumentDocumentReference;
+	}
 }

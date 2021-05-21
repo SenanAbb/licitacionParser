@@ -21,7 +21,13 @@ import Entry.Entry;
 
 import com.mysql.cj.jdbc.CallableStatement;
 
+import contractModification.ContractModification;
 import documents.AdditionalDocumentReference;
+import documents.AdditionalPublicationDocumentReference;
+import documents.AdditionalPublicationRequest;
+import documents.AdditionalPublicationStatus;
+import documents.GeneralDocument;
+import documents.ValidNoticeInfo;
 
 public class ConexionSQL {
 	private static final int PLIEGO_ADMINISTRATIVO = 1;
@@ -734,6 +740,90 @@ public class ConexionSQL {
 		}
 	}
 	
+	public void writeReasonCode(String code, String nombre){
+		Connection conn = conectarMySQL();
+		
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newReasonCode(?, ?)}");
+			
+			// Parametros del procedimiento almacenado
+			sentencia.setString("code", code);
+			sentencia.setString("nombre", nombre);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+		} catch (SQLException e){
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void writeNoticeTypeCode(String code, String nombre){
+		Connection conn = conectarMySQL();
+		
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newNoticeTypeCode(?, ?)}");
+			
+			// Parametros del procedimiento almacenado
+			sentencia.setString("code", code);
+			sentencia.setString("nombre", nombre);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+		} catch (SQLException e){
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void writeDocumentTypeCode(String code, String nombre){
+		Connection conn = conectarMySQL();
+		
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) conn.prepareCall("{call newDocumentTypeCode(?, ?)}");
+			
+			// Parametros del procedimiento almacenado
+			sentencia.setString("code", code);
+			sentencia.setString("nombre", nombre);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+		} catch (SQLException e){
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	/* TABLAS GENERALES */
 	
 	public void writeExpediente(Entry entry, int ids) throws SQLException {
@@ -909,6 +999,10 @@ public class ConexionSQL {
 			writeSubcontratacionPermitida(ids_expediente, entry, conn);
 			writeCriterioDeAdjudicacion(ids_expediente, entry, conn);
 			writeResultadoDelProcedimiento(ids_expediente, entry, conn);
+			writeJustificacionDelProceso(ids_expediente, entry, conn);
+			writeModificacionesDeContrato(ids_expediente, entry, conn);
+			writePublicacionesOficiales(ids_expediente, entry, conn);
+			writeOtrosDocumentos(ids_expediente, entry, conn);
 			
 			// FINALIZAMOS LA TRANSACCION
 			conn.commit();
@@ -1675,7 +1769,7 @@ public class ConexionSQL {
 		
 		try {
 			for (int i = 0; i < c.length; i++){
-				sentencia = (CallableStatement) entry_conn.prepareCall("{call newContrato(?, ?, ?, ?, ?)}");
+				sentencia = (CallableStatement) entry_conn.prepareCall("{call newContrato(?, ?, ?, ?)}");
 				
 				sentencia.setInt("resultado", resultado);
 				
@@ -1698,10 +1792,6 @@ public class ConexionSQL {
 				}
 				
 				sentencia.execute();
-				
-				int contrato = sentencia.getInt("contrato");
-				
-				sentencia.close();
 			}
 		} finally {
 			// Cerramos las conexiones
@@ -1769,6 +1859,230 @@ public class ConexionSQL {
 			sentencia.setDouble("total_con_impuestos", con_imp);
 			sentencia.setString("currencyID", currencyID);
 			sentencia.execute();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void writeJustificacionDelProceso(int ids_expedientes, Entry entry, Connection entry_conn) throws SQLException{
+		CallableStatement sentencia = null;
+	
+		try {
+			if (entry.getContractFolderStatus().getTenderingProcess().getProcessJustification() != null){
+				sentencia = (CallableStatement) entry_conn.prepareCall("{call newJustificacionDelProceso(?, ?, ?)}");
+				
+				sentencia.setInt("ids_expedientes", ids_expedientes);
+				
+				if (entry.getContractFolderStatus().getTenderingProcess().getProcessJustification().getReasonCode() != null){
+					sentencia.setString("codigo_de_motivo", entry.getContractFolderStatus().getTenderingProcess().getProcessJustification().getReasonCode());
+				}else{
+					sentencia.setString("codigo_de_motivo", null);
+				}
+				
+				if (entry.getContractFolderStatus().getTenderingProcess().getProcessJustification().getDescription() != null){
+					sentencia.setString("descripcion", entry.getContractFolderStatus().getTenderingProcess().getProcessJustification().getDescription());
+				}else{
+					sentencia.setString("descripcion", null);
+				}
+				
+				sentencia.execute();
+			}
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void writeModificacionesDeContrato(int ids_expedientes, Entry entry, Connection entry_conn) throws SQLException{
+		CallableStatement sentencia = null;
+		
+		try {
+			ContractModification[] cm = entry.getContractFolderStatus().getContractModificationList();
+			if (cm != null){
+				for (int i = 0; i < cm.length; i++){
+					sentencia = (CallableStatement) entry_conn.prepareCall("{call newModificacionesDeContrato(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+					
+					sentencia.setInt("ids_expedientes", ids_expedientes);
+					sentencia.setString("numero_de_contrato", cm[i].getContractID());
+					sentencia.setInt("numero_de_modificacion", cm[i].getID());
+					
+					if (cm[i].getContractModificationLegalMonetaryTotal() != null){
+						sentencia.setDouble("importe_modificacion", cm[i].getContractModificationLegalMonetaryTotal().getTaxExclusiveAmount());
+						sentencia.setString("currencyID", cm[i].getContractModificationLegalMonetaryTotal().getCurrencyID());
+					}else{
+						sentencia.setNull("importe_modificacion", java.sql.Types.NULL);
+					}
+					
+					if (cm[i].getFinalLegalMonetaryTotal() != null){
+						sentencia.setDouble("importe_contrato", cm[i].getFinalLegalMonetaryTotal().getTaxExclusiveAmount());
+						sentencia.setString("currencyID", cm[i].getFinalLegalMonetaryTotal().getCurrencyID());
+					}else{
+						sentencia.setNull("importe_contrato", java.sql.Types.NULL);
+						sentencia.setString("currencyID", null);
+					}
+					
+					if (cm[i].getContractModificationDurationMeasure() > 0){
+						sentencia.setInt("plazo_modificacion", cm[i].getContractModificationDurationMeasure());
+						sentencia.setString("plazo_modificacion_unit_code", cm[i].getContractModificationDurationMeasureUnitCode());
+					}else{
+						sentencia.setNull("plazo_modificacion", java.sql.Types.NULL);
+						sentencia.setString("plazo_modificacion_unit_code", null);
+					}
+					
+					if (cm[i].getFinalDurationMeasure() > 0){
+						sentencia.setInt("plazo_total", cm[i].getFinalDurationMeasure());
+						sentencia.setString("plazo_total_unit_code", cm[i].getFinalDurationMeasureUnitCode());
+					}else{
+						sentencia.setNull("plazo_total", java.sql.Types.NULL);
+						sentencia.setString("plazo_total_unit_code", null);
+					}
+					
+					if (cm[i].getNote() != null){
+						sentencia.setString("observaciones", cm[i].getNote());
+					}else{
+						sentencia.setString("observaciones", null);
+					}
+					
+					sentencia.execute();
+				}
+			}
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void writePublicacionesOficiales(int ids_expedientes, Entry entry, Connection entry_conn) throws SQLException{
+		CallableStatement sentencia = null;
+		
+		try {
+			ValidNoticeInfo[] vni = entry.getContractFolderStatus().getValidNoticeInfoList();
+			if (vni != null){
+				for (int i = 0; i < vni.length; i++){
+					sentencia = (CallableStatement) entry_conn.prepareCall("{call newPublicacionesOficiales(?, ?, ?)}");
+					sentencia.setInt("ids_expedientes", ids_expedientes);
+					sentencia.setString("tipo_de_anuncio", vni[i].getNoticeTypeCode());
+					
+					sentencia.execute();
+					int publicacion = sentencia.getInt("publicacion");
+					writeAdditionalPublicationStatus(publicacion, vni[i], entry_conn);
+				}
+			}
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void writeAdditionalPublicationStatus(int publicaciones_oficiales, ValidNoticeInfo v, Connection entry_conn) throws SQLException{
+		CallableStatement sentencia = null;
+		
+		try {
+			AdditionalPublicationStatus[] aps = v.getAdditionalPublicationStatusList();
+			if (aps != null){
+				for (int i = 0; i < aps.length; i++){
+					sentencia = (CallableStatement) entry_conn.prepareCall("{call newAdditionalPublicationStatus(?, ?, ?)}");
+					sentencia.setInt("publicaciones_oficiales", publicaciones_oficiales);
+					sentencia.setString("medio_de_publicacion", aps[i].getPublicationMediaName());
+					
+					sentencia.execute();
+					int publication_status = sentencia.getInt("publication_status");
+					sentencia.close();
+					
+					// Fecha envío y Acta Adjunta
+					AdditionalPublicationDocumentReference[] apdr = aps[i].getAdditionalPublicationDocumentReferenceList();
+					if (apdr != null){
+						for (int j = 0; j < apdr.length; j++){
+							if (apdr[j].getIssueDate() != null){
+								sentencia = (CallableStatement) entry_conn.prepareCall("{call newFechaEnvio(?, ?)}");
+								sentencia.setDate("fecha", apdr[j].getIssueDate());
+								sentencia.setInt("additional_publication_status", publication_status);
+								sentencia.execute();
+								sentencia.close();
+							}else if (apdr[j].getAttachment() != null){
+								sentencia = (CallableStatement) entry_conn.prepareCall("{call newActaAdjunta(?, ?, ?, ?)}");
+								sentencia.setInt("additional_publication_status", publication_status);
+								sentencia.setString("document_type_code", apdr[j].getDocumentTypeCode());
+								if (apdr[j].getAttachment().getExternalReference().getURI() != null){
+									sentencia.setString("URI", apdr[j].getAttachment().getExternalReference().getURI());
+								}else{
+									sentencia.setString("URI", null);
+								}
+								if (apdr[j].getAttachment().getExternalReference().getFileName() != null){
+									sentencia.setString("file_name", apdr[j].getAttachment().getExternalReference().getFileName());
+								}else{
+									sentencia.setString("file_name", null);
+								}
+							}
+						}
+					}
+					
+					// Fecha publicación
+					AdditionalPublicationRequest[] apr = aps[i].getAdditionalPublicationRequestList();
+					if (apr != null){
+						for (int j = 0; j < apr.length; j++){
+							sentencia = (CallableStatement) entry_conn.prepareCall("{call newFechaPublicacion(?, ?)}");
+							sentencia.setDate("fecha", apr[j].getSendDate());
+							sentencia.setInt("additional_publication_status", publication_status);
+							sentencia.execute();
+						}
+					}
+				}
+			}
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void writeOtrosDocumentos(int ids_expedientes, Entry entry, Connection entry_conn) throws SQLException{
+		CallableStatement sentencia = null;
+		
+		try {
+			GeneralDocument[] gd = entry.getContractFolderStatus().getGeneralDocumentList();
+			if (gd != null){
+				for (int i = 0; i < gd.length; i++){
+					sentencia = (CallableStatement) entry_conn.prepareCall("{call newOtrosDocumentos(?, ?, ?, ?)}");
+					
+					sentencia.setInt("ids_expedientes", ids_expedientes);
+					sentencia.setString("ID", gd[i].getGeneralDocumentDocumentReference().getId());
+					
+					if (gd[i].getGeneralDocumentDocumentReference().getAttachment().getExternalReference().getURI() != null){
+						sentencia.setString("URI", gd[i].getGeneralDocumentDocumentReference().getAttachment().getExternalReference().getURI());
+					}else{
+						sentencia.setString("URI", null);
+					}
+					
+					if (gd[i].getGeneralDocumentDocumentReference().getAttachment().getExternalReference().getFileName() != null){
+						sentencia.setString("file_name", gd[i].getGeneralDocumentDocumentReference().getAttachment().getExternalReference().getFileName());
+					}else{
+						sentencia.setString("file_name", null);
+					}
+					
+					sentencia.execute();
+				}
+			}
 		} finally {
 			// Cerramos las conexiones
 			try {

@@ -20,16 +20,16 @@ import org.w3c.dom.Element;
  *		finalLegalMonetaryTotal: FinalLegalMonetaryTotal[0..1]
  */
 public class ContractModification {
-	private String contractID, ID, note;
+	private String contractID, note;
 	private Date date;
-	private int contractModificationDurationMeasure, finalDurationMeasure;
+	private int contractModificationDurationMeasure, finalDurationMeasure, ID;
 	private String contractModificationDurationMeasureUnitCode, finalDurationMeasureUnitCode;
 	private ContractModificationLegalMonetaryTotal contractModificationLegalMonetaryTotal;
 	private FinalLegalMonetaryTotal finalLegalMonetaryTotal;
 	
 	public void readAttributes(Element cm, int POS_UNICO_ELEMENTO) {
 		this.contractID = null;
-		this.ID = null;
+		this.ID = -1;
 		this.note = null;
 		this.date = null;
 		this.contractModificationDurationMeasure = -1;
@@ -48,7 +48,7 @@ public class ContractModification {
 		/* ID */
 		Element id = (Element) cm.getElementsByTagName("cbc:ID").item(POS_UNICO_ELEMENTO);
 		try{
-			this.ID = id.getTextContent();
+			this.ID = Integer.parseInt(id.getTextContent());
 		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: ContractFolderStatus -> ContractModification -> ID no existe\n");
 		}
@@ -132,4 +132,48 @@ public class ContractModification {
 		System.out.print("===============================================================\n");
 	}
 
+	
+	public String getContractID() {
+		return contractID;
+	}
+
+	
+	public int getID() {
+		return ID;
+	}
+
+	
+	public String getNote() {
+		return note;
+	}
+
+	
+	public int getContractModificationDurationMeasure() {
+		return contractModificationDurationMeasure;
+	}
+
+	
+	public int getFinalDurationMeasure() {
+		return finalDurationMeasure;
+	}
+
+	
+	public String getContractModificationDurationMeasureUnitCode() {
+		return contractModificationDurationMeasureUnitCode;
+	}
+
+	
+	public String getFinalDurationMeasureUnitCode() {
+		return finalDurationMeasureUnitCode;
+	}
+
+	
+	public ContractModificationLegalMonetaryTotal getContractModificationLegalMonetaryTotal() {
+		return contractModificationLegalMonetaryTotal;
+	}
+
+	
+	public FinalLegalMonetaryTotal getFinalLegalMonetaryTotal() {
+		return finalLegalMonetaryTotal;
+	}
 }

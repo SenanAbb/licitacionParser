@@ -27,4 +27,12 @@ public class ContractModificationLegalMonetaryTotal {
 						 "---> Tax Exclusive Amount: " + taxExclusiveAmount + " " + currencyID + "\n" +
 						 "--------------------------------\n");
 	}
+
+	public double getTaxExclusiveAmount() {
+		return taxExclusiveAmount;
+	}
+
+	public String getCurrencyID() {
+		return currencyID;
+	}
 }

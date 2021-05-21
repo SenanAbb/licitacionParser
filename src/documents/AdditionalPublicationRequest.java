@@ -43,4 +43,12 @@ public class AdditionalPublicationRequest {
 						 "----> Send Date: " + sendDate + "\n" +
 						 "--------------------------------\n");
 	}
+
+	public java.sql.Date getSendDate() {
+		if (sendDate != null){
+			return new java.sql.Date(sendDate.getTime());	
+		}else{
+			return null;
+		}
+	}
 }

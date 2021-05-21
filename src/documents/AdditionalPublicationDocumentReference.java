@@ -60,4 +60,20 @@ public class AdditionalPublicationDocumentReference {
 		}
 		System.out.print("--------------------------------\n");
 	}
+
+	public String getDocumentTypeCode() {
+		return documentTypeCode;
+	}
+
+	public Attachment getAttachment() {
+		return attachment;
+	}
+
+	public java.sql.Date getIssueDate() {
+		if (issueDate != null){
+			return new java.sql.Date(issueDate.getTime());	
+		}else{
+			return null;
+		}
+	}
 }

@@ -16,6 +16,62 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `tbl_acta_adjunta`
+--
+
+DROP TABLE IF EXISTS `tbl_acta_adjunta`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_acta_adjunta` (
+  `acta_adjunta` int(11) NOT NULL AUTO_INCREMENT,
+  `additional_publication_status` int(11) NOT NULL,
+  `document_type_code` varchar(40) NOT NULL,
+  `URI` varchar(1000) DEFAULT NULL,
+  `file_name` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`acta_adjunta`),
+  KEY `fk_tbl_acta_adjunta_tbl_document_type_code1_idx` (`document_type_code`),
+  KEY `fk_tbl_acta_adjunta_tbl_additional_publication_status1_idx` (`additional_publication_status`),
+  CONSTRAINT `fk_tbl_acta_adjunta_tbl_additional_publication_status1` FOREIGN KEY (`additional_publication_status`) REFERENCES `tbl_additional_publication_status` (`additional_publication_status`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbl_acta_adjunta_tbl_document_type_code1` FOREIGN KEY (`document_type_code`) REFERENCES `tbl_document_type_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_acta_adjunta`
+--
+
+LOCK TABLES `tbl_acta_adjunta` WRITE;
+/*!40000 ALTER TABLE `tbl_acta_adjunta` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_acta_adjunta` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_additional_publication_status`
+--
+
+DROP TABLE IF EXISTS `tbl_additional_publication_status`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_additional_publication_status` (
+  `additional_publication_status` int(11) NOT NULL AUTO_INCREMENT,
+  `publicaciones_oficiales` int(11) NOT NULL,
+  `medio_de_publicacion` varchar(50) NOT NULL,
+  PRIMARY KEY (`additional_publication_status`),
+  KEY `fk_tbl_additional_publication_status_tbl_publicaciones_ofic_idx` (`publicaciones_oficiales`),
+  CONSTRAINT `fk_tbl_additional_publication_status_tbl_publicaciones_oficia1` FOREIGN KEY (`publicaciones_oficiales`) REFERENCES `tbl_publicaciones_oficiales` (`publicaciones_oficiales`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_additional_publication_status`
+--
+
+LOCK TABLES `tbl_additional_publication_status` WRITE;
+/*!40000 ALTER TABLE `tbl_additional_publication_status` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_additional_publication_status` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tbl_address_format_code`
 --
 
@@ -456,6 +512,30 @@ LOCK TABLES `tbl_dgpe` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `tbl_document_type_code`
+--
+
+DROP TABLE IF EXISTS `tbl_document_type_code`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_document_type_code` (
+  `code` varchar(40) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_document_type_code`
+--
+
+LOCK TABLES `tbl_document_type_code` WRITE;
+/*!40000 ALTER TABLE `tbl_document_type_code` DISABLE KEYS */;
+INSERT INTO `tbl_document_type_code` VALUES ('ACTA_ADJ','Documento de Acta de Resolución'),('ACTA_ADM_EXCL','Documento de Acta de Admisión Exclusión'),('ACTA_FORM','Documento de Acta de Formalización'),('CONTRACT_MODIFICATION','Documento adicional modificación del contrato'),('CONTR_FORM','Documento de Contrato de Formalización'),('DOC_ADD_CD','Documento Adicional de Pliegos'),('DOC_COM_ADJ','Información adicional en las comunicaciones de adjudicación'),('DOC_COM_GENDOC','Información adicional en las comunicaciones genericas'),('DOC_COM_INV','Documento Adicional de Comunicaciones de Invitacion a Licitar'),('DOC_COM_QRN','Información adicional en las comunicaciones de admisión y exclusión'),('DOC_COM_REQDOC','Información adicional en las comunicaciones de requerimiento de documentación'),('DOC_DESC','Documento Descriptivo'),('DOC_PCAP','Documento de Pliego de Cláusulas Administrativas'),('DOC_PPT','Documento de Pliego de Prescripciones Técnicas'),('ENVIO_ADJ_OTROS','Envío de Anuncio de Adjudicación a Otros Diarios'),('ENVIO_ANUL_ATPV_DOUE','Envío de anulación de ATPV al DOUE'),('ENVIO_ANUL_CN_BOE','Envío de anulación de Anuncio de Licitación al BOE'),('ENVIO_ANUL_CN_DOUE','Envío de anulación de Anuncio de Licitación al DOUE'),('ENVIO_ANUL_CN_OTROS','Envío de anulación de Anuncio de Licitación a Otros Diarios'),('ENVIO_ANUL_DESIERTO_DOUE','Envío de anulación de desierto al DOUE'),('ENVIO_ANUL_FORM_BOE','Envío de anulación de Anuncio de Formalización al BOE'),('ENVIO_ANUL_FORM_DOUE','Envío de anulación de Anuncio de Formalización al DOUE'),('ENVIO_ANUL_FORM_OTROS','Envío de anulación de Anuncio de Formalización a Otros Diarios'),('ENVIO_ANUL_PIN_BOE','Envío de anulación de Anuncio Previo al BOE'),('ENVIO_ANUL_PIN_DOUE','Envío de anulación de Anuncio Previo al DOUE'),('ENVIO_ANUL_PIN_OTROS','Envío de anulación de Anuncio Previo a Otros Diarios'),('ENVIO_ATPV_DOUE','Envío de Anuncio de Transparencia Previa Voluntaria al DOUE'),('ENVIO_CAN_DEF_BOE','Envío de Documento de Adjudicación Definitiva al BOE'),('ENVIO_CAN_DEF_DOUE','Envío de Anuncio de Adjudicación definitiva al DOUE'),('ENVIO_CAN_DEF_OTROS','Envío de Anuncio de Adjudicación Definitiva a Otros Diarios'),('ENVIO_CAN_PROV_DOUE','Envío de Anuncio de Adjudicación Provisional al DOUE'),('ENVIO_CAN_PROV_OTROS','Envío de Anuncio de Adjudicación Provisional a Otros Diarios'),('ENVIO_CN_BOE','Envío de Anuncio de Licitación al BOE'),('ENVIO_CN_DOUE','Envío de Anuncio de Licitación al DOUE'),('ENVIO_CN_OTROS','Envío de Anuncio de Licitación a Otros Diarios'),('ENVIO_DESIERTO_BOE','Envío de Desierto al BOE'),('ENVIO_DESIERTO_DOUE','Envío de Desierto al DOUE'),('ENVIO_DESIERTO_OTROS','Envío de Desierto a Otros Diarios'),('ENVIO_DESISTIMIENTO_BOE','Envío de Desistimiento al BOE'),('ENVIO_DESISTIMIENTO_DOUE','Envío de Desistimiento al DOUE'),('ENVIO_DESISTIMIENTO_OTROS','Envío de Desistimiento a Otros Diarios'),('ENVIO_FORM_BOE','Envío de Anuncio de Formalización al BOE'),('ENVIO_FORM_DOUE','Envío de Anuncio de Formalización al DOUE'),('ENVIO_FORM_OTROS','Envío de Anuncio de Formalización a Otros Diarios'),('ENVIO_MODCON_DOUE','Envío de Modificación de Contrato al DOUE'),('ENVIO_ORIGINAL_ATPV_DOUE','ATPV Original publicado en DOUE'),('ENVIO_ORIGINAL_CN_DOUE','Anuncio de Licitación Original publicado en DOUE'),('ENVIO_ORIGINAL_FORM_DOUE','Anuncio de Formalización Original publicado en DOUE'),('ENVIO_ORIGINAL_PIN_DOUE','Anuncio Previo Original publicado en DOUE'),('ENVIO_PIN_BOE','Envío de Anuncio Previo al BOE'),('ENVIO_PIN_DOUE','Envío de Anuncio Previo al DOUE'),('ENVIO_PIN_OTROS','Envío de Anuncio Previo a Otros Diarios'),('ENVIO_RENUNCIA_BOE','Envío de Renunca al BOE'),('ENVIO_RENUNCIA_DOUE','Envío de Renuncia al DOUE'),('ENVIO_RENUNCIA_OTROS','Envío de Renuncia a Otros Diarios'),('ITEM_DESC','Documento de Descripción de Producto'),('ITEM_SPEC','Documento de Especificación de Producto'),('LINK_EXP_FRAMEWORKAGREEMENT_PLACE','Documento de detalle del Establecimiento de Acuerdo Marco publicado en la Plataforma'),('LINK_EXP_PLACE','Documento de detalle del Expediente publicado en la Plataforma'),('NOTICE_CANCELLATION','Documento motivo de anulación'),('ODS_PUB_CN_DOUE','Anuncio de Licitación publicado en DOUE para Establecimiento de un Sistema Dinámico'),('PUB_ADJ_OTROS','Publicación de Anuncio de Adjudicación en Otros Diarios'),('PUB_ANUL_ATPV_DOUE','Anulación de ATPV publicada en DOUE'),('PUB_ANUL_CN_BOE','Anulación de Anuncio de Licitación publicada en BOE'),('PUB_ANUL_CN_DOUE','Anulación de Anuncio de Licitación publicada en DOUE'),('PUB_ANUL_CN_OTROS','Anulación de Anuncio de Licitación publicada en Otros Diarios'),('PUB_ANUL_DESIERTO_DOUE','Anulación de desierto publicada en DOUE'),('PUB_ANUL_FORM_BOE','Anulación de Anuncio de Formalización publicada en BOE'),('PUB_ANUL_FORM_DOUE','Anulación de Anuncio de Formalización publicada en DOUE'),('PUB_ANUL_FORM_OTROS','Anulación de Anuncio de Formalización publicada en Otros Diarios'),('PUB_ANUL_PIN_BOE','Anulación de Anuncio Previo publicada en BOE'),('PUB_ANUL_PIN_DOUE','Anulación de Anuncio Previo publicada en DOUE'),('PUB_ANUL_PIN_OTROS','Anulación de Anuncio Previo publicada en Otros Diarios'),('PUB_ATPV_DOUE','Publicación del Anuncio de Transparencia Previa Voluntaria al DOUE'),('PUB_CAN_DEF_BOE','Documento de Adjudicación Definitiva publicado en BOE'),('PUB_CAN_DEF_DOUE','Documento de Adjudicación Definitiva publicado en DOUE'),('PUB_CAN_DEF_OTROS','Publicación del Anuncio de Adjudicación Definitiva en Otros Diarios'),('PUB_CAN_DEF_PLACE','Documento de Adjudicación Definitiva publicado en Plataforma'),('PUB_CAN_PROV_OTROS','Publicación del Anuncio de Adjudicación Provisional en Otros Diarios'),('PUB_CAN_PROV_PLACE','Documento de Adjudicación Provisional publicado en Plataforma'),('PUB_CD_PLACE','Documento de Pliegos publicado en Plataforma'),('PUB_CN_BOE','Anuncio de Licitación publicado en BOE'),('PUB_CN_DOUE','Anuncio de Licitación publicado en DOUE'),('PUB_CN_OTROS','Publicación del Anuncio de Licitación en Otros Diarios'),('PUB_CN_PLACE','Anuncio de Licitación publicado en Plataforma'),('PUB_DESIERTO_BOE','Publicación de Desierto en el BOE'),('PUB_DESIERTO_DOUE','Publicación de Desierto en el DOUE'),('PUB_DESIERTO_OTROS','Publicación de Desierto en Otros Diarios'),('PUB_DESISTIMIENTO_BOE','Publicación de Desistimiento en el BOE'),('PUB_DESISTIMIENTO_DOUE','Publicación de Desistimiento en el DOUE'),('PUB_DESISTIMIENTO_OTROS','Publicación de Desistimiento a Otros Diarios'),('PUB_FORM_BOE','Anuncio de Formalización publicado en BOE'),('PUB_FORM_DOUE','Anuncio de Formalización publicado en DOUE'),('PUB_FORM_OTROS','Publicación del Anuncio de Formalización en Otros Diarios'),('PUB_PIN_BOE','Anuncio Previo publicado en BOE'),('PUB_PIN_DOUE','Anuncio Previo publicado en DOUE'),('PUB_PIN_OTROS','Publicación del Anuncio Previo en Otros Diarios'),('PUB_PIN_PLACE','Anuncio Previo publicado en Plataforma'),('PUB_RENUNCIA_BOE','Publicación de Renuncia en el BOE'),('PUB_RENUNCIA_DOUE','Publicación de Renuncia en el DOUE'),('PUB_RENUNCIA_OTROS','Publicación de Renuncia en Otros Diarios');
+/*!40000 ALTER TABLE `tbl_document_type_code` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tbl_entidad_adjudicadora`
 --
 
@@ -616,6 +696,58 @@ CREATE TABLE `tbl_extension_de_contrato` (
 LOCK TABLES `tbl_extension_de_contrato` WRITE;
 /*!40000 ALTER TABLE `tbl_extension_de_contrato` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tbl_extension_de_contrato` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_fecha_envio`
+--
+
+DROP TABLE IF EXISTS `tbl_fecha_envio`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_fecha_envio` (
+  `fecha_envio` int(11) NOT NULL AUTO_INCREMENT,
+  `fecha` date NOT NULL,
+  `additional_publication_status` int(11) NOT NULL,
+  PRIMARY KEY (`fecha_envio`),
+  KEY `fk_fecha_envio_tbl_additional_publication_status1_idx` (`additional_publication_status`),
+  CONSTRAINT `fk_fecha_envio_tbl_additional_publication_status1` FOREIGN KEY (`additional_publication_status`) REFERENCES `tbl_additional_publication_status` (`additional_publication_status`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_fecha_envio`
+--
+
+LOCK TABLES `tbl_fecha_envio` WRITE;
+/*!40000 ALTER TABLE `tbl_fecha_envio` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_fecha_envio` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_fecha_publicacion`
+--
+
+DROP TABLE IF EXISTS `tbl_fecha_publicacion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_fecha_publicacion` (
+  `fecha_publicacion` int(11) NOT NULL AUTO_INCREMENT,
+  `fecha` date NOT NULL,
+  `additional_publication_status` int(11) NOT NULL,
+  PRIMARY KEY (`fecha_publicacion`),
+  KEY `fk_tbl_fecha_publicacion_tbl_additional_publication_status1_idx` (`additional_publication_status`),
+  CONSTRAINT `fk_tbl_fecha_publicacion_tbl_additional_publication_status1` FOREIGN KEY (`additional_publication_status`) REFERENCES `tbl_additional_publication_status` (`additional_publication_status`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_fecha_publicacion`
+--
+
+LOCK TABLES `tbl_fecha_publicacion` WRITE;
+/*!40000 ALTER TABLE `tbl_fecha_publicacion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_fecha_publicacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -782,7 +914,7 @@ CREATE TABLE `tbl_ids` (
   PRIMARY KEY (`ids`),
   KEY `modosid_idx` (`modosid`),
   CONSTRAINT `modosid` FOREIGN KEY (`modosid`) REFERENCES `tbl_modosid` (`modosid`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -791,7 +923,6 @@ CREATE TABLE `tbl_ids` (
 
 LOCK TABLES `tbl_ids` WRITE;
 /*!40000 ALTER TABLE `tbl_ids` DISABLE KEYS */;
-INSERT INTO `tbl_ids` VALUES (17,2,'2021-05-20 09:25:08'),(18,2,'2021-05-20 09:34:16');
 /*!40000 ALTER TABLE `tbl_ids` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -937,6 +1068,36 @@ LOCK TABLES `tbl_importes_de_adjudicacion` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `tbl_justificacion_del_proceso`
+--
+
+DROP TABLE IF EXISTS `tbl_justificacion_del_proceso`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_justificacion_del_proceso` (
+  `justificacion_del_proceso` int(11) NOT NULL AUTO_INCREMENT,
+  `ids_expedientes` int(11) NOT NULL,
+  `codigo_de_motivo` varchar(5) NOT NULL,
+  `descripcion` varchar(500) DEFAULT NULL,
+  `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`justificacion_del_proceso`),
+  KEY `fk_tbl_justificacion_del_proceso_tbl_reason_code1_idx` (`codigo_de_motivo`),
+  KEY `fk_tbl_justificacion_del_proceso_tbl_ids_expedientes1_idx` (`ids_expedientes`),
+  CONSTRAINT `fk_tbl_justificacion_del_proceso_tbl_ids_expedientes1` FOREIGN KEY (`ids_expedientes`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbl_justificacion_del_proceso_tbl_reason_code1` FOREIGN KEY (`codigo_de_motivo`) REFERENCES `tbl_reason_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_justificacion_del_proceso`
+--
+
+LOCK TABLES `tbl_justificacion_del_proceso` WRITE;
+/*!40000 ALTER TABLE `tbl_justificacion_del_proceso` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_justificacion_del_proceso` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tbl_language`
 --
 
@@ -997,6 +1158,42 @@ LOCK TABLES `tbl_lugar_de_ejecucion` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `tbl_modificaciones_de_contrato`
+--
+
+DROP TABLE IF EXISTS `tbl_modificaciones_de_contrato`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_modificaciones_de_contrato` (
+  `modificaciones_de_contrato` int(11) NOT NULL AUTO_INCREMENT,
+  `ids_expedientes` int(11) NOT NULL,
+  `numero_de_contrato` varchar(50) NOT NULL,
+  `numero_de_modificacion` int(11) NOT NULL,
+  `importe_modificacion` decimal(19,2) DEFAULT NULL,
+  `importe_contrato` decimal(19,2) DEFAULT NULL,
+  `currencyID` varchar(5) DEFAULT NULL,
+  `plazo_modificacion` int(11) DEFAULT NULL,
+  `plazo_modificacion_unit_code` varchar(5) DEFAULT NULL,
+  `plazo_total` int(11) DEFAULT NULL,
+  `plazo_total_unit_code` varchar(5) DEFAULT NULL,
+  `observaciones` varchar(4500) DEFAULT NULL,
+  `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`modificaciones_de_contrato`),
+  KEY `fk_tbl_modificaciones_de_contrato_tbl_ids_expedientes1_idx` (`ids_expedientes`),
+  CONSTRAINT `fk_tbl_modificaciones_de_contrato_tbl_ids_expedientes1` FOREIGN KEY (`ids_expedientes`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_modificaciones_de_contrato`
+--
+
+LOCK TABLES `tbl_modificaciones_de_contrato` WRITE;
+/*!40000 ALTER TABLE `tbl_modificaciones_de_contrato` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_modificaciones_de_contrato` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tbl_modosid`
 --
 
@@ -1018,6 +1215,58 @@ LOCK TABLES `tbl_modosid` WRITE;
 /*!40000 ALTER TABLE `tbl_modosid` DISABLE KEYS */;
 INSERT INTO `tbl_modosid` VALUES (1,'Automático'),(2,'Manual');
 /*!40000 ALTER TABLE `tbl_modosid` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_notice_type_code`
+--
+
+DROP TABLE IF EXISTS `tbl_notice_type_code`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_notice_type_code` (
+  `code` varchar(20) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_notice_type_code`
+--
+
+LOCK TABLES `tbl_notice_type_code` WRITE;
+/*!40000 ALTER TABLE `tbl_notice_type_code` DISABLE KEYS */;
+INSERT INTO `tbl_notice_type_code` VALUES ('ANUL_CAN_ADJ','Anulación de Anuncio de Adjudicación'),('ANUL_CD','Anulación de Anuncio de Pliegos'),('ANUL_CN','Anulación de Anuncio de Licitación'),('ANUL_DD','Anulación de Anuncio de Documento Descriptivo'),('ANUL_DESISTIMIENTO','Anulación de Anuncio de Desistimiento'),('ANUL_DOC_MOD','Anulación Anuncio Modificación de Contrato'),('ANUL_FORM','Anulación de Anuncio de Formalización'),('ANUL_PIN','Anulación de Anuncio Previo'),('ANUL_RENUNCIA','Anulación de Anuncio de Renuncia'),('DESISTIMIENTO','Anuncio de Desistimiento'),('DOC_ATPV','Anuncio de Transparencia Previa Voluntaria'),('DOC_CAN_ADJ','Anuncio de Adjudicación'),('DOC_CAN_DEF','Anuncio de Adjudicación Definitiva'),('DOC_CAN_PROV','Anuncio de Adjudicación Provisional'),('DOC_CD','Anuncio de Pliegos'),('DOC_CN','Anuncio de Licitación'),('DOC_DD','Anuncio de Documento Descriptivo'),('DOC_FORM','Anuncio de Formalización'),('DOC_MOD','Anuncio Modificación de Contrato'),('DOC_PIN','Anuncio Previo'),('RENUNCIA','Anuncio de Renuncia');
+/*!40000 ALTER TABLE `tbl_notice_type_code` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_otros_documentos`
+--
+
+DROP TABLE IF EXISTS `tbl_otros_documentos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_otros_documentos` (
+  `tbl_otros_documentos` int(11) NOT NULL AUTO_INCREMENT,
+  `ids_expedientes` int(11) NOT NULL,
+  `ID` varchar(50) DEFAULT NULL,
+  `URI` varchar(500) DEFAULT NULL,
+  `file_name` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`tbl_otros_documentos`),
+  KEY `fk_tbl_otros_documentos_tbl_ids_expedientes1_idx` (`ids_expedientes`),
+  CONSTRAINT `fk_tbl_otros_documentos_tbl_ids_expedientes1` FOREIGN KEY (`ids_expedientes`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_otros_documentos`
+--
+
+LOCK TABLES `tbl_otros_documentos` WRITE;
+/*!40000 ALTER TABLE `tbl_otros_documentos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_otros_documentos` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1198,6 +1447,58 @@ LOCK TABLES `tbl_procurement_legislation` WRITE;
 /*!40000 ALTER TABLE `tbl_procurement_legislation` DISABLE KEYS */;
 INSERT INTO `tbl_procurement_legislation` VALUES ('2009/81/EC','Directiva 2009/81/CE sobre contratación en defensa y seguridad'),('2014/23/EU','Directiva 2014/23/UE sobre contratos de concesiones'),('2014/24/EU','Directiva 2014/24/UE sobre contratación pública'),('2014/25/EU','Directiva 2014/25/UE sobre contratación en sectores especiales'),('N/A','No Aplica');
 /*!40000 ALTER TABLE `tbl_procurement_legislation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_publicaciones_oficiales`
+--
+
+DROP TABLE IF EXISTS `tbl_publicaciones_oficiales`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_publicaciones_oficiales` (
+  `publicaciones_oficiales` int(11) NOT NULL AUTO_INCREMENT,
+  `ids_expedientes` int(11) NOT NULL,
+  `tipo_de_anuncio` varchar(20) NOT NULL,
+  PRIMARY KEY (`publicaciones_oficiales`),
+  KEY `fk_tbl_publicaciones_oficiales_tbl_ids_expedientes1_idx` (`ids_expedientes`),
+  KEY `fk_tbl_publicaciones_oficiales_tbl_notice_type_code1_idx` (`tipo_de_anuncio`),
+  CONSTRAINT `fk_tbl_publicaciones_oficiales_tbl_ids_expedientes1` FOREIGN KEY (`ids_expedientes`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbl_publicaciones_oficiales_tbl_notice_type_code1` FOREIGN KEY (`tipo_de_anuncio`) REFERENCES `tbl_notice_type_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_publicaciones_oficiales`
+--
+
+LOCK TABLES `tbl_publicaciones_oficiales` WRITE;
+/*!40000 ALTER TABLE `tbl_publicaciones_oficiales` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_publicaciones_oficiales` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_reason_code`
+--
+
+DROP TABLE IF EXISTS `tbl_reason_code`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_reason_code` (
+  `code` varchar(5) NOT NULL,
+  `nombre` varchar(300) NOT NULL,
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_reason_code`
+--
+
+LOCK TABLES `tbl_reason_code` WRITE;
+/*!40000 ALTER TABLE `tbl_reason_code` DISABLE KEYS */;
+INSERT INTO `tbl_reason_code` VALUES ('a1','No se ha presentado ninguna oferta a un procedimiento abierto'),('a2','No se ha presentado ninguna oferta a un procedimiento restringido'),('b','Los productos de que se trata se fabrican únicamente con fines de investigación, experimentación, estudio o desarrollo en las condiciones que se establecen en la Directiva'),('c1','Las obras/bienes/servicios únicamente puede proporcionarlos un determinado licitador por razones técnicas'),('c2','Las obras/bienes/servicios únicamente puede proporcionarlos un determinado licitador por razones artísticas'),('c3','Las obras/bienes/servicios únicamente puede proporcionarlos un determinado licitador por razones relacionadas con la protección de derechos exclusivos'),('d','Situación de extrema urgencia resultante de hechos imprevisibles para el poder adjudicador y con arreglo a las condiciones estrictas que se establecen en la Directiva'),('e','Se solicitan obras/suministros/servicios adicionales con arreglo a las condiciones establecidas en la Directiva'),('f','Se trata de nuevos servicios/obras que consisten en la repetición de servicios/obras similares y que se solicitan con arreglo a las condiciones estrictas establecidas en la Directiva'),('g','Contrato de servicios adjudicado al candidato ganador a uno de los candidatos gandores de un concurso de proyectos'),('h','Se trata de suministros cotizados y comprados en una bolsa de materias primas'),('i1','Se trata de la compra de suministros en condiciones ventajosas a un proveedor que cesa definitivamente su actividad comercial'),('i2','Se trata de la compra de suministros en condiciones ventajosas a administradores o síndicos de una quiebra, o en virtud de un concordato judicial o un procedimiento similar.'),('j','Todas las ofertas presentadas en respuesta a un procedimiento abierto, un procedimiento restringido o un diálogo competitivo presentaban irregularidades o eran inaceptables. Únicamente los licitadores que cumplían los criterios cualitativos de selección se han incluido en las negociaciones.'),('k','El objeto del contrato son servicios enumerados en el anexo II B de la Directiva'),('l','El contrato no entra en el ámbito de aplicación de la Directiva');
+/*!40000 ALTER TABLE `tbl_reason_code` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1537,6 +1838,52 @@ UNLOCK TABLES;
 --
 -- Dumping routines for database 'licitacion'
 --
+/*!50003 DROP PROCEDURE IF EXISTS `newActaAdjunta` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newActaAdjunta`(
+	IN additional_publication_status INT,
+    IN document_type_code VARCHAR(20),
+    IN URI VARCHAR(1000),
+    IN file_name VARCHAR(500))
+BEGIN
+	INSERT INTO tbl_acta_adjunta (additional_publication_status, document_type_code, URI, file_name) VALUES (additional_publication_status, document_type_code, URI, file_name);
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newAdditionalPublicationStatus` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newAdditionalPublicationStatus`(
+	IN publicaciones_oficiales INT,
+    IN medio_de_publicacion VARCHAR(50),
+    OUT publication_status INT)
+BEGIN
+	INSERT INTO tbl_additional_publication_status (publicaciones_oficiales, medio_de_publicacion) VALUES (publicaciones_oficiales, medio_de_publicacion);
+    SET publication_status = last_insert_id();
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `newAdjudicatario` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1732,17 +2079,15 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newContrato`(
 	IN resultado INT,
 	IN numero_contrato VARCHAR(40),
     IN fecha_formalizacion DATE,
-    IN fecha_entrada_vigor DATE,
-    OUT contrato INT)
+    IN fecha_entrada_vigor DATE)
 BEGIN
 	INSERT INTO tbl_contrato (resultado, numero_de_contrato, fecha_formalizacion, fecha_entrada_vigor) VALUES (resultado, numero_contrato, fecha_formalizacion, fecha_entrada_vigor);
-    SET contrato = last_insert_id();
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1888,6 +2233,29 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `newDeclarationTypeCode`(
 BEGIN
 	START TRANSACTION;
     INSERT INTO tbl_declaration_type_code (code, nombre) VALUES (code, nombre);
+    COMMIT;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newDocumentTypeCode` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newDocumentTypeCode`(
+	IN code VARCHAR(40),
+    IN nombre VARCHAR(100))
+BEGIN
+	START TRANSACTION;
+    INSERT INTO tbl_document_type_code (code, nombre) VALUES (code, nombre);
     COMMIT;
 END ;;
 DELIMITER ;
@@ -2061,6 +2429,48 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `newExtensionDeContrato`(
 BEGIN
 	INSERT INTO tbl_extension_de_contrato (ids_expedientes, opciones, periodo_de_validez)
     VALUES (ids_expedientes, opciones, periodo_de_validez);
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newFechaEnvio` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newFechaEnvio`(
+	IN fecha DATE,
+    IN additional_publication_status int)
+BEGIN
+	INSERT INTO tbl_fecha_envio(fecha, additional_publication_status) VALUES (fecha, additional_publication_status);
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newFechaPublicacion` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newFechaPublicacion`(
+	IN fecha DATE,
+    IN additional_publication_status int)
+BEGIN
+	INSERT INTO tbl_fecha_publicacion (fecha, additional_publication_status) VALUES (fecha, additional_publication_status);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2299,6 +2709,28 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newJustificacionDelProceso` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newJustificacionDelProceso`(
+	IN ids_expedientes INT,
+    IN descripcion VARCHAR(500),
+    IN codigo_de_motivo VARCHAR(5))
+BEGIN
+	INSERT INTO tbl_justificacion_del_proceso (ids_expedientes, descripcion, codigo_de_motivo) VALUES (ids_expedientes, descripcion, codigo_de_motivo);
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `newLanguage` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2350,6 +2782,37 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newModificacionesDeContrato` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newModificacionesDeContrato`(
+	IN ids_expedientes INT,
+    IN numero_de_contrato VARCHAR(50),
+    IN numero_de_modificacion INT,
+    IN importe_modificacion DECIMAL(19,2),
+    IN importe_contrato DECIMAL(19,2),
+    IN currencyID VARCHAR(5),
+    IN plazo_modificacion INT,
+    IN plazo_modificacion_unit_code VARCHAR(5),
+    IN plazo_total INT,
+    IN plazo_total_unit_code VARCHAR(5),
+    IN observaciones VARCHAR(4500))
+BEGIN
+	INSERT INTO tbl_modificaciones_de_contrato (ids_expedientes, numero_de_contrato, numero_de_modificacion, importe_modificacion, importe_contrato, currencyID, plazo_modificacion, plazo_modificacion_unit_code, plazo_total, plazo_total_unit_code, observaciones)
+	VALUES (ids_expedientes, numero_de_contrato, numero_de_modificacion, importe_modificacion, importe_contrato, currencyID, plazo_modificacion, plazo_modificacion_unit_code, plazo_total, plazo_total_unit_code, observaciones);
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `newModosId` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -2368,6 +2831,52 @@ BEGIN
 		INSERT INTO tbl_modosid (modosid, description)
         VALUES (modosId, description);
     COMMIT;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newNoticeTypeCode` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newNoticeTypeCode`(
+	IN code VARCHAR(20),
+    IN nombre VARCHAR(100))
+BEGIN
+	START TRANSACTION;
+    INSERT INTO tbl_notice_type_code (code, nombre) VALUES (code, nombre);
+    COMMIT;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newOtrosDocumentos` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newOtrosDocumentos`(
+	IN ids_expedientes INT,
+    IN ID VARCHAR(50),
+    IN URI VARCHAR(500),
+    IN file_name VARCHAR(200))
+BEGIN
+	INSERT INTO tbl_otros_documentos (ids_expedientes, ID, URI, file_name) VALUES (ids_expedientes, ID, URI, file_name);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2521,6 +3030,52 @@ BEGIN
 	START TRANSACTION;
 		INSERT INTO tbl_procurement_legislation (code, nombre)
         VALUES (code, nombre);
+    COMMIT;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newPublicacionesOficiales` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newPublicacionesOficiales`(
+	IN ids_expedientes INT,
+    IN tipo_de_anuncio VARCHAR(20),
+    OUT publicacion INT)
+BEGIN
+	INSERT INTO tbl_publicaciones_oficiales (ids_expedientes, tipo_de_anuncio) VALUES (ids_expedientes, tipo_de_anuncio);
+    SET publicacion = last_insert_id();
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newReasonCode` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newReasonCode`(
+	IN code VARCHAR(5),
+    IN nombre VARCHAR(300))
+BEGIN
+	START TRANSACTION;
+    INSERT INTO tbl_reason_code (code, nombre) VALUES (code, nombre);
     COMMIT;
 END ;;
 DELIMITER ;
@@ -2878,4 +3433,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-20 11:42:03
+-- Dump completed on 2021-05-21 12:41:42
