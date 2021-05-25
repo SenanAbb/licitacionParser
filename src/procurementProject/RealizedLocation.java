@@ -56,4 +56,8 @@ public class RealizedLocation {
 	public String getCountrySubentityCode() {
 		return countrySubentityCode;
 	}
+
+	public String getCountrySubentity() {
+		return countrySubentity;
+	}
 }

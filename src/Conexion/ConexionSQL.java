@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import procurementProject.RequiredCommodityClassification;
 import tenderResult.Contract;
 import tenderResult.LegalMonetaryTotal;
+import tenderResult.SubcontractTerms;
 import tenderResult.TenderResult;
 import tenderResult.WinningParty;
 import tenderingTerms.AwardingCriteria;
@@ -404,17 +405,18 @@ public class ConexionSQL {
 		}
 	}
 	
-	public void writeContractFolderStatusCode(String code, String nombre) {
+	public void writeContractFolderStatusCode(String code, String nombre, int orden) {
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
 		
 		try {
-			sentencia = (CallableStatement) conn.prepareCall("{call newContractFolderStatusCode(?, ?)}");
+			sentencia = (CallableStatement) conn.prepareCall("{call newContractFolderStatusCode(?, ?, ?)}");
 			
 			// Parametros del procedimiento almacenado
 			sentencia.setString("code", code);
 			sentencia.setString("nombre", nombre);
+			sentencia.setInt("orden", orden);
 			
 			// Ejecutamos el procedimiento
 			sentencia.execute();
@@ -1031,7 +1033,7 @@ public class ConexionSQL {
 			sentencia.setString("subentidad_territorial", entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getCountrySubentityCode());
 			
 			if (entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getAddress() != null){
-				sentencia.setString("subentidad_nacional", entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getAddress().getCountry().getIdentificationCode());
+				sentencia.setString("subentidad_nacional", entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getCountrySubentity());
 				sentencia.setString("pais", entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getAddress().getCountry().getName());
 				
 				if (entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getAddress().getAddressLine() != null){
@@ -1711,13 +1713,13 @@ public class ConexionSQL {
 					
 					sentencia.setDouble("ofertas_recibidas", tr[i].getReceivedTenderQuantity());
 					
-					if(tr[i].getLowerTenderAmount() > 0){
+					if(tr[i].getLowerTenderAmount() >= 0){
 						sentencia.setDouble("precio_oferta_mas_baja", tr[i].getLowerTenderAmount());
 					}else{
 						sentencia.setNull("precio_oferta_mas_baja", java.sql.Types.NULL);
 					}
 					
-					if(tr[i].getHigherTenderAmount() > 0){
+					if(tr[i].getHigherTenderAmount() >= 0){
 						sentencia.setDouble("precio_oferta_mas_alta", tr[i].getHigherTenderAmount());
 					}else{
 						sentencia.setNull("precio_oferta_mas_alta", java.sql.Types.NULL);
@@ -1749,6 +1751,11 @@ public class ConexionSQL {
 						for(int j = 0; j < lmt.length; j++){
 							writeImporteDeAdjudicacion(resultado, lmt[j].getPayableAmount(), lmt[j].getTaxExclusiveAmount(), lmt[j].getCurrencyID(), entry_conn);
 						}
+					}
+					
+					// Condiciones de subcontratación
+					if (tr[i].getSubcontractTerms() != null){
+						writeCondicionesDeSubcontratacion(resultado, tr[i].getSubcontractTerms(), entry_conn);
 					}
 					
 				}
@@ -1858,6 +1865,33 @@ public class ConexionSQL {
 			sentencia.setDouble("total_sin_impuestos", sin_imp);
 			sentencia.setDouble("total_con_impuestos", con_imp);
 			sentencia.setString("currencyID", currencyID);
+			sentencia.execute();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void writeCondicionesDeSubcontratacion(int resultado, SubcontractTerms s, Connection entry_conn) throws SQLException {
+		CallableStatement sentencia = null;
+		
+		try {
+			sentencia = (CallableStatement) entry_conn.prepareCall("{call newCondicionesDeSubcontratacion(?, ?, ?)}");
+			sentencia.setInt("resultado", resultado);
+			if (s.getDescription() != null){
+				sentencia.setString("descripcion", s.getDescription());
+			}else{
+				sentencia.setString("descripcion", null);
+			}
+			if (s.getRate() >= 0){
+				sentencia.setDouble("porcentaje", s.getRate());
+			}else{
+				sentencia.setNull("porcentaje", java.sql.Types.NULL);
+			}
 			sentencia.execute();
 		} finally {
 			// Cerramos las conexiones

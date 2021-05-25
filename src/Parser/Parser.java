@@ -769,6 +769,7 @@ public class Parser {
 	public void writeContractFolderStatusCode() throws ParserConfigurationException, SAXException, TransformerException{
 		try {
 			String code = "", nombre = "";
+			int orden = 1;
 			ConexionSQL con = new ConexionSQL();
 			URL url;
 			URLConnection conexion;
@@ -797,7 +798,12 @@ public class Parser {
 	        		}
 	        	}
 	        	// Escribimos en la BD
-	        	con.writeContractFolderStatusCode(code, nombre);
+	        	if (code.compareTo("ANUL") == 0){
+		        	con.writeContractFolderStatusCode(code, nombre, 0);
+	        	}else{
+	        		con.writeContractFolderStatusCode(code, nombre, orden);
+	        		orden++;
+	        	}
 	        }
 		}catch (IOException e) {
 	        e.printStackTrace();

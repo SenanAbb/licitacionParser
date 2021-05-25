@@ -257,7 +257,6 @@ public class TenderResult {
 		}
 	}
 
-	
 	public WinningParty getWinningParty() {
 		return winningParty;
 	}
@@ -268,5 +267,9 @@ public class TenderResult {
 
 	public AwardedTenderedProject getAwardedTenderedProject() {
 		return awardedTenderedProject;
+	}
+
+	public SubcontractTerms getSubcontractTerms() {
+		return subcontractTerms;
 	}
 }

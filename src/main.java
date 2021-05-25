@@ -14,17 +14,17 @@ import Parser.Parser;
 
 public class main {
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, TransformerException, SQLException {
-//		rellenar();
-		leerDirectorio();
+		rellenar();
+//		leerDirectorio();
 //		leerArchivo();
 	}
 
 	private static void leerDirectorio() throws FileNotFoundException, SAXException, IOException, SQLException {
 		ArrayList<String> exp = new ArrayList<String>();
-		exp.add("PDT.-3.9/19");
+		//exp.add("PDT.-3.9/19");
 		exp.add("PDT.-3.8/19");
 		
-		/** PARSER DE DIRECTORIO */
+		/* PARSER DE DIRECTORIO */
 		String path = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/LicitacionParser/Licitaciones 20-21/";
 		String[] files = null;
 		
@@ -100,7 +100,7 @@ public class main {
 //		System.out.println("Language"); p.writeLanguage();
 //		System.out.println("Procurement"); p.writeProcurementLegislation();
 //		System.out.println("ContractingParty"); p.writeContractingPartyTypeCode();
-//		System.out.println("ContractFolderStatus"); p.writeContractFolderStatusCode();
+		System.out.println("ContractFolderStatus"); p.writeContractFolderStatusCode();
 //		System.out.println("TipoPliego"); p.writeTipoPliego();
 //		System.out.println("TipoPlazo"); p.writeTipoPlazo();
 //		System.out.println("FundingProgram"); p.writeFundingProgramCode();
@@ -113,7 +113,7 @@ public class main {
 //		System.out.println("TenderResult"); p.writeTenderResultCode();
 //		System.out.println("ReasonCode"); p.writeReasonCode();
 //		System.out.println("NoticeTypeCode"); p.writeNoticeTypeCode();
-		System.out.println("DocumentTypeCode"); p.writeDocumentTypeCode();
+//		System.out.println("DocumentTypeCode"); p.writeDocumentTypeCode();
 	}
 	
 	private static String[] getFiles(String path) {

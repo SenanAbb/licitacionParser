@@ -39,13 +39,13 @@ public class SubcontractTerms {
 						 "---> Amount: " + amount + "\n" +
 						 "---> Description: " + description + "\n");
 	}
-	
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	
-	public SubcontractTerms(){}
+
+	public double getRate() {
+		return rate;
+	}
+
+	public String getDescription() {
+		return description;
+	}
 
 }
