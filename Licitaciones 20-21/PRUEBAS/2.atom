@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:cbc-place-ext="urn:dgpe:names:draft:codice-place-ext:schema:xsd:CommonBasicComponents-2" xmlns:cac-place-ext="urn:dgpe:names:draft:codice-place-ext:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:dgpe:names:draft:codice:schema:xsd:CommonBasicComponents-2" xmlns:cac="urn:dgpe:names:draft:codice:schema:xsd:CommonAggregateComponents-2" xmlns:ns1="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2">
+    <author>
+        <name>Plataforma de Contratación del Sector Público</name>
+        <uri>https://contrataciondelestado.es</uri>
+        <email>contrataciondelestado@minhap.es</email>
+    </author>
+    <id>https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom</id>
+    <link href="licitacionesPerfilesContratanteCompleto3_20210104_150033_1.atom" rel="self"/>
+    <link href="licitacionesPerfilesContratanteCompleto3.atom" rel="first"/>
+    <link href="licitacionesPerfilesContratanteCompleto3_20210104_150033.atom" rel="prev"/>
+    <link href="licitacionesPerfilesContratanteCompleto3_20201231_173132.atom" rel="next"/>
+    <title>Licitaciones publicadas en la Plataforma de Contratación del Sector Público: licitacionesPerfilesContratanteCompleto v3</title>
+    <updated>2021-01-04T15:00:33.373+01:00</updated>
+
+    <entry>
+        <id>https://contrataciondelestado.es/sindicacion/licitacionesPerfilContratante/6833393</id>
+        <link href="https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&amp;idEvl=a2qBoTOGTwXnSoTX3z%2F7wA%3D%3D"/>
+        <summary type="text">Id licitación: PDT.-3.8/19; Órgano de Contratación: Presidencia de la Diputación Provincial de Málaga; Importe: 123966.94 EUR; Estado: RES</summary>
+        <title>PDT.-3.8/19.- Reparación de taludes y drenaje en la carretera MA-5402, de MA 5401 a Ardales, entre los PP.KK. 5,5 y 9,5, en la Zona del Guadalhorce.</title>
+        <updated>2021-03-24T14:44:47.716+01:00</updated>
+        <cac-place-ext:ContractFolderStatus>
+            <cbc:ContractFolderID>PDT.-3.8/19</cbc:ContractFolderID>
+            <cbc-place-ext:ContractFolderStatusCode languageID="es" listURI="https://contrataciondelestado.es/codice/cl/2.04/SyndicationContractFolderStatusCode-2.04.gc">RES</cbc-place-ext:ContractFolderStatusCode>
+            <cac-place-ext:LocatedContractingParty>
+                <cbc:ContractingPartyTypeCode listURI="http://contrataciondelestado.es/codice/cl/1.04/ContractingAuthorityCode-1.04.gc">3</cbc:ContractingPartyTypeCode>
+                <cac:Party>
+                    <cbc:WebsiteURI>http://www.malaga.es</cbc:WebsiteURI>
+                    <cac:PartyIdentification>
+                        <cbc:ID schemeName="DIR3">L02000029</cbc:ID>
+                    </cac:PartyIdentification>
+                    <cac:PartyIdentification>
+                        <cbc:ID schemeName="NIF">P2900000G</cbc:ID>
+                    </cac:PartyIdentification>
+                    <cac:PartyName>
+                        <cbc:Name>Presidencia de la Diputación Provincial de Málaga</cbc:Name>
+                    </cac:PartyName>
+                    <cac:PostalAddress>
+                        <cbc:CityName>Málaga</cbc:CityName>
+                        <cbc:PostalZone>29004</cbc:PostalZone>
+                        <cac:AddressLine>
+                            <cbc:Line>Pacífico, 54</cbc:Line>
+                        </cac:AddressLine>
+                        <cac:Country>
+                            <cbc:IdentificationCode listURI="http://docs.oasis-open.org/ubl/os-ubl-2.0/cl/gc/default/CountryIdentificationCode-2.0.gc">ES</cbc:IdentificationCode>
+                            <cbc:Name>España</cbc:Name>
+                        </cac:Country>
+                    </cac:PostalAddress>
+                    <cac:Contact>
+                        <cbc:Name>Presidencia de la Diputación Provincial de Málaga</cbc:Name>
+                        <cbc:ElectronicMail>perfil.del.contratante@malaga.es</cbc:ElectronicMail>
+                    </cac:Contact>
+                </cac:Party>
+            </cac-place-ext:LocatedContractingParty>
+            <cac:ProcurementProject>
+                <cbc:Name>PDT.-3.8/19.- Reparación de taludes y drenaje en la carretera MA-5402, de MA 5401 a Ardales, entre los PP.KK. 5,5 y 9,5, en la Zona del Guadalhorce.</cbc:Name>
+                <cbc:TypeCode listURI="http://contrataciondelestado.es/codice/cl/2.08/ContractCode-2.08.gc">3</cbc:TypeCode>
+                <cbc:SubTypeCode listURI="http://contrataciondelestado.es/codice/cl/1.04/WorksContractCode-1.04.gc">4500</cbc:SubTypeCode>
+                <cac:BudgetAmount>
+                    <cbc:EstimatedOverallContractAmount currencyID="EUR">123966.94</cbc:EstimatedOverallContractAmount>
+                    <cbc:TotalAmount currencyID="EUR">150000</cbc:TotalAmount>
+                    <cbc:TaxExclusiveAmount currencyID="EUR">123966.94</cbc:TaxExclusiveAmount>
+                </cac:BudgetAmount>
+                <cac:RequiredCommodityClassification>
+                    <cbc:ItemClassificationCode listURI="http://contrataciondelestado.es/codice/cl/1.04/CPV2007-1.04.gc">45233142</cbc:ItemClassificationCode>
+                </cac:RequiredCommodityClassification>
+                <cac:RealizedLocation>
+                    <cbc:CountrySubentity>Málaga</cbc:CountrySubentity>
+                    <cbc:CountrySubentityCode listURI="http://contrataciondelestado.es/codice/cl/2.06/NUTS-2016.gc">ES617</cbc:CountrySubentityCode>
+                    <cac:Address>
+                        <cac:Country>
+                            <cbc:IdentificationCode listURI="http://docs.oasis-open.org/ubl/os-ubl-2.0/cl/gc/default/CountryIdentificationCode-2.0.gc">ES</cbc:IdentificationCode>
+                            <cbc:Name>España</cbc:Name>
+                        </cac:Country>
+                    </cac:Address>
+                </cac:RealizedLocation>
+                <cac:PlannedPeriod>
+                    <cbc:DurationMeasure unitCode="MON">6</cbc:DurationMeasure>
+                </cac:PlannedPeriod>
+                <cac:ContractExtension>
+                    <cbc:OptionsDescription>Ver apartado K, del Anexo Nº. 1 del Pliego de Cláusulas Administrativas Particulares.</cbc:OptionsDescription>
+                    <cac:OptionValidityPeriod>
+                        <cbc:Description>No prorrogable. SI se podrá conceder ampliación del plazo de ejecución.</cbc:Description>
+                    </cac:OptionValidityPeriod>
+                </cac:ContractExtension>
+            </cac:ProcurementProject>
+            <cac:TenderResult>
+                <cbc:ResultCode listURI="http://contrataciondelestado.es/codice/cl/2.02/TenderResultCode-2.02.gc">8</cbc:ResultCode>
+                <cbc:Description>Al resultar la mejor oferta en atención a la relación calidad-precio de conformidad con el Artº. 145 de la LCSP.</cbc:Description>
+                <cbc:AwardDate>2021-03-17</cbc:AwardDate>
+                <cbc:ReceivedTenderQuantity>58</cbc:ReceivedTenderQuantity>
+                <cbc:LowerTenderAmount currencyID="EUR">0</cbc:LowerTenderAmount>
+                <cbc:HigherTenderAmount currencyID="EUR">117892.56</cbc:HigherTenderAmount>
+                <cac:Contract>
+                    <cbc:ID>016/2021</cbc:ID>
+                    <cbc:IssueDate>2021-03-24</cbc:IssueDate>
+                </cac:Contract>
+                <cac:WinningParty>
+                    <cac:PartyIdentification>
+                        <cbc:ID schemeName="NIF">B41484064</cbc:ID>
+                    </cac:PartyIdentification>
+                    <cac:PartyName>
+                        <cbc:Name>CONSTRUCCIONES GALLARDO MONTES, SLU</cbc:Name>
+                    </cac:PartyName>
+                </cac:WinningParty>
+                <cac:AwardedTenderedProject>
+                    <cac:LegalMonetaryTotal>
+                        <cbc:TaxExclusiveAmount currencyID="EUR">0</cbc:TaxExclusiveAmount>
+                        <cbc:PayableAmount currencyID="EUR">0</cbc:PayableAmount>
+                    </cac:LegalMonetaryTotal>
+                </cac:AwardedTenderedProject>
+            </cac:TenderResult>
+            <cac:TenderResult>
+                <cbc:ResultCode listURI="http://contrataciondelestado.es/codice/cl/2.02/TenderResultCode-2.02.gc">8</cbc:ResultCode>
+                <cbc:Description>(COPIA) Al resultar la mejor oferta en atención a la relación calidad-precio de conformidad con el Artº. 145 de la LCSP.</cbc:Description>
+                <cbc:AwardDate>2021-03-17</cbc:AwardDate>
+                <cbc:ReceivedTenderQuantity>58</cbc:ReceivedTenderQuantity>
+                <cbc:LowerTenderAmount currencyID="EUR">0</cbc:LowerTenderAmount>
+                <cbc:HigherTenderAmount currencyID="EUR">117892.56</cbc:HigherTenderAmount>
+                <cac:Contract>
+                    <cbc:ID>016/2021</cbc:ID>
+                    <cbc:IssueDate>2021-03-24</cbc:IssueDate>
+                </cac:Contract>
+                <cac:WinningParty>
+                    <cac:PartyIdentification>
+                        <cbc:ID schemeName="NIF">B41484064</cbc:ID>
+                    </cac:PartyIdentification>
+                    <cac:PartyName>
+                        <cbc:Name>CONSTRUCCIONES GALLARDO MONTES, SLU</cbc:Name>
+                    </cac:PartyName>
+                </cac:WinningParty>
+                <cac:AwardedTenderedProject>
+                    <cac:LegalMonetaryTotal>
+                        <cbc:TaxExclusiveAmount currencyID="EUR">0</cbc:TaxExclusiveAmount>
+                        <cbc:PayableAmount currencyID="EUR">0</cbc:PayableAmount>
+                    </cac:LegalMonetaryTotal>
+                </cac:AwardedTenderedProject>
+            </cac:TenderResult>
+            <cac:TenderingTerms>
+                <cbc:RequiredCurriculaIndicator>false</cbc:RequiredCurriculaIndicator>
+                <cbc:VariantConstraintIndicator>false</cbc:VariantConstraintIndicator>
+                <cbc:PriceRevisionFormulaDescription>No procede.</cbc:PriceRevisionFormulaDescription>
+                <cbc:FundingProgramCode listURI="http://contrataciondelestado.es/codice/cl/2.02/FundingProgramCode-2.02.gc">EU</cbc:FundingProgramCode>
+                <cbc:FundingProgram>Programa de Desarrollo Rural de Andalucía 2014-2020. Fondo Europeo Agrícola de Desarrollo Rural (FEADER). Resolución de 9 de Octubre de 2020, de la Dirección General de Industrias, Innovación y Cadena Agroalimentaria de la Consejería de Agricultura, Ganadería, Pesca y Desarrollo Sostenible de la Junta de Andalucía, por la que se concede una ayuda pública por importe de 100.000,00 € prevista en las estrategias de Desarrollo Local LEADER en el marco de la Submedida 19.2 del Programa de Desarrollo Rural de Andalucía 2014-2020, Convocatoria 2018, Línea de Ayuda 1 “Modernización y Adaptación de los municipios rurales, Conservación y Protección del Patrimonio Rural y Lucha contra el Cambio Climático en la Comarca Nororiental de Málaga”. </cbc:FundingProgram>
+                
+                <cac:RequiredFinancialGuarantee>
+                    <cbc:GuaranteeTypeCode listURI="http://contrataciondelestado.es/codice/cl/1.04/GuaranteeTypeCode-1.04.gc">2</cbc:GuaranteeTypeCode>
+                    <cbc:AmountRate>5</cbc:AmountRate>
+                </cac:RequiredFinancialGuarantee>
+                <cac:RequiredFinancialGuarantee>
+                    <cbc:GuaranteeTypeCode listURI="http://contrataciondelestado.es/codice/cl/1.04/GuaranteeTypeCode-1.04.gc">3</cbc:GuaranteeTypeCode>
+                    <cbc:AmountRate>10</cbc:AmountRate>
+                </cac:RequiredFinancialGuarantee>
+                <cac:ProcurementLegislationDocumentReference>
+                    <cbc:ID>2014/24/EU</cbc:ID>
+                </cac:ProcurementLegislationDocumentReference>
+                <cac:TendererQualificationRequest>
+                    <cac:TechnicalEvaluationCriteria>
+                        <cbc:EvaluationCriteriaTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.0/TechnicalCapabilityTypeCode-2.0.gc">OSR-COMPTASK</cbc:EvaluationCriteriaTypeCode>
+                        <cbc:Description>Ver el punto 4.2 del Anexo Nº. 4 del Pliego de Cláusulas Administrativas Particulares.</cbc:Description>
+                    </cac:TechnicalEvaluationCriteria>
+                    <cac:TechnicalEvaluationCriteria>
+                        <cbc:EvaluationCriteriaTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.0/TechnicalCapabilityTypeCode-2.0.gc">OSR-COMPTASK</cbc:EvaluationCriteriaTypeCode>
+                        <cbc:Description>Ver el punto 4.3 del Anexo Nº. 5 del Pliego de Cláusulas Administrativas Particulares.</cbc:Description>
+                    </cac:TechnicalEvaluationCriteria>
+                    <cac:FinancialEvaluationCriteria>
+                        <cbc:EvaluationCriteriaTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.0/FinancialCapabilityTypeCode-2.0.gc">5</cbc:EvaluationCriteriaTypeCode>
+                        <cbc:Description>Ver el punto 4.1 del Anexo Nº. 4 del Pliego de Cláusulas Administrativas Particulares.</cbc:Description>
+                    </cac:FinancialEvaluationCriteria>
+                    <cac:SpecificTendererRequirement>
+                        <cbc:RequirementTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.08/DeclarationTypeCode-2.08.gc">1</cbc:RequirementTypeCode>
+                    </cac:SpecificTendererRequirement>
+                </cac:TendererQualificationRequest>
+                <cac:AllowedSubcontractTerms>
+                    <cbc:Description>Si se puede subcontratar y no hay obligación de indicar en la oferta la parte del contrato que tenga previsto subcontratar. Ver apartado S, del Anexo Nº. 1 del Pliego de Cláusulas Administrativas Particulares.</cbc:Description>
+                </cac:AllowedSubcontractTerms>
+                <cac:AwardingTerms>
+                    <cac:AwardingCriteria>
+                        <cbc:Description>Proposición económica.</cbc:Description>
+                        <cbc:WeightNumeric>100</cbc:WeightNumeric>
+                    </cac:AwardingCriteria>
+                    <cac:AwardingCriteria>
+                        <cbc:Description>Ampliación del plazo de garantía.</cbc:Description>
+                        <cbc:WeightNumeric>100</cbc:WeightNumeric>
+                    </cac:AwardingCriteria>
+                </cac:AwardingTerms>
+                <cac:Language>
+                    <cbc:ID>es</cbc:ID>
+                </cac:Language>
+            </cac:TenderingTerms>
+            <cac:TenderingProcess>
+                <cbc:ProcedureCode listURI="https://contrataciondelestado.es/codice/cl/2.07/SyndicationTenderingProcessCode-2.07.gc">9</cbc:ProcedureCode>
+                <cbc:UrgencyCode listURI="http://contrataciondelestado.es/codice/cl/1.04/DiligenceTypeCode-1.04.gc">2</cbc:UrgencyCode>
+                <cbc:ContractingSystemCode listURI="http://contrataciondelestado.es/codice/cl/2.08/ContractingSystemTypeCode-2.08.gc">0</cbc:ContractingSystemCode>
+                <cbc:SubmissionMethodCode listURI="http://contrataciondelestado.es/codice/cl/1.04/TenderDeliveryCode-1.04.gc">1</cbc:SubmissionMethodCode>
+                <cac:DocumentAvailabilityPeriod>
+                    <cbc:EndDate>2021-01-01</cbc:EndDate>
+                    <cbc:EndTime>23:59:00</cbc:EndTime>
+                </cac:DocumentAvailabilityPeriod>
+                <cac:TenderSubmissionDeadlinePeriod>
+                    <cbc:EndDate>2021-01-19</cbc:EndDate>
+                    <cbc:EndTime>14:00:00</cbc:EndTime>
+                </cac:TenderSubmissionDeadlinePeriod>
+                <cac:ParticipationRequestReceptionPeriod>
+                    <cbc:EndDate>2021-01-25</cbc:EndDate>
+                    <cbc:EndTime>10:00:00</cbc:EndTime>
+                </cac:ParticipationRequestReceptionPeriod>
+                <cac:AuctionTerms>
+                    <cbc:AuctionConstraintIndicator>false</cbc:AuctionConstraintIndicator>
+                </cac:AuctionTerms>
+                <cac:ProcessJustification>
+                    <cbc:ReasonCode languageID="es" listURI="http://contrataciondelestado.es/codice/cl/2.0/ProcessJustificationReasonCode2.0.gc" listVersionID="2.0" name="Proveedor único por razones artísticas">c2</cbc:ReasonCode>
+                    <cbc:Description>La Real Fabrica de Tapices es la única que puede garantizar la realización en la calidad, diseño y plazos previstos.</cbc:Description>
+                </cac:ProcessJustification>
+            </cac:TenderingProcess>
+            <cac:ContractModification>
+                <cbc:ID>1</cbc:ID>
+                <cbc:ContractID>2020/CON_01/000009</cbc:ContractID>
+                <cac:ContractModificationLegalMonetaryTotal>
+                    <cbc:TaxExclusiveAmount currencyID="EUR">7000</cbc:TaxExclusiveAmount>
+                </cac:ContractModificationLegalMonetaryTotal>
+                <cac:FinalLegalMonetaryTotal>
+                    <cbc:TaxExclusiveAmount currencyID="EUR">184278.89</cbc:TaxExclusiveAmount>
+                </cac:FinalLegalMonetaryTotal>
+            </cac:ContractModification>
+            <cac:ContractModification>
+                <cbc:ID>2</cbc:ID>
+                <cbc:ContractID>(COPIA)2020/CON_01/000009</cbc:ContractID>
+                <cac:ContractModificationLegalMonetaryTotal>
+                    <cbc:TaxExclusiveAmount currencyID="EUR">7000</cbc:TaxExclusiveAmount>
+                </cac:ContractModificationLegalMonetaryTotal>
+                <cac:FinalLegalMonetaryTotal>
+                    <cbc:TaxExclusiveAmount currencyID="EUR">184278.89</cbc:TaxExclusiveAmount>
+                </cac:FinalLegalMonetaryTotal>
+            </cac:ContractModification>
+            <cac:LegalDocumentReference>
+                <cbc:ID>Pliego de Clausulas Administrativas PDT-3-8-19.pdf</cbc:ID>
+                <cac:Attachment>
+                    <cac:ExternalReference>
+                        <cbc:URI>https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?srv=cmpnt&amp;cmpntname=GetDocumentsById&amp;source=library&amp;DocumentIdParam=30ee3f29-46c8-4f62-ad71-81e687ad7ffb</cbc:URI>
+                        <cbc:DocumentHash>L2J5tW3kGVbWMkl04z9gb1xlDU4=</cbc:DocumentHash>
+                    </cac:ExternalReference>
+                </cac:Attachment>
+            </cac:LegalDocumentReference>
+            <cac:TechnicalDocumentReference>
+                <cbc:ID>Pliego de Prescripciones Tecnicas PDT-3-8-19.pdf</cbc:ID>
+                <cac:Attachment>
+                    <cac:ExternalReference>
+                        <cbc:URI>https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?srv=cmpnt&amp;cmpntname=GetDocumentsById&amp;source=library&amp;DocumentIdParam=087d5366-d108-47de-8738-ce4a9b48778a</cbc:URI>
+                        <cbc:DocumentHash>1P4xGk3pY1QQ4qGOP4qIFBUWRNQ=</cbc:DocumentHash>
+                    </cac:ExternalReference>
+                </cac:Attachment>
+            </cac:TechnicalDocumentReference>
+            <cac:AdditionalDocumentReference>
+                <cbc:ID>Proyectos PDT-3-8-19.zip</cbc:ID>
+                <cac:Attachment>
+                    <cac:ExternalReference>
+                        <cbc:URI>https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?srv=cmpnt&amp;cmpntname=GetDocumentsById&amp;source=library&amp;DocumentIdParam=1bee54d5-c556-4f75-a789-6fbc2c3e9e33</cbc:URI>
+                        <cbc:DocumentHash>9z3xmshsNU2i5W/nF5JDgH1qXzY=</cbc:DocumentHash>
+                    </cac:ExternalReference>
+                </cac:Attachment>
+            </cac:AdditionalDocumentReference>
+            <cac:AdditionalDocumentReference>
+                <cbc:ID>Anexos del Pliego de Clausulas Administrativas PDT-3-8-19.pdf</cbc:ID>
+                <cac:Attachment>
+                    <cac:ExternalReference>
+                        <cbc:URI>https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?srv=cmpnt&amp;cmpntname=GetDocumentsById&amp;source=library&amp;DocumentIdParam=35178f18-c920-4180-9efa-4380e1ac195f</cbc:URI>
+                        <cbc:DocumentHash>O72fqEPZwowY6Eai0bUVIYC+XL0=</cbc:DocumentHash>
+                    </cac:ExternalReference>
+                </cac:Attachment>
+            </cac:AdditionalDocumentReference>
+            <cac-place-ext:ValidNoticeInfo>
+                <cbc-place-ext:NoticeTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.04/TenderingNoticeTypeCode-2.04.gc">DOC_CAN_ADJ</cbc-place-ext:NoticeTypeCode>
+                <cac-place-ext:AdditionalPublicationStatus>
+                    <cbc-place-ext:PublicationMediaName>Perfil del Contratante</cbc-place-ext:PublicationMediaName>
+                    <cac-place-ext:AdditionalPublicationDocumentReference>
+                        <cbc:IssueDate>2021-03-22</cbc:IssueDate>
+                    </cac-place-ext:AdditionalPublicationDocumentReference>
+                    <cac-place-ext:AdditionalPublicationDocumentReference>
+                        <cbc:DocumentTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.07/TenderingDocumentTypeCode-2.07.gc" name="Documento de Acta de Adjudicación">ACTA_ADJ</cbc:DocumentTypeCode>
+                        <cac:Attachment>
+                            <cac:ExternalReference>
+                                <cbc:URI>https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?srv=cmpnt&amp;cmpntname=GetDocumentsById&amp;source=library&amp;DocumentIdParam=f63b92eb-5bda-47ac-b376-4e55960859a6</cbc:URI>
+                                <cbc:FileName>Notificacion Decreto de adjudicacion PDT-3-8-19.pdf</cbc:FileName>
+                            </cac:ExternalReference>
+                        </cac:Attachment>
+                    </cac-place-ext:AdditionalPublicationDocumentReference>
+                </cac-place-ext:AdditionalPublicationStatus>
+            </cac-place-ext:ValidNoticeInfo>
+            <cac-place-ext:ValidNoticeInfo>
+                <cbc-place-ext:NoticeTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.04/TenderingNoticeTypeCode-2.04.gc">DOC_CD</cbc-place-ext:NoticeTypeCode>
+                <cac-place-ext:AdditionalPublicationStatus>
+                    <cbc-place-ext:PublicationMediaName>Perfil del Contratante</cbc-place-ext:PublicationMediaName>
+                    <cac-place-ext:AdditionalPublicationDocumentReference>
+                        <cbc:IssueDate>2020-12-30</cbc:IssueDate>
+                    </cac-place-ext:AdditionalPublicationDocumentReference>
+                </cac-place-ext:AdditionalPublicationStatus>
+            </cac-place-ext:ValidNoticeInfo>
+            <cac-place-ext:ValidNoticeInfo>
+                <cbc-place-ext:NoticeTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.04/TenderingNoticeTypeCode-2.04.gc">DOC_CN</cbc-place-ext:NoticeTypeCode>
+                <cac-place-ext:AdditionalPublicationStatus>
+                    <cbc-place-ext:PublicationMediaName>Perfil del Contratante</cbc-place-ext:PublicationMediaName>
+                    <cac-place-ext:AdditionalPublicationDocumentReference>
+                        <cbc:IssueDate>2020-12-30</cbc:IssueDate>
+                    </cac-place-ext:AdditionalPublicationDocumentReference>
+                </cac-place-ext:AdditionalPublicationStatus>
+            </cac-place-ext:ValidNoticeInfo>
+            <cac-place-ext:ValidNoticeInfo>
+                <cbc-place-ext:NoticeTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.04/TenderingNoticeTypeCode-2.04.gc">DOC_FORM</cbc-place-ext:NoticeTypeCode>
+                <cac-place-ext:AdditionalPublicationStatus>
+                    <cbc-place-ext:PublicationMediaName>Perfil del Contratante</cbc-place-ext:PublicationMediaName>
+                    <cac-place-ext:AdditionalPublicationDocumentReference>
+                        <cbc:IssueDate>2021-03-24</cbc:IssueDate>
+                    </cac-place-ext:AdditionalPublicationDocumentReference>
+                    <cac-place-ext:AdditionalPublicationDocumentReference>
+                        <cbc:DocumentTypeCode listURI="http://contrataciondelestado.es/codice/cl/2.07/TenderingDocumentTypeCode-2.07.gc" name="Documento de Acta de Formalización">ACTA_FORM</cbc:DocumentTypeCode>
+                        <cac:Attachment>
+                            <cac:ExternalReference>
+                                <cbc:URI>https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?srv=cmpnt&amp;cmpntname=GetDocumentsById&amp;source=library&amp;DocumentIdParam=ba8f3507-3a63-42c4-bc5a-f8e439a3e1a9</cbc:URI>
+                                <cbc:FileName>Contrato administrativo formalizado el dia 24-03-21 de la obra PDT-3-8-19.pdf</cbc:FileName>
+                            </cac:ExternalReference>
+                        </cac:Attachment>
+                    </cac-place-ext:AdditionalPublicationDocumentReference>
+                </cac-place-ext:AdditionalPublicationStatus>
+            </cac-place-ext:ValidNoticeInfo>
+            <cac-place-ext:GeneralDocument>
+                <cac-place-ext:GeneralDocumentDocumentReference>
+                    <cbc:ID>03604561-df46-486f-931a-48febacf363e</cbc:ID>
+                    <cac:Attachment>
+                        <cac:ExternalReference>
+                            <cbc:URI>https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?srv=cmpnt&amp;cmpntname=GetDocumentsById&amp;source=library&amp;DocumentIdParam=03604561-df46-486f-931a-48febacf363e</cbc:URI>
+                            <cbc:FileName>Rectificación de acuerdo de convocatoria de licitación y aprobación pliegos y proyecto.</cbc:FileName>
+                        </cac:ExternalReference>
+                    </cac:Attachment>
+                </cac-place-ext:GeneralDocumentDocumentReference>
+            </cac-place-ext:GeneralDocument>
+            <cac-place-ext:GeneralDocument>
+                <cac-place-ext:GeneralDocumentDocumentReference>
+                    <cbc:ID>891ca740-ea63-4a21-a9c3-f5c7613bff57</cbc:ID>
+                    <cac:Attachment>
+                        <cac:ExternalReference>
+                            <cbc:URI>https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?srv=cmpnt&amp;cmpntname=GetDocumentsById&amp;source=library&amp;DocumentIdParam=891ca740-ea63-4a21-a9c3-f5c7613bff57</cbc:URI>
+                            <cbc:FileName>Información para presentación de ofertas y subsanaciones, etc.</cbc:FileName>
+                        </cac:ExternalReference>
+                    </cac:Attachment>
+                </cac-place-ext:GeneralDocumentDocumentReference>
+            </cac-place-ext:GeneralDocument>
+            <cac-place-ext:GeneralDocument>
+                <cac-place-ext:GeneralDocumentDocumentReference>
+                    <cbc:ID>53b33db9-287b-45f8-a95e-dcd6b54c546c</cbc:ID>
+                    <cac:Attachment>
+                        <cac:ExternalReference>
+                            <cbc:URI>https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?srv=cmpnt&amp;cmpntname=GetDocumentsById&amp;source=library&amp;DocumentIdParam=53b33db9-287b-45f8-a95e-dcd6b54c546c</cbc:URI>
+                            <cbc:FileName>Informe de inicio</cbc:FileName>
+                        </cac:ExternalReference>
+                    </cac:Attachment>
+                </cac-place-ext:GeneralDocumentDocumentReference>
+            </cac-place-ext:GeneralDocument>
+            <cac-place-ext:GeneralDocument>
+                <cac-place-ext:GeneralDocumentDocumentReference>
+                    <cbc:ID>4a16f3db-ee55-4f1b-9a6a-3095a20149a2</cbc:ID>
+                    <cac:Attachment>
+                        <cac:ExternalReference>
+                            <cbc:URI>https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?srv=cmpnt&amp;cmpntname=GetDocumentsById&amp;source=library&amp;DocumentIdParam=4a16f3db-ee55-4f1b-9a6a-3095a20149a2</cbc:URI>
+                            <cbc:FileName>Acuerdo de convocatoria de licitación y aprobación pliegos y proyecto.</cbc:FileName>
+                        </cac:ExternalReference>
+                    </cac:Attachment>
+                </cac-place-ext:GeneralDocumentDocumentReference>
+            </cac-place-ext:GeneralDocument>
+            <cac-place-ext:GeneralDocument>
+                <cac-place-ext:GeneralDocumentDocumentReference>
+                    <cbc:ID>DOC1</cbc:ID>
+                    <cac:Attachment>
+                        <cac:ExternalReference>
+                            <cbc:URI>https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?srv=cmpnt&amp;cmpntname=GetDocumentsById&amp;source=library&amp;DocumentIdParam=4a16f3db-ee55-4f1b-9a6a-3095a20149a2</cbc:URI>
+                            <cbc:FileName>Acuerdo de convocatoria de licitación y aprobación pliegos y proyecto.</cbc:FileName>
+                        </cac:ExternalReference>
+                    </cac:Attachment>
+                </cac-place-ext:GeneralDocumentDocumentReference>
+            </cac-place-ext:GeneralDocument>
+            <cac-place-ext:GeneralDocument>
+                <cac-place-ext:GeneralDocumentDocumentReference>
+                    <cbc:ID>DOC2</cbc:ID>
+                    <cac:Attachment>
+                        <cac:ExternalReference>
+                            <cbc:URI>https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?srv=cmpnt&amp;cmpntname=GetDocumentsById&amp;source=library&amp;DocumentIdParam=4a16f3db-ee55-4f1b-9a6a-3095a20149a2</cbc:URI>
+                            <cbc:FileName>Acuerdo de convocatoria de licitación y aprobación pliegos y proyecto.</cbc:FileName>
+                        </cac:ExternalReference>
+                    </cac:Attachment>
+                </cac-place-ext:GeneralDocumentDocumentReference>
+            </cac-place-ext:GeneralDocument>
+            <cac-place-ext:GeneralDocument>
+                <cac-place-ext:GeneralDocumentDocumentReference>
+                    <cbc:ID>DOC3</cbc:ID>
+                    <cac:Attachment>
+                        <cac:ExternalReference>
+                            <cbc:URI>https://contrataciondelestado.es/wps/wcm/connect/PLACE_es/Site/area/docAccCmpnt?srv=cmpnt&amp;cmpntname=GetDocumentsById&amp;source=library&amp;DocumentIdParam=4a16f3db-ee55-4f1b-9a6a-3095a20149a2</cbc:URI>
+                            <cbc:FileName>Acuerdo de convocatoria de licitación y aprobación pliegos y proyecto.</cbc:FileName>
+                        </cac:ExternalReference>
+                    </cac:Attachment>
+                </cac-place-ext:GeneralDocumentDocumentReference>
+            </cac-place-ext:GeneralDocument>
+        </cac-place-ext:ContractFolderStatus>
+    </entry>
+
+</feed>

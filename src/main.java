@@ -14,18 +14,20 @@ import Parser.Parser;
 
 public class main {
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, TransformerException, SQLException {
-		rellenar();
-//		leerDirectorio();
-//		leerArchivo();
+		boolean primera_lectura = false;
+		
+//		rellenar();
+		leerDirectorio(primera_lectura);
+//		leerArchivo(primera_lectura);
 	}
 
-	private static void leerDirectorio() throws FileNotFoundException, SAXException, IOException, SQLException {
+	private static void leerDirectorio(boolean primera_lectura) throws FileNotFoundException, SAXException, IOException, SQLException, ParserConfigurationException {
 		ArrayList<String> exp = new ArrayList<String>();
 		//exp.add("PDT.-3.9/19");
 		exp.add("PDT.-3.8/19");
 		
 		/* PARSER DE DIRECTORIO */
-		String path = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/LicitacionParser/Licitaciones 20-21/";
+		String path = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/LicitacionParser/Licitaciones 20-21/PRUEBAS/";
 		String[] files = null;
 		
 		File f = new File(path);
@@ -45,8 +47,8 @@ public class main {
                 	System.out.println("==============");
                 	File file = new File(sub_path);
                 	p.setURL(file);
-                	//p.start();
-                	p.readEntries();           
+                	p.readUpdateDate();
+                	p.readEntries(primera_lectura);           
 		    	}else{
 		    		System.out.println("----> " + listado[i].getName() + " <-----");
 		    		files = getFiles(sub_path);
@@ -59,8 +61,8 @@ public class main {
 		                	System.out.println("==============");
 		                	File file = new File(files[j]);
 		                	p.setURL(file);
-		                	//p.start();
-		                	p.readEntries();
+		                	p.readUpdateDate();
+		                	p.readEntries(primera_lectura);
 		                }
 		            }
 		    	}
@@ -68,7 +70,7 @@ public class main {
 		}
 	}
 	
-	private static void leerArchivo() throws FileNotFoundException, ParserConfigurationException, SAXException, IOException, SQLException{
+	private static void leerArchivo(boolean primera_lectura) throws FileNotFoundException, ParserConfigurationException, SAXException, IOException, SQLException{
 		/** PARSER DE UN SOLO ARCHIVO */
 		String URL = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/Documentacion/Informacion/pruebas_licitacion.atom";
 		//String URL = "Licitaciones 20-21/2020_12/licitacionesPerfilesContratanteCompleto3_20201230_181906_1";
@@ -78,9 +80,8 @@ public class main {
 		
 		Parser p = new Parser();
 		p.setURL(new File(URL));
-		
-		p.start();
-		p.readEntries();
+    	p.readUpdateDate();
+		p.readEntries(primera_lectura);
 	}
 	
 	private static void rellenar() throws ParserConfigurationException, SAXException, TransformerException{
@@ -100,7 +101,7 @@ public class main {
 //		System.out.println("Language"); p.writeLanguage();
 //		System.out.println("Procurement"); p.writeProcurementLegislation();
 //		System.out.println("ContractingParty"); p.writeContractingPartyTypeCode();
-		System.out.println("ContractFolderStatus"); p.writeContractFolderStatusCode();
+//		System.out.println("ContractFolderStatus"); p.writeContractFolderStatusCode();
 //		System.out.println("TipoPliego"); p.writeTipoPliego();
 //		System.out.println("TipoPlazo"); p.writeTipoPlazo();
 //		System.out.println("FundingProgram"); p.writeFundingProgramCode();

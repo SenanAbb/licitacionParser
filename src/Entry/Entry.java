@@ -1,14 +1,9 @@
 package Entry;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import org.w3c.dom.Element;
 
-import com.mysql.cj.jdbc.CallableStatement;
-
-import Conexion.ConexionSQL;
 import ContractFolderStatus.ContractFolderStatus;
 
 /**

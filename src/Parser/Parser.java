@@ -45,7 +45,7 @@ public class Parser {
 	private String NIF = "";
 	private File URL;
 	
-	private String updated;
+	private Timestamp updated;
 	private String selfLink, nextLink;
 	private int entryCont = 0;
 	private ArrayList<Entry> entries = new ArrayList<Entry>();
@@ -57,7 +57,7 @@ public class Parser {
 	/* Si escribir = true -> escribirá los datos en la BD */
 	private boolean escribir = true;
 
-	public void readEntries() throws SQLException{
+	public void readEntries(boolean primera_lectura) throws SQLException{
 		try {
     		//Iniciamos el DocumentBuilderFactory;
 			Document document = initDocumentBuilder(this.URL);
@@ -78,15 +78,15 @@ public class Parser {
 					if (modo_identificacion == "NIF"){
 						result = getEntryPartyID(e);
 						if (result.compareTo(NIF) == 0){
-							readAttributesAndWrite(e);
+							readAttributesAndWrite(e, primera_lectura);
 						}
 					}else if (modo_identificacion == "EXP"){
 						result = getEntryExp(e);
 						if (expedientes.contains(result)){
-							readAttributesAndWrite(e);
+							readAttributesAndWrite(e, primera_lectura);
 						}
 					}else{
-						readAttributesAndWrite(e);		
+						readAttributesAndWrite(e, primera_lectura);		
 					}
 				}
 			}else{
@@ -97,7 +97,7 @@ public class Parser {
 		}
 	}
 	
-	private void readAttributesAndWrite(Element e) throws SQLException {
+	private void readAttributesAndWrite(Element e, boolean primera_lectura) throws SQLException {
 		String[] idSplit = null;
 		String id = null, entryId = null, entryLink = null, entrySummary = null, entryTitle = null;
 		Timestamp entryUpdate = null;
@@ -162,17 +162,11 @@ public class Parser {
 		
 		if (escribir){
 			ConexionSQL conn = new ConexionSQL();
-			
-			conn.writeExpediente(newEntry, ids);
+			conn.writeExpediente(newEntry, ids, updated, primera_lectura);
 		}
 	}
-
-	public void start() throws FileNotFoundException, ParserConfigurationException, SAXException, IOException{
-		readUpdateDate();
-		readLinks();
-	}
 	
-	private void readUpdateDate() throws FileNotFoundException, ParserConfigurationException, SAXException, IOException{
+	public void readUpdateDate() throws FileNotFoundException, ParserConfigurationException, SAXException, IOException{
 		try {
 			//Iniciamos el DocumentBuilderFactory;
 			Document document = initDocumentBuilder(this.URL);
@@ -182,7 +176,10 @@ public class Parser {
 			
 			if (nodos.getLength() > 0){
 				//Como sabemos que solo vamos a encontrar uno, lo almacenamos directamente
-				updated = nodos.item(POS_UNICO_ELEMENTO).getTextContent();
+				String date= nodos.item(POS_UNICO_ELEMENTO).getTextContent().replace("T", " ");
+				date = date.substring(0, date.indexOf("+"));
+				
+				updated = Timestamp.valueOf(date);
 			}else{
 				throw new NullPointerException();
 			}
@@ -191,7 +188,7 @@ public class Parser {
 		}
 	}
 	
-	private void readLinks() throws FileNotFoundException, ParserConfigurationException, SAXException, IOException{
+	public void readLinks() throws FileNotFoundException, ParserConfigurationException, SAXException, IOException{
 		String ID;
 		
 		try {
@@ -227,7 +224,206 @@ public class Parser {
 		}
 	}
 	
-	/* TYPE CODES */
+	public void init(){
+		
+	}
+	
+	
+	/******************/
+	/** CONSTRUCTORS **/
+	/******************/
+
+	// Filtro por NIF
+	public Parser(String URL, String NIF, String modo){
+		this.URL = new File(URL);
+		this.NIF = NIF;
+		this.modo_identificacion = modo;
+		this.ids = createIds();
+	}
+	
+	// Filtro por nº de expediente
+	public Parser(String URL, ArrayList<String> exp, String modo){
+		this.URL = new File(URL);
+		this.expedientes = exp;
+		this.modo_identificacion = modo;
+		this.ids = createIds();
+	}
+	
+	// Filtro por nº de expediente sin URL
+	public Parser(ArrayList<String> exp, String modo){
+		this.expedientes = exp;
+		this.modo_identificacion = modo;
+		this.ids = createIds();
+	}
+	
+	// Sin nada (leemos todo)
+	public Parser(){
+		this.ids = createIds();
+	};
+	
+	
+	/**********************/
+	/** AUXILIARY METHODS**/
+	/**********************/
+	
+	/* Creación de un IDS -> información sobre esta ejecución del Parser */
+	private int createIds(){
+		int ids = 0;
+		ConexionSQL sql = new ConexionSQL();
+		Connection conn = sql.conectarMySQL();
+		CallableStatement sentencia = null;
+		
+		try{
+			sentencia = (CallableStatement) conn.prepareCall("{call newIds(?, ?)}");
+			
+			// Parametro 1 del procedimiento almacenado
+			sentencia.setInt("modos_id", MODO_MANUAL);
+			
+			// Definimos los tipos de los params de salida del procedimiento almacenado
+			sentencia.registerOutParameter("ids", java.sql.Types.INTEGER);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+			// Se obtiene la salida
+			ids = sentencia.getInt("ids");
+		} catch (SQLException e) {
+			System.out.println("Error para rollback: " + e.getMessage());
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return ids;
+	}
+	
+	/* Comprobación del identificador (NIF) del entry, para ver si es válido o no */
+ 	private String getEntryPartyID(Element e){
+		String ID = "";
+		
+		// Busco el ContractFolderStatus -> Sabemos que solo hay uno
+		Element cfs = (Element)e.getElementsByTagName("cac-place-ext:ContractFolderStatus").item(POS_UNICO_ELEMENTO);
+		if (cfs != null){
+			
+			// Dentro del ContractFolderStatus, busco el LocatedContractingParty -> Sabemos que solo hay uno
+			Element lcp = (Element) cfs.getElementsByTagName("cac-place-ext:LocatedContractingParty").item(POS_UNICO_ELEMENTO);
+			if (lcp != null){
+				
+				// Dentro del LocatedContractingParty, busco el Party -> Sabemos que solo hay uno
+				Element party = (Element) lcp.getElementsByTagName("cac:Party").item(POS_UNICO_ELEMENTO);
+				if (party != null){
+					
+					// Dentro del Party, busco PartyIdentification, del cual pueden haber: minimo 1, maximo 3
+					NodeList PIDNodeList = party.getElementsByTagName("cac:PartyIdentification");
+					if (PIDNodeList.getLength() > 0){
+						
+						// Recorro la lista, y busco el NIF
+						for (int i = 0; i < PIDNodeList.getLength(); i++){
+							// Cojo el bloque <cac:PartyIdentification>
+							Element partyIdentification = (Element) PIDNodeList.item(i);
+							// Busco en sus hijos el ID -> Sabemos que por cada PartyIdentification solo vendra un ID
+							Element PID = (Element) partyIdentification.getElementsByTagName("cbc:ID").item(POS_UNICO_ELEMENTO);
+							// Miramos si el schemeName es NIF, en caso contrario pasamos al siguiente
+							if (PID.getAttributes().getNamedItem("schemeName").getTextContent().compareTo("NIF") == 0){
+								ID = PID.getTextContent();
+							}
+						}
+						
+					}else{
+						throw new NullPointerException("ENTRY -> CONTRACT FOLDER STATUS -> LOCATED CONTRACTING PARTY -> PARTY -> PARTY IDENTIFICATION no existe, no se puede obtener la identificación del entry");
+					}
+					
+				}else{
+					throw new NullPointerException("ENTRY -> CONTRACT FOLDER STATUS -> LOCATED CONTRACTING PARTY -> PARTY no existe, no se puede obtener la identificación del entry");
+				}
+				
+			}else{
+				throw new NullPointerException("ENTRY -> CONTRACT FOLDER STATUS -> LOCATED CONTRACTING PARTY no existe, no se puede obtener la identificación del entry");
+			}
+			
+		}else{
+			throw new NullPointerException("ENTRY -> CONTRACT FOLDER STATUS no existe, no se puede obtener la identificación del entry");
+		}
+		
+		return ID;
+	}
+	
+ 	private String getEntryExp(Element e) {
+ 		String exp = "";
+		
+		// Busco el ContractFolderStatus -> Sabemos que solo hay uno
+		Element cfs = (Element)e.getElementsByTagName("cac-place-ext:ContractFolderStatus").item(POS_UNICO_ELEMENTO);
+		if (cfs != null){
+			// Dentro del ContractFolderStatus, busco el ContractFolderID -> Sabemos que solo hay uno
+			Element cfid = (Element) cfs.getElementsByTagName("cbc:ContractFolderID").item(POS_UNICO_ELEMENTO);
+			if (cfid != null){
+				exp = cfid.getTextContent();
+			}else{
+				throw new NullPointerException("ENTRY -> CONTRACT FOLDER STATUS -> LOCATED CONTRACTING PARTY no existe, no se puede obtener la identificación del entry");
+			}
+		}else{
+			throw new NullPointerException("ENTRY -> CONTRACT FOLDER STATUS no existe, no se puede obtener la identificación del entry");
+		}
+	
+		return exp;
+	}
+ 	
+	/* Reconstrucción del link */
+	private String rebuildLink(String ID, String href) {
+		String result = "";
+		String[] splited = ID.split("/");
+		int cont = 0;
+		
+		splited[splited.length-1] = href;
+		while (cont < splited.length-1){
+			result += splited[cont] + "/";
+			cont++;
+		}
+		result += splited[splited.length-1];
+		
+		return result;
+	}
+	
+	private Document initDocumentBuilder(File url) throws ParserConfigurationException, SAXException, IOException, FileNotFoundException{
+		Document document = null;
+		try{
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
+            document = documentBuilder.parse(url);
+            document.getDocumentElement().normalize();
+		}catch (FileNotFoundException e){
+			throw e;
+		}
+		return document;
+	}
+	
+	public void printData(){
+		System.out.println("*************************************");
+		System.out.println("Link actual: " + selfLink);
+		System.out.println("En este archivo hay un total de " + entryCont + " entries, de los cuales " + entries.size() + " son válidos.");
+		System.out.println("Fecha de actualización: " + updated);
+		System.out.println("*************************************");
+		System.out.println("Las entries son: ");
+		for (Entry e : entries){
+			System.out.println("ID: " + e.getId());
+			System.out.println("Fecha de actualización: " + e.getUpdated());
+			System.out.println("------------");
+		}
+		System.out.println("Link siguiente: " + nextLink);
+	}
+
+	public void setURL(File file) {
+		this.URL = file;
+	}
+
+	
+	/** TYPE CODES */
 	
 	public void writeSubtypeCodes() throws ParserConfigurationException, SAXException, TransformerException {
 		try {
@@ -1283,200 +1479,5 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-
-	// Filtro por NIF
-	public Parser(String URL, String NIF, String modo){
-		this.URL = new File(URL);
-		this.NIF = NIF;
-		this.modo_identificacion = modo;
-		this.ids = createIds();
-	}
-	
-	// Filtro por nº de expediente
-	public Parser(String URL, ArrayList<String> exp, String modo){
-		this.URL = new File(URL);
-		this.expedientes = exp;
-		this.modo_identificacion = modo;
-		this.ids = createIds();
-	}
-	
-	// Filtro por nº de expediente sin URL
-	public Parser(ArrayList<String> exp, String modo){
-		this.expedientes = exp;
-		this.modo_identificacion = modo;
-		this.ids = createIds();
-	}
-	
-	// Sin nada (leemos todo)
-	public Parser(){
-		this.ids = createIds();
-	};
-	
-	
-	/**********************/
-	/** AUXILIARY METHODS**/
-	/**********************/
-
-	
-	/* Creación de un IDS -> información sobre esta ejecución del Parser */
-	private int createIds(){
-		int ids = 0;
-		ConexionSQL sql = new ConexionSQL();
-		Connection conn = sql.conectarMySQL();
-		CallableStatement sentencia = null;
-		
-		try{
-			sentencia = (CallableStatement) conn.prepareCall("{call newIds(?, ?)}");
-			
-			// Parametro 1 del procedimiento almacenado
-			sentencia.setInt("modos_id", MODO_MANUAL);
-			
-			// Definimos los tipos de los params de salida del procedimiento almacenado
-			sentencia.registerOutParameter("ids", java.sql.Types.INTEGER);
-			
-			// Ejecutamos el procedimiento
-			sentencia.execute();
-			
-			// Se obtiene la salida
-			ids = sentencia.getInt("ids");
-		} catch (SQLException e) {
-			System.out.println("Error para rollback: " + e.getMessage());
-			e.printStackTrace();
-		} finally {
-			// Cerramos las conexiones
-			try {
-				if (sentencia != null) sentencia.close();
-				if (conn != null) conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return ids;
-	}
-	
-	/* Comprobación del identificador (NIF) del entry, para ver si es válido o no */
- 	private String getEntryPartyID(Element e){
-		String ID = "";
-		
-		// Busco el ContractFolderStatus -> Sabemos que solo hay uno
-		Element cfs = (Element)e.getElementsByTagName("cac-place-ext:ContractFolderStatus").item(POS_UNICO_ELEMENTO);
-		if (cfs != null){
-			
-			// Dentro del ContractFolderStatus, busco el LocatedContractingParty -> Sabemos que solo hay uno
-			Element lcp = (Element) cfs.getElementsByTagName("cac-place-ext:LocatedContractingParty").item(POS_UNICO_ELEMENTO);
-			if (lcp != null){
-				
-				// Dentro del LocatedContractingParty, busco el Party -> Sabemos que solo hay uno
-				Element party = (Element) lcp.getElementsByTagName("cac:Party").item(POS_UNICO_ELEMENTO);
-				if (party != null){
-					
-					// Dentro del Party, busco PartyIdentification, del cual pueden haber: minimo 1, maximo 3
-					NodeList PIDNodeList = party.getElementsByTagName("cac:PartyIdentification");
-					if (PIDNodeList.getLength() > 0){
-						
-						// Recorro la lista, y busco el NIF
-						for (int i = 0; i < PIDNodeList.getLength(); i++){
-							// Cojo el bloque <cac:PartyIdentification>
-							Element partyIdentification = (Element) PIDNodeList.item(i);
-							// Busco en sus hijos el ID -> Sabemos que por cada PartyIdentification solo vendra un ID
-							Element PID = (Element) partyIdentification.getElementsByTagName("cbc:ID").item(POS_UNICO_ELEMENTO);
-							// Miramos si el schemeName es NIF, en caso contrario pasamos al siguiente
-							if (PID.getAttributes().getNamedItem("schemeName").getTextContent().compareTo("NIF") == 0){
-								ID = PID.getTextContent();
-							}
-						}
-						
-					}else{
-						throw new NullPointerException("ENTRY -> CONTRACT FOLDER STATUS -> LOCATED CONTRACTING PARTY -> PARTY -> PARTY IDENTIFICATION no existe, no se puede obtener la identificación del entry");
-					}
-					
-				}else{
-					throw new NullPointerException("ENTRY -> CONTRACT FOLDER STATUS -> LOCATED CONTRACTING PARTY -> PARTY no existe, no se puede obtener la identificación del entry");
-				}
-				
-			}else{
-				throw new NullPointerException("ENTRY -> CONTRACT FOLDER STATUS -> LOCATED CONTRACTING PARTY no existe, no se puede obtener la identificación del entry");
-			}
-			
-		}else{
-			throw new NullPointerException("ENTRY -> CONTRACT FOLDER STATUS no existe, no se puede obtener la identificación del entry");
-		}
-		
-		return ID;
-	}
-	
- 	private String getEntryExp(Element e) {
- 		String exp = "";
-		
-		// Busco el ContractFolderStatus -> Sabemos que solo hay uno
-		Element cfs = (Element)e.getElementsByTagName("cac-place-ext:ContractFolderStatus").item(POS_UNICO_ELEMENTO);
-		if (cfs != null){
-			// Dentro del ContractFolderStatus, busco el ContractFolderID -> Sabemos que solo hay uno
-			Element cfid = (Element) cfs.getElementsByTagName("cbc:ContractFolderID").item(POS_UNICO_ELEMENTO);
-			if (cfid != null){
-				exp = cfid.getTextContent();
-			}else{
-				throw new NullPointerException("ENTRY -> CONTRACT FOLDER STATUS -> LOCATED CONTRACTING PARTY no existe, no se puede obtener la identificación del entry");
-			}
-		}else{
-			throw new NullPointerException("ENTRY -> CONTRACT FOLDER STATUS no existe, no se puede obtener la identificación del entry");
-		}
-	
-		return exp;
-	}
- 	
-	/* Reconstrucción del link */
-	private String rebuildLink(String ID, String href) {
-		String result = "";
-		String[] splited = ID.split("/");
-		int cont = 0;
-		
-		splited[splited.length-1] = href;
-		while (cont < splited.length-1){
-			result += splited[cont] + "/";
-			cont++;
-		}
-		result += splited[splited.length-1];
-		
-		return result;
-	}
-	
-	private Document initDocumentBuilder(File url) throws ParserConfigurationException, SAXException, IOException, FileNotFoundException{
-		Document document = null;
-		try{
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
-            document = documentBuilder.parse(url);
-            document.getDocumentElement().normalize();
-		}catch (FileNotFoundException e){
-			throw e;
-		}
-		return document;
-	}
-	
-	public void printData(){
-		System.out.println("*************************************");
-		System.out.println("Link actual: " + selfLink);
-		System.out.println("En este archivo hay un total de " + entryCont + " entries, de los cuales " + entries.size() + " son válidos.");
-		System.out.println("Fecha de actualización: " + updated);
-		System.out.println("*************************************");
-		System.out.println("Las entries son: ");
-		for (Entry e : entries){
-			System.out.println("ID: " + e.getId());
-			System.out.println("Fecha de actualización: " + e.getUpdated());
-			System.out.println("------------");
-		}
-		System.out.println("Link siguiente: " + nextLink);
-	}
-
-	public void setURL(File file) {
-		this.URL = file;
-	}
-
 
 }
