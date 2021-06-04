@@ -3,17 +3,23 @@ package Parser;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -41,6 +47,7 @@ public class Parser {
 	private static final int MODO_AUTOMATICO = 1; 
 	private static final int MODO_MANUAL = 2; 
 	private static int ids;
+	private static Timestamp fecha_limite;
 	
 	private String NIF = "";
 	private File URL;
@@ -57,43 +64,78 @@ public class Parser {
 	/* Si escribir = true -> escribirá los datos en la BD */
 	private boolean escribir = true;
 
-	public void readEntries(boolean primera_lectura) throws SQLException{
-		try {
-    		//Iniciamos el DocumentBuilderFactory;
-			Document document = initDocumentBuilder(this.URL);
+	public void readOpenData(boolean primera_lectura, String URL) throws IOException, ParserConfigurationException, SAXException, SQLException, ParseException{
+		URLConnection conexion;
+		URL url = new URL(URL);
+        
+		conexion = url.openConnection();
+        conexion.connect();
+     
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); 
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        
+        Document doc = db.parse(conexion.getInputStream());
+        
+        checkAtom(primera_lectura, conexion, doc);
+	}
+	
+	public void checkAtom(boolean primera_lectura, URLConnection conexion, Document doc) throws SQLException, FileNotFoundException, ParserConfigurationException, SAXException, IOException, ParseException{
+		// Recogemos el updated y el link next
+		readUpdateDate(doc);
+		readLinks(doc);
+		
+		// Si la fecha del .atom es posterior al limite, leo
+		if (fecha_limite.before(updated)){
+			System.out.println("ATOM DATE: " + updated);
+			readEntries(primera_lectura, doc);
 			
-			NodeList entriesNodes = document.getElementsByTagName("entry");
-			
-			if (entriesNodes.getLength() > 0){
-				entryCont += entriesNodes.getLength();
-				for (int i = 0; i < entriesNodes.getLength(); i++){
-					// Cojo el nodo actual
-					Node entry = entriesNodes.item(i);
-					// Lo transformo a element
-					Element e = (Element) entry;
-					
-					System.out.println("Leyendo entry " + (i+1) + "/" + entriesNodes.getLength());
-					
-					String result = "";
-					if (modo_identificacion == "NIF"){
-						result = getEntryPartyID(e);
-						if (result.compareTo(NIF) == 0){
-							readAttributesAndWrite(e, primera_lectura);
-						}
-					}else if (modo_identificacion == "EXP"){
-						result = getEntryExp(e);
-						if (expedientes.contains(result)){
-							readAttributesAndWrite(e, primera_lectura);
-						}
-					}else{
-						readAttributesAndWrite(e, primera_lectura);		
+			// Pasamos al siguiente next
+			readOpenData(primera_lectura, nextLink);
+		}else{
+			System.out.println("COMPLETO HASTA " + fecha_limite.toString());
+		}
+	}
+	
+	public void readEntries(boolean primera_lectura, Document doc) throws FileNotFoundException, ParserConfigurationException, SAXException, IOException, SQLException{
+		Document document;
+		
+		//Iniciamos el DocumentBuilderFactory;
+		if(doc == null){
+			document = initDocumentBuilder(this.URL);
+		}else{
+			document = doc;
+		}
+		
+		// Entries
+		NodeList entriesNodes = document.getElementsByTagName("entry");
+		
+		if (entriesNodes.getLength() > 0){
+			entryCont += entriesNodes.getLength();
+			for (int i = 0; i < entriesNodes.getLength(); i++){
+				// Cojo el nodo actual
+				Node entry = entriesNodes.item(i);
+				// Lo transformo a element
+				Element e = (Element) entry;
+				
+				System.out.print("Leyendo entry " + (i+1) + "/" + entriesNodes.getLength());
+				
+				String result = "";
+				if (modo_identificacion == "NIF"){
+					result = getEntryPartyID(e);
+					if (result.compareTo(NIF) == 0){
+						readAttributesAndWrite(e, primera_lectura);
 					}
+				}else if (modo_identificacion == "EXP"){
+					result = getEntryExp(e);
+					if (expedientes.contains(result)){
+						readAttributesAndWrite(e, primera_lectura);
+					}
+				}else{
+					readAttributesAndWrite(e, primera_lectura);		
 				}
-			}else{
-				throw new NullPointerException();
 			}
-		} catch (NullPointerException | ParserConfigurationException | SAXException | IOException e) {
-			e.printStackTrace();
+		}else{
+			throw new NullPointerException();
 		}
 	}
 	
@@ -166,15 +208,13 @@ public class Parser {
 		}
 	}
 	
-	public void readUpdateDate() throws FileNotFoundException, ParserConfigurationException, SAXException, IOException{
+	public void readUpdateDate(Document document) throws FileNotFoundException, ParserConfigurationException, SAXException, IOException, ParseException{
 		try {
-			//Iniciamos el DocumentBuilderFactory;
-			Document document = initDocumentBuilder(this.URL);
-			
 			//Buscamos la lista de nodos en la raíz (feed) con la etiqueta "updated"
 			NodeList nodos = document.getElementsByTagName("updated");
 			
 			if (nodos.getLength() > 0){
+				
 				//Como sabemos que solo vamos a encontrar uno, lo almacenamos directamente
 				String date= nodos.item(POS_UNICO_ELEMENTO).getTextContent().replace("T", " ");
 				date = date.substring(0, date.indexOf("+"));
@@ -188,13 +228,10 @@ public class Parser {
 		}
 	}
 	
-	public void readLinks() throws FileNotFoundException, ParserConfigurationException, SAXException, IOException{
+	public void readLinks(Document document) throws FileNotFoundException, ParserConfigurationException, SAXException, IOException{
 		String ID;
 		
 		try {
-			//Iniciamos el DocumentBuilderFactory;
-			Document document = initDocumentBuilder(this.URL);
-			
 			// Recogemos primero el ID, para poder modificarlo despues
 			NodeList IDs = document.getElementsByTagName("id");
 			if(IDs.getLength() > 0){
@@ -212,8 +249,8 @@ public class Parser {
 						String link = rebuildLink(ID, href);
 						selfLink = link;
 					}else if (rel.compareTo("next") == 0){
-						String link = rebuildLink(ID, href);
-						nextLink = link;
+						//String link = rebuildLink(ID, href);
+						nextLink = href;
 					}
 				}
 			}else{
@@ -253,6 +290,24 @@ public class Parser {
 	public Parser(ArrayList<String> exp, String modo){
 		this.expedientes = exp;
 		this.modo_identificacion = modo;
+		this.ids = createIds();
+	}
+	
+	public Parser(boolean primera_lectura) throws SQLException, ParseException{
+		// Buscamos la fecha limite para la lectura
+		if (!primera_lectura){
+			ConexionSQL conn = new ConexionSQL();
+			fecha_limite = conn.getLastUpdateDate();
+		}else{
+			String fecha = "2021-06-02 19:00:00.000";
+			
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.s");
+			Date date = dateFormat.parse(fecha);
+			long time = date.getTime();
+			
+			fecha_limite = new Timestamp(time);
+		}
+		
 		this.ids = createIds();
 	}
 	

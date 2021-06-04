@@ -1,26 +1,38 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 import Parser.Parser;
 
 public class main {
-	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, TransformerException, SQLException {
+	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, TransformerException, SQLException, ParseException {
 		boolean primera_lectura = false;
 		
+		Parser p = new Parser(primera_lectura);
+		String URL = "https://contrataciondelsectorpublico.gob.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom";
+//		String URL = "https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3_20210603_171151.atom";
+		p.readOpenData(primera_lectura, URL);
+		
 //		rellenar();
-		leerDirectorio(primera_lectura);
+//		leerDirectorio(primera_lectura);
 //		leerArchivo(primera_lectura);
 	}
-
+	
 	private static void leerDirectorio(boolean primera_lectura) throws FileNotFoundException, SAXException, IOException, SQLException, ParserConfigurationException {
 		ArrayList<String> exp = new ArrayList<String>();
 		//exp.add("PDT.-3.9/19");
@@ -47,8 +59,7 @@ public class main {
                 	System.out.println("==============");
                 	File file = new File(sub_path);
                 	p.setURL(file);
-                	p.readUpdateDate();
-                	p.readEntries(primera_lectura);           
+                	p.readEntries(primera_lectura, null);           
 		    	}else{
 		    		System.out.println("----> " + listado[i].getName() + " <-----");
 		    		files = getFiles(sub_path);
@@ -61,8 +72,7 @@ public class main {
 		                	System.out.println("==============");
 		                	File file = new File(files[j]);
 		                	p.setURL(file);
-		                	p.readUpdateDate();
-		                	p.readEntries(primera_lectura);
+		                	p.readEntries(primera_lectura, null);
 		                }
 		            }
 		    	}
@@ -81,7 +91,7 @@ public class main {
 		Parser p = new Parser();
 		p.setURL(new File(URL));
     	p.readUpdateDate();
-		p.readEntries(primera_lectura);
+		p.readEntries(primera_lectura, null);
 	}
 	
 	private static void rellenar() throws ParserConfigurationException, SAXException, TransformerException{

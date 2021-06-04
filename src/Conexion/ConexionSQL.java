@@ -138,7 +138,8 @@ public class ConexionSQL {
 					writeNewIdsExpediente(entry, ids, atom_date, todo);
 					checkTables(entry, ids_exp_ultimo);
 				}else if (orden_entry == orden_ultimo){ // PARA RECTIFICACION
-					
+					// Para la primera version solo vamos a almacenar el IDS de la rectificación
+					writeNewIdsExpediente(entry, ids, atom_date, todo);
 				}
 			}
 		}else{
@@ -354,6 +355,8 @@ public class ConexionSQL {
 		PreparedStatement sentencia = null;
 		ResultSet rs = null;
 		int aux = 0;
+		
+		conn.setAutoCommit(false);
 		
 		try {
 			// LUGAR DE EJECUCION
@@ -695,44 +698,46 @@ public class ConexionSQL {
 			}
 			
 			// CRITERIOS DE ADJUDICACION
-			AwardingCriteria[] ac = entry.getContractFolderStatus().getTenderingTerms().getAwardingTerms().getAwardingCriteriaList();
-			
-			sentencia = conn.prepareStatement("SELECT COUNT(*) FROM tbl_criterio_de_adjudicacion INNER JOIN tbl_ids_expedientes ON tbl_criterio_de_adjudicacion.ids_expedientes = tbl_ids_expedientes.ids_expedientes WHERE tbl_ids_expedientes.expediente = ?");
-			sentencia.setInt(1, Integer.parseInt(entry.getId()));
-			 
-			rs = sentencia.executeQuery();
-			
-			rs.next();
-			tam = rs.getInt(1);
-			int ac_tam = 0;
-			if (ac != null){
-				ac_tam = ac.length;
-			}
-			
-			if (ac_tam > tam){
-				sentencia = conn.prepareStatement("SELECT * FROM tbl_criterio_de_adjudicacion INNER JOIN tbl_ids_expedientes ON tbl_criterio_de_adjudicacion.ids_expedientes = tbl_ids_expedientes.ids_expedientes WHERE tbl_ids_expedientes.expediente = ?");
-				sentencia.setInt(1, Integer.parseInt(entry.getId()));
+			if (entry.getContractFolderStatus().getTenderingTerms().getAwardingTerms() != null){
+				AwardingCriteria[] ac = entry.getContractFolderStatus().getTenderingTerms().getAwardingTerms().getAwardingCriteriaList();
 				
+				sentencia = conn.prepareStatement("SELECT COUNT(*) FROM tbl_criterio_de_adjudicacion INNER JOIN tbl_ids_expedientes ON tbl_criterio_de_adjudicacion.ids_expedientes = tbl_ids_expedientes.ids_expedientes WHERE tbl_ids_expedientes.expediente = ?");
+				sentencia.setInt(1, Integer.parseInt(entry.getId()));
+				 
 				rs = sentencia.executeQuery();
 				
-				// Si no hay ningun criterio, añado todos
-				if (!rs.next()){
-					writeCriterioDeAdjudicacion(entry, conn);
-				}else{
-					boolean encontrado = false;
-					for (int i = 0; i < ac_tam; i++){
-						rs = sentencia.executeQuery();
-						while (rs.next() && !encontrado){
-							if (rs.getString("descripcion").compareTo(ac[i].getDescription()) == 0 &&
-									rs.getDouble("ponderacion") == ac[i].getWeightNumeric()){
-								encontrado = true;
+				rs.next();
+				tam = rs.getInt(1);
+				int ac_tam = 0;
+				if (ac != null){
+					ac_tam = ac.length;
+				}
+				
+				if (ac_tam > tam){
+					sentencia = conn.prepareStatement("SELECT * FROM tbl_criterio_de_adjudicacion INNER JOIN tbl_ids_expedientes ON tbl_criterio_de_adjudicacion.ids_expedientes = tbl_ids_expedientes.ids_expedientes WHERE tbl_ids_expedientes.expediente = ?");
+					sentencia.setInt(1, Integer.parseInt(entry.getId()));
+					
+					rs = sentencia.executeQuery();
+					
+					// Si no hay ningun criterio, añado todos
+					if (!rs.next()){
+						writeCriterioDeAdjudicacion(entry, conn);
+					}else{
+						boolean encontrado = false;
+						for (int i = 0; i < ac_tam; i++){
+							rs = sentencia.executeQuery();
+							while (rs.next() && !encontrado){
+								if (rs.getString("descripcion").compareTo(ac[i].getDescription()) == 0 &&
+										rs.getDouble("ponderacion") == ac[i].getWeightNumeric()){
+									encontrado = true;
+								}
 							}
+							if (!encontrado){
+								writeCriterioDeAdjudicacion_Unico(ac[i], conn);
+							}
+							rs.close();
+							encontrado = false;
 						}
-						if (!encontrado){
-							writeCriterioDeAdjudicacion_Unico(ac[i], conn);
-						}
-						rs.close();
-						encontrado = false;
 					}
 				}
 			}
@@ -955,6 +960,8 @@ public class ConexionSQL {
 					}
 				}
 			}
+			
+			conn.commit();
 			
 		} catch (SQLException e){
 			e.printStackTrace();
@@ -1831,7 +1838,11 @@ public class ConexionSQL {
 				
 				sentencia.setDate("fecha_acuerdo", tr.getAwardDate());
 				
-				sentencia.setDouble("ofertas_recibidas", tr.getReceivedTenderQuantity());
+				if (tr.getReceivedTenderQuantity() >= 0){
+					sentencia.setDouble("ofertas_recibidas", tr.getReceivedTenderQuantity());
+				}else{
+					sentencia.setNull("ofertas_recibidas", java.sql.Types.NULL);
+				}
 				
 				if(tr.getLowerTenderAmount() >= 0){
 					sentencia.setDouble("precio_oferta_mas_baja", tr.getLowerTenderAmount());
@@ -2399,6 +2410,31 @@ public class ConexionSQL {
 		return existe;
 	}
 	
+	public Timestamp getLastUpdateDate() throws SQLException{
+		PreparedStatement sentencia = null;
+		Connection conn = conectarMySQL();
+		Timestamp fecha = null;
+		
+		try {
+			sentencia = conn.prepareStatement("SELECT DISTINCT atom_date FROM tbl_ids_expedientes ORDER BY atom_date DESC LIMIT 1");
+			ResultSet rs = sentencia.executeQuery();
+			rs.next();
+			fecha = rs.getTimestamp(1);
+		} catch (SQLException e){
+			e.printStackTrace();
+			if (conn != null) conn.rollback();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return fecha;
+	}
 	
 	/** TYPE CODES */
     

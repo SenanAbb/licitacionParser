@@ -1050,7 +1050,7 @@ DROP TABLE IF EXISTS `tbl_lugar_de_ejecucion`;
 CREATE TABLE `tbl_lugar_de_ejecucion` (
   `lugar_de_ejecucion` int(11) NOT NULL AUTO_INCREMENT,
   `subentidad_territorial` varchar(5) NOT NULL,
-  `subentidad_nacional` varchar(45) NOT NULL,
+  `subentidad_nacional` varchar(45) DEFAULT NULL,
   `pais` varchar(100) DEFAULT NULL,
   `calle` varchar(220) DEFAULT NULL,
   `codigo_postal` varchar(32) DEFAULT NULL,
@@ -1485,7 +1485,7 @@ CREATE TABLE `tbl_resultado_del_procedimiento` (
   `resultado` int(11) NOT NULL,
   `motivacion` varchar(3500) DEFAULT NULL,
   `fecha_acuerdo` date NOT NULL,
-  `ofertas_recibidas` decimal(3,0) NOT NULL,
+  `ofertas_recibidas` decimal(3,0) DEFAULT NULL,
   `precio_oferta_mas_baja` decimal(17,2) DEFAULT NULL,
   `precio_oferta_mas_alta` decimal(17,2) DEFAULT NULL,
   `excluidos` tinyint(4) DEFAULT NULL,
@@ -3329,4 +3329,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-28  9:48:23
+-- Dump completed on 2021-06-04 12:43:16
