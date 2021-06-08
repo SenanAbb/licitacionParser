@@ -56,6 +56,7 @@ public class Parser {
 	private String NIF = "";
 	private File URL;
 	
+	private Entry entry;
 	private Timestamp updated;
 	private String nextLink, selfLink;
 	private int entryCont = 0;
@@ -196,7 +197,8 @@ public class Parser {
 			Entry newEntry = new Entry(id, entryId, entryLink, entrySummary, entryTitle, entryUpdate);
 			newEntry.readContractFolderStatus(e, POS_UNICO_ELEMENTO);
 			//newEntry.print();
-			entries.add(newEntry);	
+			this.entry = newEntry;
+			entries.add(this.entry);	
 			
 			/* ----> CONEXION CON BD <----
 			 * Vamos a insertar en la BD la entry:
@@ -278,6 +280,49 @@ public class Parser {
 	/**********************/
 	/** AUXILIARY METHODS**/
 	/**********************/
+	
+	public void escribirLogError(Exception e){
+		FileWriter fichero = null;
+		PrintWriter pw = null;
+		
+		try{
+			fichero = new FileWriter("C:\\Users\\senan\\OneDrive\\Escritorio\\LicitacionParser\\LicitacionParser\\log_errores.txt", true);
+			pw = new PrintWriter(fichero);
+			
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+			java.time.LocalDateTime fecha = LocalDateTime.now();
+			
+			StringBuilder s = new StringBuilder();
+			
+			s.append("[");
+			s.append(dtf.format(fecha));
+			s.append("]\n ");
+			s.append("\tURL: ");
+			s.append(selfLink);
+			s.append("\n");
+			s.append("\tEntry: ");
+			s.append(this.entry.getId());
+			s.append("\n");
+			s.append("\tException: ");
+			s.append(e.getMessage());
+			
+			String cadena = s.toString();
+			
+			pw.println(cadena);
+		} catch (Exception ex) {
+            e.printStackTrace();
+        } finally {
+           try {
+           // Nuevamente aprovechamos el finally para 
+           // asegurarnos que se cierra el fichero.
+           if (null != fichero)
+              fichero.close();
+           } catch (Exception e2) {
+              e2.printStackTrace();
+           }
+        }
+	}
+	
 	public void escribirLog(Timestamp atom_update, String atom_url, Timestamp entry_update, String entry_id, String estado){
 		FileWriter fichero = null;
 		PrintWriter pw = null;
