@@ -21,14 +21,16 @@ import Parser.Parser;
 
 public class main {
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, TransformerException, SQLException, ParseException {
-		boolean primera_lectura = false;
+		Parser p = new Parser();
+		boolean primera_lectura = p.getPrimeraLectura();
+		p.createIds();
+		p.setFechaLimite(primera_lectura);
 		
-		Parser p = new Parser(primera_lectura);
 		String URL = "https://contrataciondelsectorpublico.gob.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom";
-//		String URL = "https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3_20210603_171151.atom";
+		
 		p.readOpenData(primera_lectura, URL);
 		
-//		rellenar();
+//		rellenar(p);
 //		leerDirectorio(primera_lectura);
 //		leerArchivo(primera_lectura);
 	}
@@ -94,37 +96,35 @@ public class main {
 		p.readEntries(primera_lectura, null);
 	}
 	
-	private static void rellenar() throws ParserConfigurationException, SAXException, TransformerException{
-		Parser p = new Parser();
-		
+	private static void rellenar(Parser p) throws ParserConfigurationException, SAXException, TransformerException{
 		// Rellenar las tablas TypeCode
-//		System.out.println("ModosID"); p.writeModosId();
-//		System.out.println("TypeCode"); p.writeTypeCode();
-//		System.out.println("SubtypeCode"); p.writeSubtypeCodes();
-//		System.out.println("CPV"); p.writeCPV();
-//		System.out.println("CountryID"); p.writeCountryIdentificationCode();
-//		System.out.println("CountrySubID"); p.writeCountrySubentityCode();
-//		System.out.println("ProcedureCode"); p.writeProcedureCode();
-//		System.out.println("ContractingSystem"); p.writeContractingSystemTypeCode();
-//		System.out.println("Urgency"); p.writeUrgencyCode();
-//		System.out.println("Submission"); p.writeSubmissionMethodCode();
-//		System.out.println("Language"); p.writeLanguage();
-//		System.out.println("Procurement"); p.writeProcurementLegislation();
-//		System.out.println("ContractingParty"); p.writeContractingPartyTypeCode();
-//		System.out.println("ContractFolderStatus"); p.writeContractFolderStatusCode();
-//		System.out.println("TipoPliego"); p.writeTipoPliego();
-//		System.out.println("TipoPlazo"); p.writeTipoPlazo();
-//		System.out.println("FundingProgram"); p.writeFundingProgramCode();
-//		System.out.println("Guarantee"); p.writeGuaranteeTypeCode();
-//		System.out.println("RequiredBusiness"); p.writeRequiredBusinessProfileCode();
-//		System.out.println("Declaration"); p.writeDeclarationTypeCode();
-//		System.out.println("Technical"); p.writeTechnicalCapabilityTypeCode();
-//		System.out.println("Financial"); p.writeFinancialCapabilityTypeCode();
-//		System.out.println("TipoEvaluacion"); p.writeTipoEvaluacion();
-//		System.out.println("TenderResult"); p.writeTenderResultCode();
-//		System.out.println("ReasonCode"); p.writeReasonCode();
-//		System.out.println("NoticeTypeCode"); p.writeNoticeTypeCode();
-//		System.out.println("DocumentTypeCode"); p.writeDocumentTypeCode();
+		System.out.println("ModosID"); p.writeModosId();
+		System.out.println("TypeCode"); p.writeTypeCode();
+		System.out.println("SubtypeCode"); p.writeSubtypeCodes();
+		System.out.println("CPV"); p.writeCPV();
+		System.out.println("CountryID"); p.writeCountryIdentificationCode();
+		System.out.println("CountrySubID"); p.writeCountrySubentityCode();
+		System.out.println("ProcedureCode"); p.writeProcedureCode();
+		System.out.println("ContractingSystem"); p.writeContractingSystemTypeCode();
+		System.out.println("Urgency"); p.writeUrgencyCode();
+		System.out.println("Submission"); p.writeSubmissionMethodCode();
+		System.out.println("Language"); p.writeLanguage();
+		System.out.println("Procurement"); p.writeProcurementLegislation();
+		System.out.println("ContractingParty"); p.writeContractingPartyTypeCode();
+		System.out.println("ContractFolderStatus"); p.writeContractFolderStatusCode();
+		System.out.println("TipoPliego"); p.writeTipoPliego();
+		System.out.println("TipoPlazo"); p.writeTipoPlazo();
+		System.out.println("FundingProgram"); p.writeFundingProgramCode();
+		System.out.println("Guarantee"); p.writeGuaranteeTypeCode();
+		System.out.println("RequiredBusiness"); p.writeRequiredBusinessProfileCode();
+		System.out.println("Declaration"); p.writeDeclarationTypeCode();
+		System.out.println("Technical"); p.writeTechnicalCapabilityTypeCode();
+		System.out.println("Financial"); p.writeFinancialCapabilityTypeCode();
+		System.out.println("TipoEvaluacion"); p.writeTipoEvaluacion();
+		System.out.println("TenderResult"); p.writeTenderResultCode();
+		System.out.println("ReasonCode"); p.writeReasonCode();
+		System.out.println("NoticeTypeCode"); p.writeNoticeTypeCode();
+		System.out.println("DocumentTypeCode"); p.writeDocumentTypeCode();
 	}
 	
 	private static String[] getFiles(String path) {

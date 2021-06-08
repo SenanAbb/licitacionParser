@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,6 +25,7 @@ import tenderingTerms.SpecificTendererRequirement;
 import tenderingTerms.TechnicalEvaluationCriteria;
 import utils.PartyIdentification;
 import Entry.Entry;
+import Parser.Parser;
 
 import com.mysql.cj.jdbc.CallableStatement;
 
@@ -37,7 +37,7 @@ import documents.AdditionalPublicationStatus;
 import documents.GeneralDocument;
 import documents.ValidNoticeInfo;
 
-public class ConexionSQL {
+public class ConexionSQL extends Parser{
 	private static final int PLIEGO_ADMINISTRATIVO = 1;
 	private static final int PLIEGO_TECNICO = 2;
 	private static final int PLIEGO_ADICIONAL = 3;
@@ -261,9 +261,7 @@ public class ConexionSQL {
 			
 			conn.commit();
 		} catch (SQLException e){
-			System.out.println(entry.getId() + " " + entry.getContractFolderStatus().getProcurementProject().getTypeCode()
-					+ " " + entry.getContractFolderStatus().getProcurementProject().getSubTypeCode());
-			e.printStackTrace();
+			super.escribirLog(super.getSelfLink(), entry.getId(), e);
 			if (conn != null) conn.rollback();
 		} finally {
 			// Cerramos las conexiones
@@ -336,6 +334,7 @@ public class ConexionSQL {
 			}
 		} catch (SQLException e){
 			e.printStackTrace();
+			//super.escribirLog(super.getSelfLink(), entry.getId(), e);
 			if (conn != null) conn.rollback();
 		} finally {
 			// Cerramos las conexiones
@@ -345,9 +344,7 @@ public class ConexionSQL {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-	}
-		
-		
+		}
 	}
 
 	private void checkTables(Entry entry, int ids_exp_ultimo) throws SQLException{
@@ -609,77 +606,79 @@ public class ConexionSQL {
 			sentencia.close();
 			
 			// CRITERIOS DE EVALUACION
-			TechnicalEvaluationCriteria[] tec = entry.getContractFolderStatus().getTenderingTerms().getTendererQualificationRequest().getTechnicalEvaluationCriteriaList();
-			FinancialEvaluationCriteria[] fec = entry.getContractFolderStatus().getTenderingTerms().getTendererQualificationRequest().getFinancialEvaluationCriteriaList();
-			
-			sentencia = conn.prepareStatement("SELECT COUNT(*) FROM tbl_criterio_de_evaluacion INNER JOIN tbl_ids_expedientes ON tbl_criterio_de_evaluacion.ids_expedientes = tbl_ids_expedientes.ids_expedientes WHERE tbl_ids_expedientes.expediente = ?");
-			sentencia.setInt(1, Integer.parseInt(entry.getId()));
-			 
-			rs = sentencia.executeQuery();
-			rs.next();
-			
-			tam = rs.getInt(1);
-			int fec_tam = 0;
-			int tec_tam = 0;
-			
-			if (tec != null) tec_tam = tec.length;
-			if (fec != null) fec_tam = fec.length;
-			
-			if ((tec_tam + fec_tam) > tam){
-				// Busco el distinto
-				sentencia = conn.prepareStatement("SELECT * FROM tbl_criterio_de_evaluacion INNER JOIN tbl_ids_expedientes ON tbl_criterio_de_evaluacion.ids_expedientes = tbl_ids_expedientes.ids_expedientes WHERE tbl_ids_expedientes.expediente = ?");
+			if (entry.getContractFolderStatus().getTenderingTerms().getTendererQualificationRequest() != null){
+				TechnicalEvaluationCriteria[] tec = entry.getContractFolderStatus().getTenderingTerms().getTendererQualificationRequest().getTechnicalEvaluationCriteriaList();
+				FinancialEvaluationCriteria[] fec = entry.getContractFolderStatus().getTenderingTerms().getTendererQualificationRequest().getFinancialEvaluationCriteriaList();
+				
+				sentencia = conn.prepareStatement("SELECT COUNT(*) FROM tbl_criterio_de_evaluacion INNER JOIN tbl_ids_expedientes ON tbl_criterio_de_evaluacion.ids_expedientes = tbl_ids_expedientes.ids_expedientes WHERE tbl_ids_expedientes.expediente = ?");
 				sentencia.setInt(1, Integer.parseInt(entry.getId()));
 				 
 				rs = sentencia.executeQuery();
+				rs.next();
 				
-				// Si no hay ningun criterio
-				if (!rs.next()){
-					if (tec != null){
-						for (int i = 0; i < tec.length; i++){
-							writeCriterioDeEvaluacionTecnica(tec[i], conn);
-						}
-					}
-					if (fec != null){
-						for (int i = 0; i < fec.length; i++){
-							writeCriterioDeEvaluacionEconomica(fec[i], conn);
-						}
-					}
-				}else{
-					// Si hay algún criterio
-					// 1. Para cada criterio de la entry, comprueba si está en la BD
-					// 1.1 Si no está, lo añado
-					boolean encontrado = false;
+				tam = rs.getInt(1);
+				int fec_tam = 0;
+				int tec_tam = 0;
+				
+				if (tec != null) tec_tam = tec.length;
+				if (fec != null) fec_tam = fec.length;
+				
+				if ((tec_tam + fec_tam) > tam){
+					// Busco el distinto
+					sentencia = conn.prepareStatement("SELECT * FROM tbl_criterio_de_evaluacion INNER JOIN tbl_ids_expedientes ON tbl_criterio_de_evaluacion.ids_expedientes = tbl_ids_expedientes.ids_expedientes WHERE tbl_ids_expedientes.expediente = ?");
+					sentencia.setInt(1, Integer.parseInt(entry.getId()));
+					 
 					rs = sentencia.executeQuery();
 					
-					if (tec != null){
-						for (int i = 0; i < tec.length; i++){
-							rs = sentencia.executeQuery();
-							while (rs.next() && !encontrado){
-								if (rs.getString("descripcion").compareTo(tec[i].getDescription()) == 0 && rs.getString("tipo_technical").compareTo(tec[i].getEvaluationCriteriaTypeCode()) == 0){
-									encontrado = true;
-								}
-							}
-							if (!encontrado){
+					// Si no hay ningun criterio
+					if (!rs.next()){
+						if (tec != null){
+							for (int i = 0; i < tec.length; i++){
 								writeCriterioDeEvaluacionTecnica(tec[i], conn);
 							}
-							rs.close();
-							encontrado = false;
 						}
-					}
-					
-					if (fec != null){
-						for (int i = 0; i < fec.length; i++){
-							rs = sentencia.executeQuery();
-							while (rs.next() && !encontrado){
-								if (rs.getString("descripcion").compareTo(fec[i].getDescription()) == 0 && rs.getString("tipo_financial").compareTo(fec[i].getEvaluationCriteriaTypeCode()) == 0){
-									encontrado = true;
-								}
-							}
-							if (!encontrado){
+						if (fec != null){
+							for (int i = 0; i < fec.length; i++){
 								writeCriterioDeEvaluacionEconomica(fec[i], conn);
 							}
-							rs.close();
-							encontrado = false;
+						}
+					}else{
+						// Si hay algún criterio
+						// 1. Para cada criterio de la entry, comprueba si está en la BD
+						// 1.1 Si no está, lo añado
+						boolean encontrado = false;
+						rs = sentencia.executeQuery();
+						
+						if (tec != null){
+							for (int i = 0; i < tec.length; i++){
+								rs = sentencia.executeQuery();
+								while (rs.next() && !encontrado){
+									if (rs.getString("descripcion").compareTo(tec[i].getDescription()) == 0 && rs.getString("tipo_technical").compareTo(tec[i].getEvaluationCriteriaTypeCode()) == 0){
+										encontrado = true;
+									}
+								}
+								if (!encontrado){
+									writeCriterioDeEvaluacionTecnica(tec[i], conn);
+								}
+								rs.close();
+								encontrado = false;
+							}
+						}
+						
+						if (fec != null){
+							for (int i = 0; i < fec.length; i++){
+								rs = sentencia.executeQuery();
+								while (rs.next() && !encontrado){
+									if (rs.getString("descripcion").compareTo(fec[i].getDescription()) == 0 && rs.getString("tipo_financial").compareTo(fec[i].getEvaluationCriteriaTypeCode()) == 0){
+										encontrado = true;
+									}
+								}
+								if (!encontrado){
+									writeCriterioDeEvaluacionEconomica(fec[i], conn);
+								}
+								rs.close();
+								encontrado = false;
+							}
 						}
 					}
 				}
@@ -1020,7 +1019,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeProcesoDeLicitacion(Entry entry, Connection entry_conn) throws SQLException{
 		CallableStatement sentencia = null;
 		
@@ -1068,7 +1066,7 @@ public class ConexionSQL {
 			
 			// LANGUAGES
 			Language[] languageList = entry.getContractFolderStatus().getTenderingTerms().getLanguageList();
-			if (languageList.length > 0){
+			if (languageList != null){
 				for (int i = 0; i < languageList.length; i++){
 					sentencia = (CallableStatement) entry_conn.prepareCall("{call newProcesoDeLicitacion_Idioma(?, ?)}");
 					
@@ -1089,7 +1087,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeEntidadAdjudicadora(Entry entry, Connection entry_conn) throws SQLException{
 		CallableStatement sentencia = null;
 		
@@ -1224,7 +1221,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writePlazoDeObtencion(Entry entry, Connection entry_conn) throws SQLException{
 		CallableStatement sentencia = null;
 		
@@ -1252,7 +1248,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writePlazoDeObtencionPliegos(Entry entry, Connection entry_conn) throws SQLException {
 		CallableStatement sentencia = null;
 		
@@ -1286,7 +1281,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writePlazoDeObtencionOferta(Entry entry, Connection entry_conn) throws SQLException {
 		CallableStatement sentencia = null;
 		
@@ -1325,7 +1319,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writePlazoDeObtencionSolicitudes(Entry entry, Connection entry_conn) throws SQLException {
 		CallableStatement sentencia = null;
 		
@@ -1363,7 +1356,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeExtensionDeContrato(Entry entry, Connection entry_conn) throws SQLException{
 		CallableStatement sentencia = null;
 		
@@ -1390,7 +1382,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeCondicionesDeLicitacion(Entry entry, Connection entry_conn) throws SQLException{
 		CallableStatement sentencia = null;
 		
@@ -1432,7 +1423,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeGarantias(Entry entry, Connection entry_conn) throws SQLException{
 		CallableStatement sentencia = null;
 		
@@ -1474,7 +1464,6 @@ public class ConexionSQL {
 			}
 		}	
 	}
-	
 	private void writeGarantias_Unico(RequiredFinancialGuarantee rfg, Connection entry_conn) throws SQLException {
 		CallableStatement sentencia = null;
 		
@@ -1511,7 +1500,6 @@ public class ConexionSQL {
 			}
 		}	
 	}
-	
 	private void writeRequisitosDeParticipacion(Entry entry, Connection entry_conn) throws SQLException{
 		CallableStatement sentencia = null;
 		
@@ -1575,7 +1563,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeCriterioDeEvaluacion(Entry entry, Connection entry_conn) throws SQLException{
 		if (entry.getContractFolderStatus().getTenderingTerms().getTendererQualificationRequest() != null){
 			if (entry.getContractFolderStatus().getTenderingTerms().getTendererQualificationRequest().getTechnicalEvaluationCriteriaList() != null){
@@ -1599,7 +1586,6 @@ public class ConexionSQL {
 			}	
 		}
 	}
-	
 	private void writeCriterioDeEvaluacionTecnica(TechnicalEvaluationCriteria tec, Connection entry_conn) throws SQLException{
 		CallableStatement sentencia = null;
 		
@@ -1623,7 +1609,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeCriterioDeEvaluacionEconomica(FinancialEvaluationCriteria fec, Connection entry_conn) throws SQLException{
 		CallableStatement sentencia = null;
 		
@@ -1647,7 +1632,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeSubcontratacionPermitida(Entry entry, Connection entry_conn) throws SQLException {
 		CallableStatement sentencia = null;
 		
@@ -1680,7 +1664,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeCriterioDeAdjudicacion(Entry entry, Connection entry_conn) throws SQLException {
 		CallableStatement sentencia = null;
 		
@@ -1714,7 +1697,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeCriterioDeAdjudicacion_Unico(AwardingCriteria ac, Connection entry_conn) throws SQLException {
 		CallableStatement sentencia = null;
 		
@@ -1740,7 +1722,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeResultadoDelProcedimiento(Entry entry, Connection entry_conn) throws SQLException {
 		CallableStatement sentencia = null;
 		
@@ -1819,7 +1800,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeResultadoDelProcedimiento_Unico(TenderResult tr, Connection entry_conn) throws SQLException {
 		CallableStatement sentencia = null;
 		
@@ -1898,7 +1878,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeInformacionDelContrato(int resultado, java.sql.Date startDate, Contract[] c, Connection entry_conn) throws SQLException {
 		CallableStatement sentencia = null;
 		
@@ -1937,7 +1916,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeAdjudicatario(int resultado, WinningParty wp, boolean pyme, Connection entry_conn) throws SQLException{
 		CallableStatement sentencia = null;
 		
@@ -1983,7 +1961,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeImporteDeAdjudicacion(int resultado, double con_imp, double sin_imp, String currencyID, Connection entry_conn) throws SQLException{
 		CallableStatement sentencia = null;
 		
@@ -2003,7 +1980,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeCondicionesDeSubcontratacion(int resultado, SubcontractTerms s, Connection entry_conn) throws SQLException {
 		CallableStatement sentencia = null;
 		
@@ -2030,7 +2006,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeJustificacionDelProceso(Entry entry, Connection entry_conn) throws SQLException{
 		CallableStatement sentencia = null;
 	
@@ -2063,7 +2038,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeModificacionesDeContrato(Entry entry, Connection entry_conn) throws SQLException{
 		CallableStatement sentencia = null;
 		
@@ -2126,7 +2100,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeModificacionesDeContrato_Unico(ContractModification cm, Connection entry_conn) throws SQLException{
 		CallableStatement sentencia = null;
 		
@@ -2186,7 +2159,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writePublicacionesOficiales(Entry entry, Connection entry_conn) throws SQLException{
 		CallableStatement sentencia = null;
 		
@@ -2212,7 +2184,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writePublicacionesOficiales_Unico(ValidNoticeInfo vni, Connection entry_conn) throws SQLException{
 		CallableStatement sentencia = null;
 		
@@ -2235,7 +2206,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeAdditionalPublicationStatus(int publicaciones_oficiales, ValidNoticeInfo v, Connection entry_conn) throws SQLException{
 		CallableStatement sentencia = null;
 		
@@ -2300,7 +2270,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeOtrosDocumentos(Entry entry, Connection entry_conn) throws SQLException{
 		CallableStatement sentencia = null;
 		
@@ -2337,7 +2306,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	private void writeOtrosDocumentos_Unico(GeneralDocument gd, Connection entry_conn) throws SQLException{
 		CallableStatement sentencia = null;
 		
@@ -2371,7 +2339,6 @@ public class ConexionSQL {
 			}
 		}
 	}
-	
 	/* AUXILIARES */
 	
 	private boolean searchExpediente(int id) {

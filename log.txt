@@ -1,0 +1,3 @@
+[2021/06/08 12:12:06] URL: null
+	Expediente: 7659832
+	Excepcion: Cannot add or update a child row: a foreign key constraint fails (`licitacion`.`tbl_publicaciones_oficiales`, CONSTRAINT `fk_tbl_publicaciones_oficiales_tbl_notice_type_code1` FOREIGN KEY (`tipo_de_anuncio`) REFERENCES `tbl_notice_type_code` (`code`) ON DELE)

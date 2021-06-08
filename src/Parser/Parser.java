@@ -2,16 +2,21 @@ package Parser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -37,7 +42,6 @@ import Entry.Entry;
  * 		NIF: String[1]
  *		ULR: File[1]
  *		updated: Date[1]
- *		selfLink: String[1]
  *		nextLink: String[1]
  *		entryCont: int[0..1]
  *		entries: Entry[] [0..*]
@@ -46,14 +50,14 @@ public class Parser {
 	private static final int POS_UNICO_ELEMENTO = 0; 
 	private static final int MODO_AUTOMATICO = 1; 
 	private static final int MODO_MANUAL = 2; 
-	private static int ids;
+	private int ids;
 	private static Timestamp fecha_limite;
 	
 	private String NIF = "";
 	private File URL;
 	
 	private Timestamp updated;
-	private String selfLink, nextLink;
+	private String nextLink, selfLink;
 	private int entryCont = 0;
 	private ArrayList<Entry> entries = new ArrayList<Entry>();
 	private ArrayList<String> expedientes = new ArrayList<String>();
@@ -76,6 +80,7 @@ public class Parser {
         
         Document doc = db.parse(conexion.getInputStream());
         
+        System.out.println("URL: " + URL);
         checkAtom(primera_lectura, conexion, doc);
 	}
 	
@@ -139,72 +144,75 @@ public class Parser {
 		}
 	}
 	
-	private void readAttributesAndWrite(Element e, boolean primera_lectura) throws SQLException {
-		String[] idSplit = null;
-		String id = null, entryId = null, entryLink = null, entrySummary = null, entryTitle = null;
-		Timestamp entryUpdate = null;
-		
-		Element idElement = (Element) e.getElementsByTagName("id").item(POS_UNICO_ELEMENTO);
+	private void readAttributesAndWrite(Element e, boolean primera_lectura){
 		try{
-			id = idElement.getTextContent();
-			idSplit = idElement.getTextContent().split("/");
-			entryId = idSplit[idSplit.length-1];
-		}catch (NullPointerException exID){
-			System.err.print("ERROR FATAL: Entry -> ID no existe\n");
-		}
-		
-		Element link = (Element) e.getElementsByTagName("link").item(POS_UNICO_ELEMENTO);
-		try{
-			entryLink = link.getAttributes().getNamedItem("href").getTextContent();
-		}catch (NullPointerException exLINK){
-			System.err.print("ERROR FATAL: Entry " + entryId + " -> LINK no existe\n");
-		}
-				
-		Element summary = (Element) e.getElementsByTagName("summary").item(POS_UNICO_ELEMENTO);		
-		try{
-			entrySummary = summary.getTextContent();
-		}catch (NullPointerException exSUMMARY){
-			System.err.print("ERROR FATAL: Entry " + entryId + " -> SUMMARY no existe\n");
-		}
-		
-		Element title = (Element) e.getElementsByTagName("title").item(POS_UNICO_ELEMENTO);
-		try{
-			entryTitle = title.getTextContent();
-		}catch (NullPointerException exTITLE){
-			System.err.print("ERROR FATAL: Entry " + entryId + " -> TITLE no existe\n");
-		}
-						
-		Element update = (Element) e.getElementsByTagName("updated").item(POS_UNICO_ELEMENTO);
-		try{
-			// Quitamos los espacios y los caracteres que no queremos
-			String date = update.getTextContent().replace("T", " ");
-			date = date.substring(0, date.indexOf("+"));
+			String[] idSplit = null;
+			String id = null, entryId = null, entryLink = null, entrySummary = null, entryTitle = null;
+			Timestamp entryUpdate = null;
 			
-			entryUpdate = Timestamp.valueOf(date);
-		}catch (NullPointerException exUPDATED){
-			System.err.print("ERROR FATAL: Entry " + entryId + " -> UPDATED no existe\n");
-		}
-		
-		System.out.println(" -> ID: " + entryId);
-		
-		Entry newEntry = new Entry(id, entryId, entryLink, entrySummary, entryTitle, entryUpdate);
-		newEntry.readContractFolderStatus(e, POS_UNICO_ELEMENTO);
-		//newEntry.print();
-		entries.add(newEntry);	
-		
-		
-		/* ----> CONEXION CON BD <----
-		 * Vamos a insertar en la BD la entry:
-		 * 	1. Debemos crear un registro en tbl_ids para guardar la fecha en que se produjo esta lectura
-		 * 	2. Guardamos el ids generado automáticamente para linkearlo con expedientes (FK)
-		 * 	3. Almacenamos los datos del entry
-		 * 	3.1. Creamos la conexion en la clase ConexionSQL
-		 * 	3.2. Le pasamos al entry el objeto sql para que pueda hacer la llamada a la creación de su sentencia, y ejecutarla
-		 */
-		
-		if (escribir){
-			ConexionSQL conn = new ConexionSQL();
-			conn.writeExpediente(newEntry, ids, updated, primera_lectura);
+			Element idElement = (Element) e.getElementsByTagName("id").item(POS_UNICO_ELEMENTO);
+			try{
+				id = idElement.getTextContent();
+				idSplit = idElement.getTextContent().split("/");
+				entryId = idSplit[idSplit.length-1];
+			}catch (NullPointerException exID){
+				System.err.print("ERROR FATAL: Entry -> ID no existe\n");
+			}
+			
+			Element link = (Element) e.getElementsByTagName("link").item(POS_UNICO_ELEMENTO);
+			try{
+				entryLink = link.getAttributes().getNamedItem("href").getTextContent();
+			}catch (NullPointerException exLINK){
+				System.err.print("ERROR FATAL: Entry " + entryId + " -> LINK no existe\n");
+			}
+					
+			Element summary = (Element) e.getElementsByTagName("summary").item(POS_UNICO_ELEMENTO);		
+			try{
+				entrySummary = summary.getTextContent();
+			}catch (NullPointerException exSUMMARY){
+				System.err.print("ERROR FATAL: Entry " + entryId + " -> SUMMARY no existe\n");
+			}
+			
+			Element title = (Element) e.getElementsByTagName("title").item(POS_UNICO_ELEMENTO);
+			try{
+				entryTitle = title.getTextContent();
+			}catch (NullPointerException exTITLE){
+				System.err.print("ERROR FATAL: Entry " + entryId + " -> TITLE no existe\n");
+			}
+							
+			Element update = (Element) e.getElementsByTagName("updated").item(POS_UNICO_ELEMENTO);
+			try{
+				// Quitamos los espacios y los caracteres que no queremos
+				String date = update.getTextContent().replace("T", " ");
+				date = date.substring(0, date.indexOf("+"));
+				
+				entryUpdate = Timestamp.valueOf(date);
+			}catch (NullPointerException exUPDATED){
+				System.err.print("ERROR FATAL: Entry " + entryId + " -> UPDATED no existe\n");
+			}
+			
+			System.out.println(" -> ID: " + entryId);
+			
+			Entry newEntry = new Entry(id, entryId, entryLink, entrySummary, entryTitle, entryUpdate);
+			newEntry.readContractFolderStatus(e, POS_UNICO_ELEMENTO);
+			//newEntry.print();
+			entries.add(newEntry);	
+			
+			
+			/* ----> CONEXION CON BD <----
+			 * Vamos a insertar en la BD la entry:
+			 * 	1. Debemos crear un registro en tbl_ids para guardar la fecha en que se produjo esta lectura
+			 * 	2. Guardamos el ids generado automáticamente para linkearlo con expedientes (FK)
+			 * 	3. Almacenamos los datos del entry
+			 * 	3.1. Creamos la conexion en la clase ConexionSQL
+			 * 	3.2. Le pasamos al entry el objeto sql para que pueda hacer la llamada a la creación de su sentencia, y ejecutarla
+			 */
+			
+			if (escribir){
+				ConexionSQL conn = new ConexionSQL();
+				conn.writeExpediente(newEntry, ids, updated, primera_lectura);
+			}
+		}catch(Exception ex){
 		}
 	}
 	
@@ -229,14 +237,10 @@ public class Parser {
 	}
 	
 	public void readLinks(Document document) throws FileNotFoundException, ParserConfigurationException, SAXException, IOException{
-		String ID;
-		
 		try {
 			// Recogemos primero el ID, para poder modificarlo despues
 			NodeList IDs = document.getElementsByTagName("id");
 			if(IDs.getLength() > 0){
-				ID = IDs.item(POS_UNICO_ELEMENTO).getTextContent();
-				
 				// Buscamos la lista de nodos en FEED con la etiqueta link
 				NodeList links = document.getElementsByTagName("link");
 				
@@ -245,12 +249,11 @@ public class Parser {
 					String rel = links.item(i).getAttributes().getNamedItem("rel").getTextContent();
 					String href = links.item(i).getAttributes().getNamedItem("href").getTextContent();
 					
-					if (rel.compareTo("self") == 0){
-						String link = rebuildLink(ID, href);
-						selfLink = link;
-					}else if (rel.compareTo("next") == 0){
+					if (rel.compareTo("next") == 0){
 						//String link = rebuildLink(ID, href);
-						nextLink = href;
+						this.nextLink = href;
+					}else if (rel.compareTo("self") == 0){
+						this.selfLink = href;
 					}
 				}
 			}else{
@@ -260,41 +263,61 @@ public class Parser {
 			e.getStackTrace();
 		}
 	}
-	
-	public void init(){
-		
-	}
-	
+
 	
 	/******************/
 	/** CONSTRUCTORS **/
 	/******************/
-
-	// Filtro por NIF
-	public Parser(String URL, String NIF, String modo){
-		this.URL = new File(URL);
-		this.NIF = NIF;
-		this.modo_identificacion = modo;
-		this.ids = createIds();
+	
+	// Sin nada (leemos todo)
+	public Parser(){}
+	
+	
+	/**********************/
+	/** AUXILIARY METHODS**/
+	/**********************/
+	public void escribirLog(String URL, String entry, Exception ex){
+		FileWriter fichero = null;
+		PrintWriter pw = null;
+		
+		try{
+			fichero = new FileWriter("C:\\Users\\senan\\OneDrive\\Escritorio\\LicitacionParser\\LicitacionParser\\log.txt", true);
+			pw = new PrintWriter(fichero);
+			
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+			java.time.LocalDateTime fecha = LocalDateTime.now();
+			
+			StringBuilder s = new StringBuilder();
+			
+			s.append("[");
+			s.append(dtf.format(fecha));
+			s.append("] URL: ");
+			s.append(URL);
+			s.append("\n");
+			s.append("\tExpediente: ");
+			s.append(entry);
+			s.append("\n");
+			s.append("\tExcepcion: ");
+			s.append(ex.getMessage());
+			
+			String cadena = s.toString();
+			
+			pw.println(cadena);
+		} catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+           try {
+           // Nuevamente aprovechamos el finally para 
+           // asegurarnos que se cierra el fichero.
+           if (null != fichero)
+              fichero.close();
+           } catch (Exception e2) {
+              e2.printStackTrace();
+           }
+        }
 	}
 	
-	// Filtro por nº de expediente
-	public Parser(String URL, ArrayList<String> exp, String modo){
-		this.URL = new File(URL);
-		this.expedientes = exp;
-		this.modo_identificacion = modo;
-		this.ids = createIds();
-	}
-	
-	// Filtro por nº de expediente sin URL
-	public Parser(ArrayList<String> exp, String modo){
-		this.expedientes = exp;
-		this.modo_identificacion = modo;
-		this.ids = createIds();
-	}
-	
-	public Parser(boolean primera_lectura) throws SQLException, ParseException{
-		// Buscamos la fecha limite para la lectura
+	public void setFechaLimite(boolean primera_lectura) throws SQLException, ParseException{
 		if (!primera_lectura){
 			ConexionSQL conn = new ConexionSQL();
 			fecha_limite = conn.getLastUpdateDate();
@@ -307,22 +330,24 @@ public class Parser {
 			
 			fecha_limite = new Timestamp(time);
 		}
-		
-		this.ids = createIds();
 	}
 	
-	// Sin nada (leemos todo)
-	public Parser(){
-		this.ids = createIds();
-	};
-	
-	
-	/**********************/
-	/** AUXILIARY METHODS**/
-	/**********************/
+	public boolean getPrimeraLectura() throws SQLException{
+		boolean primera_lectura = false;
+		
+		ConexionSQL sql = new ConexionSQL();
+		Connection conn = sql.conectarMySQL();
+		
+		PreparedStatement sentencia = conn.prepareStatement("SELECT * FROM tbl_ids");
+		ResultSet rs = sentencia.executeQuery();
+		
+		if (!rs.next()) primera_lectura = true;
+		
+		return primera_lectura;
+	}
 	
 	/* Creación de un IDS -> información sobre esta ejecución del Parser */
-	private int createIds(){
+	public void createIds(){
 		int ids = 0;
 		ConexionSQL sql = new ConexionSQL();
 		Connection conn = sql.conectarMySQL();
@@ -342,6 +367,7 @@ public class Parser {
 			
 			// Se obtiene la salida
 			ids = sentencia.getInt("ids");
+			this.ids = ids;
 		} catch (SQLException e) {
 			System.out.println("Error para rollback: " + e.getMessage());
 			e.printStackTrace();
@@ -354,8 +380,6 @@ public class Parser {
 				e.printStackTrace();
 			}
 		}
-		
-		return ids;
 	}
 	
 	/* Comprobación del identificador (NIF) del entry, para ver si es válido o no */
@@ -428,23 +452,7 @@ public class Parser {
 	
 		return exp;
 	}
- 	
-	/* Reconstrucción del link */
-	private String rebuildLink(String ID, String href) {
-		String result = "";
-		String[] splited = ID.split("/");
-		int cont = 0;
-		
-		splited[splited.length-1] = href;
-		while (cont < splited.length-1){
-			result += splited[cont] + "/";
-			cont++;
-		}
-		result += splited[splited.length-1];
-		
-		return result;
-	}
-	
+ 
 	private Document initDocumentBuilder(File url) throws ParserConfigurationException, SAXException, IOException, FileNotFoundException{
 		Document document = null;
 		try{
@@ -460,7 +468,6 @@ public class Parser {
 	
 	public void printData(){
 		System.out.println("*************************************");
-		System.out.println("Link actual: " + selfLink);
 		System.out.println("En este archivo hay un total de " + entryCont + " entries, de los cuales " + entries.size() + " son válidos.");
 		System.out.println("Fecha de actualización: " + updated);
 		System.out.println("*************************************");
@@ -477,6 +484,10 @@ public class Parser {
 		this.URL = file;
 	}
 
+	public String getSelfLink(){
+		return selfLink;
+	}
+	
 	
 	/** TYPE CODES */
 	
@@ -611,7 +622,6 @@ public class Parser {
 	        e.printStackTrace();
 	     }
 	}
-
 	public void writeCPV() throws ParserConfigurationException, SAXException, TransformerException {
 		try {
 			int code = 0;
@@ -657,7 +667,6 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	
 	public void writeCountryIdentificationCode() throws ParserConfigurationException, SAXException, TransformerException {
 		try {
 			String code = "", nombre = "";
@@ -695,7 +704,6 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	
 	public void writeCountrySubentityCode() throws ParserConfigurationException, SAXException, TransformerException {
 		try {
 			String code = "", nombre = "";
@@ -733,7 +741,6 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	
 	public void writeProcedureCode() throws ParserConfigurationException, SAXException, TransformerException{
 		try {
 			int code = 0;
@@ -772,7 +779,6 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-
 	public void writeContractingSystemTypeCode() throws ParserConfigurationException, SAXException, TransformerException{
 		try {
 			int code = 0;
@@ -811,7 +817,6 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-
 	public void writeUrgencyCode() throws ParserConfigurationException, SAXException, TransformerException{
 		try {
 			int code = 0;
@@ -850,7 +855,6 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	
 	public void writeSubmissionMethodCode() throws ParserConfigurationException, SAXException, TransformerException{
 		try {
 			int code = 0; 
@@ -889,7 +893,6 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	
 	public void writeLanguage() throws ParserConfigurationException, SAXException, TransformerException{
 		try {
 			String code = "", nombre = "";
@@ -927,7 +930,6 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	
 	public void writeProcurementLegislation() throws ParserConfigurationException, SAXException, TransformerException{
 		try {
 			String code = "", nombre = "";
@@ -965,7 +967,6 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-
 	public void writeContractingPartyTypeCode() throws ParserConfigurationException, SAXException, TransformerException {
 		try {
 			String code = "", nombre = "";
@@ -1003,7 +1004,6 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	
 	public void writeModosId() {
 		ConexionSQL con = new ConexionSQL();
 		int modosid = 1;
@@ -1016,7 +1016,6 @@ public class Parser {
 		descripcion = "Manual";
 		con.writeModosId(modosid, descripcion);
 	}
-	
 	public void writeContractFolderStatusCode() throws ParserConfigurationException, SAXException, TransformerException{
 		try {
 			String code = "", nombre = "";
@@ -1059,8 +1058,7 @@ public class Parser {
 		}catch (IOException e) {
 	        e.printStackTrace();
 	    }
-	}
-		
+	}	
 	public void writeTypeCode() throws ParserConfigurationException, SAXException, TransformerException{
 		try {
 			int code = 0;
@@ -1100,7 +1098,6 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	
 	public void writeTipoPliego(){
 		ConexionSQL con = new ConexionSQL();
 		int id = 1;
@@ -1115,7 +1112,6 @@ public class Parser {
 		tipo = "Adicional";
 		con.writeTipoPliego(id, tipo);
 	}
-	
 	public void writeTipoPlazo(){
 		ConexionSQL con = new ConexionSQL();
 		int id = 1;
@@ -1130,7 +1126,6 @@ public class Parser {
 		tipo = "Solicitudes";
 		con.writeTipoPlazo(id, tipo);
 	}
-	
 	public void writeFundingProgramCode() throws ParserConfigurationException, SAXException, TransformerException{
 		try {
 			String code = "";
@@ -1169,7 +1164,6 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	
 	public void writeGuaranteeTypeCode() throws ParserConfigurationException, SAXException, TransformerException{
 		try {
 			int code = 0;
@@ -1211,7 +1205,6 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-
 	public void writeRequiredBusinessProfileCode() throws ParserConfigurationException, SAXException, TransformerException{
 		try {
 			String code = "";
@@ -1250,7 +1243,6 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	
 	public void writeDeclarationTypeCode() throws ParserConfigurationException, SAXException, TransformerException{
 		try {
 			int code = 0;
@@ -1289,7 +1281,6 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	
 	public void writeTechnicalCapabilityTypeCode() throws ParserConfigurationException, SAXException, TransformerException{
 		try {
 			String code = "";
@@ -1328,7 +1319,6 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	
 	public void writeFinancialCapabilityTypeCode() throws ParserConfigurationException, SAXException, TransformerException{
 		try {
 			String code = "";
@@ -1367,7 +1357,6 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	
 	public void writeTipoEvaluacion(){
 		ConexionSQL con = new ConexionSQL();
 		int id = 1;
@@ -1378,7 +1367,6 @@ public class Parser {
 		tipo = "Económica-Financiera";
 		con.writeTipoEvaluacion(id, tipo);
 	}
-	
 	public void writeTenderResultCode() throws ParserConfigurationException, SAXException, TransformerException{
 		try {
 			int code = 0;
@@ -1417,7 +1405,6 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	
 	public void writeReasonCode() throws ParserConfigurationException, SAXException, TransformerException{
 		try {
 			String code = "";
@@ -1456,7 +1443,6 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	
 	public void writeNoticeTypeCode() throws ParserConfigurationException, SAXException, TransformerException{
 		try {
 			String code = "";
@@ -1495,7 +1481,6 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-
 	public void writeDocumentTypeCode() throws ParserConfigurationException, SAXException, TransformerException{
 		try {
 			String code = "";
@@ -1534,5 +1519,4 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-
 }

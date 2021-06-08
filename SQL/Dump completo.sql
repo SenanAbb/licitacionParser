@@ -299,7 +299,6 @@ DROP TABLE IF EXISTS `tbl_contracting_system_type_code`;
 CREATE TABLE `tbl_contracting_system_type_code` (
   `code` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
-  `orden` int(11) NOT NULL,
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -310,7 +309,7 @@ CREATE TABLE `tbl_contracting_system_type_code` (
 
 LOCK TABLES `tbl_contracting_system_type_code` WRITE;
 /*!40000 ALTER TABLE `tbl_contracting_system_type_code` DISABLE KEYS */;
-INSERT INTO `tbl_contracting_system_type_code` VALUES (0,'No aplica',0),(1,'Establecimiento del Acuerdo Marco',0),(2,'Establecimiento del Sistema Dinámico de Adquisición',0),(3,'Contrato basado en un Acuerdo Marco',0),(4,'Contrato basado en un Sistema Dinámico de Adquisición',0);
+INSERT INTO `tbl_contracting_system_type_code` VALUES (0,'No aplica'),(1,'Establecimiento del Acuerdo Marco'),(2,'Establecimiento del Sistema Dinámico de Adquisición'),(3,'Contrato basado en un Acuerdo Marco'),(4,'Contrato basado en un Sistema Dinámico de Adquisición');
 /*!40000 ALTER TABLE `tbl_contracting_system_type_code` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -829,9 +828,12 @@ CREATE TABLE `tbl_garantia` (
   `moneda` varchar(5) DEFAULT NULL,
   `porcentaje` decimal(8,2) DEFAULT NULL,
   `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `ids_expedientes` int(11) NOT NULL,
   PRIMARY KEY (`garantia`),
   KEY `fk_tbl_garantia_tbl_guarantee_type_code1_idx` (`guarantee_type_code`),
-  CONSTRAINT `fk_tbl_garantia_tbl_guarantee_type_code1` FOREIGN KEY (`guarantee_type_code`) REFERENCES `tbl_guarantee_type_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `fk_tbl_garantia_tbl_ids_expedientes1_idx` (`ids_expedientes`),
+  CONSTRAINT `fk_tbl_garantia_tbl_guarantee_type_code1` FOREIGN KEY (`guarantee_type_code`) REFERENCES `tbl_guarantee_type_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbl_garantia_tbl_ids_expedientes1` FOREIGN KEY (`ids_expedientes`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -907,7 +909,7 @@ CREATE TABLE `tbl_ids` (
   PRIMARY KEY (`ids`),
   KEY `modosid_idx` (`modosid`),
   CONSTRAINT `modosid` FOREIGN KEY (`modosid`) REFERENCES `tbl_modosid` (`modosid`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -932,6 +934,7 @@ CREATE TABLE `tbl_ids_expedientes` (
   `expediente` int(11) NOT NULL,
   `summary` varchar(400) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `atom_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `estado` varchar(45) NOT NULL,
   PRIMARY KEY (`ids_expedientes`),
@@ -951,32 +954,6 @@ CREATE TABLE `tbl_ids_expedientes` (
 LOCK TABLES `tbl_ids_expedientes` WRITE;
 /*!40000 ALTER TABLE `tbl_ids_expedientes` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tbl_ids_expedientes` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `tbl_ids_garantia`
---
-
-DROP TABLE IF EXISTS `tbl_ids_garantia`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tbl_ids_garantia` (
-  `garantia` int(11) NOT NULL,
-  `ids_expedientes` int(11) NOT NULL,
-  KEY `fk_tbl_ids_garantia_tbl_garantia1_idx` (`garantia`),
-  KEY `fk_tbl_ids_garantia_tbl_ids_expedientes1_idx` (`ids_expedientes`),
-  CONSTRAINT `fk_tbl_ids_garantia_tbl_garantia1` FOREIGN KEY (`garantia`) REFERENCES `tbl_garantia` (`garantia`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tbl_ids_garantia_tbl_ids_expedientes1` FOREIGN KEY (`ids_expedientes`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tbl_ids_garantia`
---
-
-LOCK TABLES `tbl_ids_garantia` WRITE;
-/*!40000 ALTER TABLE `tbl_ids_garantia` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tbl_ids_garantia` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1071,8 +1048,8 @@ DROP TABLE IF EXISTS `tbl_lugar_de_ejecucion`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tbl_lugar_de_ejecucion` (
   `lugar_de_ejecucion` int(11) NOT NULL AUTO_INCREMENT,
-  `subentidad_nacional` varchar(3) DEFAULT NULL,
-  `subentidad_territorial` varchar(5) NOT NULL,
+  `subentidad_territorial` varchar(5) DEFAULT NULL,
+  `subentidad_nacional` varchar(45) DEFAULT NULL,
   `pais` varchar(100) DEFAULT NULL,
   `calle` varchar(220) DEFAULT NULL,
   `codigo_postal` varchar(32) DEFAULT NULL,
@@ -1080,10 +1057,8 @@ CREATE TABLE `tbl_lugar_de_ejecucion` (
   `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `ids_expedientes` int(11) NOT NULL,
   PRIMARY KEY (`lugar_de_ejecucion`),
-  KEY `fk_calle_tbl_country_identification_code1_idx` (`subentidad_nacional`),
   KEY `fk_calle_tbl_country_subentity_code1_idx` (`subentidad_territorial`),
   KEY `fk_tbl_lugar_de_ejecucion_tbl_ids_expedientes1_idx` (`ids_expedientes`),
-  CONSTRAINT `fk_calle_tbl_country_identification_code1` FOREIGN KEY (`subentidad_nacional`) REFERENCES `tbl_country_identification_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_calle_tbl_country_subentity_code1` FOREIGN KEY (`subentidad_territorial`) REFERENCES `tbl_country_subentity_code` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_lugar_de_ejecucion_tbl_ids_expedientes1` FOREIGN KEY (`ids_expedientes`) REFERENCES `tbl_ids_expedientes` (`ids_expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
@@ -1509,7 +1484,7 @@ CREATE TABLE `tbl_resultado_del_procedimiento` (
   `resultado` int(11) NOT NULL,
   `motivacion` varchar(3500) DEFAULT NULL,
   `fecha_acuerdo` date NOT NULL,
-  `ofertas_recibidas` decimal(3,0) NOT NULL,
+  `ofertas_recibidas` decimal(3,0) DEFAULT NULL,
   `precio_oferta_mas_baja` decimal(17,2) DEFAULT NULL,
   `precio_oferta_mas_alta` decimal(17,2) DEFAULT NULL,
   `excluidos` tinyint(4) DEFAULT NULL,
@@ -1973,7 +1948,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newContractFolderStatusCode`(
 	IN code VARCHAR(50),
@@ -2364,11 +2339,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `newExpediente_Ids`(
     IN expediente INT,
     IN summary VARCHAR(400),
     IN updated TIMESTAMP,
+    IN atom_date TIMESTAMP,
     IN estado VARCHAR(45),
     OUT ids_expediente INT)
 BEGIN
-		INSERT INTO tbl_ids_expedientes (ids, expediente, summary, updated, estado)
-        VALUES (ids, expediente, summary, updated, estado);
+		INSERT INTO tbl_ids_expedientes (ids, expediente, summary, updated, atom_date, estado)
+        VALUES (ids, expediente, summary, updated, atom_date, estado);
         SET ids_expediente = last_insert_id();
 END ;;
 DELIMITER ;
@@ -2502,10 +2478,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `newGarantia`(
     IN importe DECIMAL(12,2),
     IN moneda VARCHAR(5),
     IN porcentaje DECIMAL(8,2),
-    OUT garantia INT)
+    IN ids_expedientes INT)
 BEGIN
-	INSERT INTO tbl_garantia (guarantee_type_code, importe, moneda, porcentaje) VALUES (guarantee_type_code, importe, moneda, porcentaje);
-    SET garantia = last_insert_id();
+	INSERT INTO tbl_garantia (guarantee_type_code, importe, moneda, porcentaje, ids_expedientes) VALUES (guarantee_type_code, importe, moneda, porcentaje, ids_expedientes);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2578,27 +2553,6 @@ BEGIN
     
     SET ids = last_insert_id();
     COMMIT;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `newIds_Garantia` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `newIds_Garantia`(
-	IN ids INT,
-    IN garantia INT)
-BEGIN
-	INSERT INTO tbl_ids_garantia (ids_expedientes, garantia) VALUES (ids, garantia);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2687,7 +2641,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newLugarDeEjecucion`(
 	IN ids_expedientes INT,
-    IN subentidad_nacional VARCHAR(3),
+    IN subentidad_nacional VARCHAR(45),
     IN subentidad_territorial VARCHAR(5),
     IN pais VARCHAR(100),
     IN calle VARCHAR(220),
@@ -3353,4 +3307,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-25 12:06:10
+-- Dump completed on 2021-06-08 10:28:19
