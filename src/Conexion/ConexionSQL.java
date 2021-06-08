@@ -261,7 +261,7 @@ public class ConexionSQL extends Parser{
 			
 			conn.commit();
 		} catch (SQLException e){
-			super.escribirLog(super.getSelfLink(), entry.getId(), e);
+			e.printStackTrace();
 			if (conn != null) conn.rollback();
 		} finally {
 			// Cerramos las conexiones

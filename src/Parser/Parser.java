@@ -198,7 +198,6 @@ public class Parser {
 			//newEntry.print();
 			entries.add(newEntry);	
 			
-			
 			/* ----> CONEXION CON BD <----
 			 * Vamos a insertar en la BD la entry:
 			 * 	1. Debemos crear un registro en tbl_ids para guardar la fecha en que se produjo esta lectura
@@ -211,6 +210,9 @@ public class Parser {
 			if (escribir){
 				ConexionSQL conn = new ConexionSQL();
 				conn.writeExpediente(newEntry, ids, updated, primera_lectura);
+				
+				// ESCRIBIMOS LOS DATOS EN EL LOG DESPUES DE ESCRIBIR EN LA BD
+				escribirLog(updated, selfLink, entryUpdate, entryId, newEntry.getContractFolderStatus().getContractFolderStatusCode());
 			}
 		}catch(Exception ex){
 		}
@@ -276,7 +278,7 @@ public class Parser {
 	/**********************/
 	/** AUXILIARY METHODS**/
 	/**********************/
-	public void escribirLog(String URL, String entry, Exception ex){
+	public void escribirLog(Timestamp atom_update, String atom_url, Timestamp entry_update, String entry_id, String estado){
 		FileWriter fichero = null;
 		PrintWriter pw = null;
 		
@@ -289,16 +291,17 @@ public class Parser {
 			
 			StringBuilder s = new StringBuilder();
 			
-			s.append("[");
 			s.append(dtf.format(fecha));
-			s.append("] URL: ");
-			s.append(URL);
-			s.append("\n");
-			s.append("\tExpediente: ");
-			s.append(entry);
-			s.append("\n");
-			s.append("\tExcepcion: ");
-			s.append(ex.getMessage());
+			s.append(", ");
+			s.append(atom_update.toString());
+			s.append(", ");
+			s.append(atom_url);
+			s.append(", ");
+			s.append(entry_update.toString());
+			s.append(", ");
+			s.append(entry_id);
+			s.append(", ");
+			s.append(estado);
 			
 			String cadena = s.toString();
 			
