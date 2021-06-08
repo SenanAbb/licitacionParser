@@ -694,7 +694,7 @@ DROP TABLE IF EXISTS `tbl_extension_de_contrato`;
 CREATE TABLE `tbl_extension_de_contrato` (
   `extension_de_contrato` int(11) NOT NULL AUTO_INCREMENT,
   `opciones` varchar(256) DEFAULT NULL,
-  `periodo_de_validez` varchar(1024) DEFAULT NULL,
+  `periodo_de_validez` varchar(4000) DEFAULT NULL,
   `ids_expedientes` int(11) NOT NULL,
   `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`extension_de_contrato`),
@@ -3307,4 +3307,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-08 10:28:19
+-- Dump completed on 2021-06-08 13:16:32
