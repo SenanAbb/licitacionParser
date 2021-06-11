@@ -42,8 +42,6 @@ public class ConexionSQL extends Parser{
 	private static final int PLIEGO_TECNICO = 2;
 	private static final int PLIEGO_ADICIONAL = 3;
 	
-	private static final String UBICACION_ORGANICA = "DIR3";
-	
 	private static final int PLAZO_PLIEGOS = 1;
 	private static final int PLAZO_OFERTA = 2;
 	private static final int PLAZO_SOLICITUDES = 3;
@@ -51,7 +49,7 @@ public class ConexionSQL extends Parser{
 	private static final int EVALUACION_TECNICA = 1;
 	private static final int EVALUACION_ECONOMICA_FINANCIERA = 2;
 	
-	private int ids_expedientes;
+	private int feeds_expedientes;
 	
     private String driver = "com.mysql.jdbc.Driver"; // Librería de MySQL
     private String database = "licitacion"; // Nombre de la base de datos  
@@ -77,28 +75,28 @@ public class ConexionSQL extends Parser{
 	
 	/* TABLAS GENERALES */
 	
-	public void writeExpediente(Entry entry, int ids, Timestamp atom_date, boolean primera_lectura) throws SQLException {
+	public void writeExpediente(Entry entry, int feeds, boolean primera_lectura) throws SQLException {
 		if (primera_lectura){
-			writeData_firstTime(entry, ids, atom_date);
+			writeData_firstTime(entry, feeds);
 		}else{
-			writeData_notFirstTime(entry, ids, atom_date);
+			writeData_notFirstTime(entry, feeds);
 		}
 	}
 	
-	private void writeData_firstTime(Entry entry, int ids, Timestamp atom_date) throws SQLException {
+	private void writeData_firstTime(Entry entry, int feeds) throws SQLException {
 		boolean existe = searchExpediente(Integer.parseInt(entry.getId()));
 		boolean todo;
 		if(existe){
 			todo = false;
-			writeNewIdsExpediente(entry, ids, atom_date, todo);
+			writeNewFeedsExpediente(entry, feeds, todo);
 		}else{
 			todo = true;
 			writeNewExpediente(entry);
-			writeNewIdsExpediente(entry, ids, atom_date, todo);
+			writeNewFeedsExpediente(entry, feeds, todo);
 		}
 	}
 	
-	private void writeData_notFirstTime(Entry entry, int ids, Timestamp atom_date) throws SQLException {
+	private void writeData_notFirstTime(Entry entry, int feeds) throws SQLException {
 		boolean existe = searchExpediente(Integer.parseInt(entry.getId()));
 		boolean todo;
 		if(existe){
@@ -106,19 +104,19 @@ public class ConexionSQL extends Parser{
 			
 			// Comprobamos si el estado del entry actual es mayor o igual que el último registrado
 			Connection conn = conectarMySQL();
-			PreparedStatement sentencia = conn.prepareStatement("SELECT ids_expedientes, orden FROM tbl_ids_expedientes INNER JOIN tbl_contract_folder_status_code" +
-					" ON tbl_ids_expedientes.estado = tbl_contract_folder_status_code.code  WHERE expediente = ? ORDER BY atom_date DESC LIMIT 1");
+			PreparedStatement sentencia = conn.prepareStatement("SELECT feeds_expedientes, orden FROM tbl_feeds_expedientes INNER JOIN tbl_contract_folder_status_code" +
+					" ON tbl_feeds_expedientes.estado = tbl_contract_folder_status_code.code WHERE expediente = ? ORDER BY updated DESC LIMIT 1");
 			sentencia.setInt(1, Integer.parseInt(entry.getId()));
 			
 			ResultSet rs = sentencia.executeQuery();
 			while(rs.next()){
 				int orden_ultimo = rs.getInt("orden");
 				int orden_entry = -1;
-				int ids_exp_ultimo = rs.getInt("ids_expedientes");
+				int feeds_exp_ultimo = rs.getInt("feeds_expedientes");
 				rs.close();
 				
 				sentencia = conn.prepareStatement("SELECT orden FROM tbl_contract_folder_status_code WHERE code = ?");
-				sentencia.setString(1 ,entry.getContractFolderStatus().getContractFolderStatusCode());
+				sentencia.setString(1, entry.getContractFolderStatus().getContractFolderStatusCode());
 				
 				rs = sentencia.executeQuery();
 				if (rs.next()){
@@ -135,17 +133,17 @@ public class ConexionSQL extends Parser{
 				 */
 				
 				if (orden_entry >= orden_ultimo){ // HAY QUE QUITAR EL =
-					writeNewIdsExpediente(entry, ids, atom_date, todo);
-					checkTables(entry, ids_exp_ultimo);
+					writeNewFeedsExpediente(entry, feeds, todo);
+					checkTables(entry, feeds_exp_ultimo);
 				}else if (orden_entry == orden_ultimo){ // PARA RECTIFICACION
 					// Para la primera version solo vamos a almacenar el IDS de la rectificación
-					writeNewIdsExpediente(entry, ids, atom_date, todo);
+					writeNewFeedsExpediente(entry, feeds, todo);
 				}
 			}
 		}else{
 			todo = true;
 			writeNewExpediente(entry);
-			writeNewIdsExpediente(entry, ids, atom_date, todo);
+			writeNewFeedsExpediente(entry, feeds, todo);
 		}
 	}
 
@@ -274,22 +272,25 @@ public class ConexionSQL extends Parser{
 		}
 	}
 
-	private void writeNewIdsExpediente(Entry entry, int ids, Timestamp atom_date, boolean todo) throws SQLException{
+	private void writeNewFeedsExpediente(Entry entry, int feeds, boolean todo) throws SQLException{
 		Connection conn = conectarMySQL();
 		CallableStatement sentencia = null;
+		int entidad_adjudicadora = writeEntidadAdjudicadora(entry, conn);
 		
 		try {
 			if (todo){
-				sentencia = (CallableStatement) conn.prepareCall("{call newExpediente_Ids(?, ?, ?, ?, ?, ?, ?)}");
+				sentencia = (CallableStatement) conn.prepareCall("{call newFeeds_Expediente(?, ?, ?, ?, ?, ?, ?)}");
 				
-				sentencia.setInt("ids", ids);
+				sentencia.setInt("feeds", feeds);
 				sentencia.setInt("expediente", Integer.parseInt(entry.getId()));
 				sentencia.setString("summary", entry.getSummary());
 				sentencia.setTimestamp("updated", entry.getUpdated());
-				sentencia.setTimestamp("atom_date", atom_date);
 				sentencia.setString("estado", entry.getContractFolderStatus().getContractFolderStatusCode());
+				sentencia.setInt("entidad_adjudicadora", entidad_adjudicadora);
 				
 				sentencia.execute();
+				
+				feeds_expedientes = sentencia.getInt("feeds_expediente");
 				
 				// HAY QUE CONTROLAR QUE DESPUES DE CREAR EL IDS_EXPEDIENTE, SI FALLA ALGO, MARCAR ESE IDS COMO ERROR
 				
@@ -297,11 +298,8 @@ public class ConexionSQL extends Parser{
 				// En caso de haber algun fallo con la base de datos, esta entry se descartará
 				conn.setAutoCommit(false);
 				
-				ids_expedientes = sentencia.getInt("ids_expediente");
-				
 				writeLugarDeEjecucion(entry, conn);
 				writeProcesoDeLicitacion(entry, conn);
-				writeEntidadAdjudicadora(entry, conn);
 				writePlazoDeObtencion(entry, conn);
 				writeExtensionDeContrato(entry, conn);
 				writeCondicionesDeLicitacion(entry, conn);
@@ -319,18 +317,18 @@ public class ConexionSQL extends Parser{
 				// FINALIZAMOS LA TRANSACCION
 				conn.commit();
 			}else{
-				sentencia = (CallableStatement) conn.prepareCall("{call newExpediente_Ids(?, ?, ?, ?, ?, ?, ?)}");
+				sentencia = (CallableStatement) conn.prepareCall("{call newFeeds_Expediente(?, ?, ?, ?, ?, ?, ?)}");
 				
-				sentencia.setInt("ids", ids);
+				sentencia.setInt("feeds", feeds);
 				sentencia.setInt("expediente", Integer.parseInt(entry.getId()));
 				sentencia.setString("summary", entry.getSummary());
 				sentencia.setTimestamp("updated", entry.getUpdated());
-				sentencia.setTimestamp("atom_date", atom_date);
 				sentencia.setString("estado", entry.getContractFolderStatus().getContractFolderStatusCode());
+				sentencia.setInt("entidad_adjudicadora", entidad_adjudicadora);
 				
 				sentencia.execute();
 				
-				ids_expedientes = sentencia.getInt("ids_expediente");
+				feeds_expedientes = sentencia.getInt("feeds_expediente");
 			}
 		} catch (SQLException e){
 			e.printStackTrace();
@@ -357,8 +355,8 @@ public class ConexionSQL extends Parser{
 		
 		try {
 			// LUGAR DE EJECUCION
-			sentencia = conn.prepareStatement("SELECT * FROM tbl_lugar_de_ejecucion INNER JOIN tbl_ids_expedientes ON "
-					+ "tbl_lugar_de_ejecucion.ids_expedientes = tbl_ids_expedientes.ids_expedientes WHERE tbl_ids_expedientes.expediente= ?");
+			sentencia = conn.prepareStatement("SELECT * FROM tbl_lugar_de_ejecucion INNER JOIN tbl_feeds_expedientes ON "
+					+ "tbl_lugar_de_ejecucion.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes WHERE tbl_feeds_expedientes.expediente= ?");
 			sentencia.setInt(1, Integer.parseInt(entry.getId()));
 			
 			rs = sentencia.executeQuery();
@@ -369,8 +367,8 @@ public class ConexionSQL extends Parser{
 			sentencia.close();
 			
 			// PROCESO DE LICITACION
-			sentencia = conn.prepareStatement("SELECT * FROM tbl_proceso_de_licitacion INNER JOIN tbl_ids_expedientes ON "
-					+ "tbl_proceso_de_licitacion.ids_expedientes = tbl_ids_expedientes.ids_expedientes WHERE tbl_ids_expedientes.expediente = ?");
+			sentencia = conn.prepareStatement("SELECT * FROM tbl_proceso_de_licitacion INNER JOIN tbl_feeds_expedientes ON "
+					+ "tbl_proceso_de_licitacion.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes WHERE tbl_feeds_expedientes.expediente = ?");
 			sentencia.setInt(1, Integer.parseInt(entry.getId()));
 			
 			rs = sentencia.executeQuery();
@@ -380,23 +378,11 @@ public class ConexionSQL extends Parser{
 			rs.close();
 			sentencia.close();
 			
-			// ENTIDAD ADJUDICADORA
-			sentencia = conn.prepareStatement("SELECT * FROM tbl_entidad_adjudicadora INNER JOIN tbl_ids_expedientes ON "
-					+ "tbl_entidad_adjudicadora.ids_expedientes = tbl_ids_expedientes.ids_expedientes WHERE tbl_ids_expedientes.expediente = ?");
-			sentencia.setInt(1, Integer.parseInt(entry.getId()));
-			
-			rs = sentencia.executeQuery();
-			if (!rs.next()){
-				writeEntidadAdjudicadora(entry, conn);
-			}
-			rs.close();
-			sentencia.close();
-			
 			// PLAZOS DE OBTENCIÓN
 			// Pliegos
-			sentencia = conn.prepareStatement("SELECT * FROM tbl_plazo_de_obtencion INNER JOIN tbl_ids_expedientes "
-					+ "ON tbl_plazo_de_obtencion.ids_expedientes = tbl_ids_expedientes.ids_expedientes "
-					+ "WHERE tbl_ids_expedientes.expediente = ? "
+			sentencia = conn.prepareStatement("SELECT * FROM tbl_plazo_de_obtencion INNER JOIN tbl_feeds_expedientes "
+					+ "ON tbl_plazo_de_obtencion.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes "
+					+ "WHERE tbl_feeds_expedientes.expediente = ? "
 					+ "AND tbl_plazo_de_obtencion.tipo_plazo = ?");
 			sentencia.setInt(1, Integer.parseInt(entry.getId()));
 			sentencia.setInt(2, PLAZO_PLIEGOS);
@@ -405,29 +391,29 @@ public class ConexionSQL extends Parser{
 			// Si no está en la base de datos Y LO TENGO EN EL ENTRY
 			if (!rs.next() && entry.getContractFolderStatus().getTenderingProcess().getDocumentAvailabilityPeriod() != null){
 				// Busco todos los plazos del expediente
-				sentencia = conn.prepareStatement("SELECT id_plazo_de_obtencion, tipo_plazo FROM tbl_plazo_de_obtencion INNER JOIN tbl_ids_expedientes" + 
-						" ON tbl_plazo_de_obtencion.ids_expedientes = tbl_ids_expedientes.ids_expedientes" + 
-						" WHERE tbl_plazo_de_obtencion.ids_expedientes = ?");
+				sentencia = conn.prepareStatement("SELECT id_plazo_de_obtencion, tipo_plazo FROM tbl_plazo_de_obtencion INNER JOIN tbl_feeds_expedientes" + 
+						" ON tbl_plazo_de_obtencion.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes" + 
+						" WHERE tbl_plazo_de_obtencion.feeds_expedientes = ?");
 				sentencia.setInt(1, ids_exp_ultimo);
 				
 				// Actualizo el ids_expediente al actual
 				rs = sentencia.executeQuery();
 				while (rs.next()){
-					sentencia = conn.prepareStatement("UPDATE tbl_plazo_de_obtencion SET ids_expedientes = ?");
-					sentencia.setInt(1, ids_expedientes);
+					sentencia = conn.prepareStatement("UPDATE tbl_plazo_de_obtencion SET feeds_expedientes = ?");
+					sentencia.setInt(1, feeds_expedientes);
 					sentencia.executeUpdate();
 				}
 				writePlazoDeObtencionPliegos(entry, conn);
 				aux = ids_exp_ultimo;
-				ids_exp_ultimo = ids_expedientes;
+				ids_exp_ultimo = feeds_expedientes;
 			}
 			rs.close();
 			sentencia.close();
 			
 			/// Oferta
-			sentencia = conn.prepareStatement("SELECT * FROM tbl_plazo_de_obtencion INNER JOIN tbl_ids_expedientes "
-					+ "ON tbl_plazo_de_obtencion.ids_expedientes = tbl_ids_expedientes.ids_expedientes "
-					+ "WHERE tbl_ids_expedientes.expediente = ? "
+			sentencia = conn.prepareStatement("SELECT * FROM tbl_plazo_de_obtencion INNER JOIN tbl_feeds_expedientes "
+					+ "ON tbl_plazo_de_obtencion.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes "
+					+ "WHERE tbl_feeds_expedientes.expediente = ? "
 					+ "AND tbl_plazo_de_obtencion.tipo_plazo = ?");
 			sentencia.setInt(1, Integer.parseInt(entry.getId()));
 			sentencia.setInt(2, PLAZO_OFERTA);
@@ -435,29 +421,29 @@ public class ConexionSQL extends Parser{
 			rs = sentencia.executeQuery();
 			if (!rs.next() && entry.getContractFolderStatus().getTenderingProcess().getTenderSubmissionDeadlinePeriod() != null){
 				// Busco todos los plazos del expediente
-				sentencia = conn.prepareStatement("SELECT id_plazo_de_obtencion, tipo_plazo FROM tbl_plazo_de_obtencion INNER JOIN tbl_ids_expedientes" + 
-						" ON tbl_plazo_de_obtencion.ids_expedientes = tbl_ids_expedientes.ids_expedientes" + 
-						" WHERE tbl_plazo_de_obtencion.ids_expedientes = ?");
+				sentencia = conn.prepareStatement("SELECT id_plazo_de_obtencion, tipo_plazo FROM tbl_plazo_de_obtencion INNER JOIN tbl_feeds_expedientes" + 
+						" ON tbl_plazo_de_obtencion.feeds_expedientes = tbl_ids_expedientes.feeds_expedientes" + 
+						" WHERE tbl_plazo_de_obtencion.feeds_expedientes = ?");
 				sentencia.setInt(1, ids_exp_ultimo);
 				
 				// Actualizo el ids_expediente al actual
 				rs = sentencia.executeQuery();
 				while (rs.next()){
-					sentencia = conn.prepareStatement("UPDATE tbl_plazo_de_obtencion SET ids_expedientes = ?");
-					sentencia.setInt(1, ids_expedientes);
+					sentencia = conn.prepareStatement("UPDATE tbl_plazo_de_obtencion SET feeds_expedientes = ?");
+					sentencia.setInt(1, feeds_expedientes);
 					sentencia.executeUpdate();
 				}
 				writePlazoDeObtencionOferta(entry, conn);
 				aux = ids_exp_ultimo;
-				ids_exp_ultimo = ids_expedientes;
+				ids_exp_ultimo = feeds_expedientes;
 			}
 			rs.close();
 			sentencia.close();
 			
 			/// Solicitudes
-			sentencia = conn.prepareStatement("SELECT * FROM tbl_plazo_de_obtencion INNER JOIN tbl_ids_expedientes "
-					+ "ON tbl_plazo_de_obtencion.ids_expedientes = tbl_ids_expedientes.ids_expedientes "
-					+ "WHERE tbl_ids_expedientes.expediente = ? "
+			sentencia = conn.prepareStatement("SELECT * FROM tbl_plazo_de_obtencion INNER JOIN tbl_feeds_expedientes "
+					+ "ON tbl_plazo_de_obtencion.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes "
+					+ "WHERE tbl_feeds_expedientes.expediente = ? "
 					+ "AND tbl_plazo_de_obtencion.tipo_plazo = ?");
 			sentencia.setInt(1, Integer.parseInt(entry.getId()));
 			sentencia.setInt(2, PLAZO_SOLICITUDES);
@@ -465,21 +451,21 @@ public class ConexionSQL extends Parser{
 			rs = sentencia.executeQuery();
 			if (!rs.next() && entry.getContractFolderStatus().getTenderingProcess().getParticipationRequestReceptionPeriod() != null){
 				// Busco todos los plazos del expediente
-				sentencia = conn.prepareStatement("SELECT id_plazo_de_obtencion, tipo_plazo FROM tbl_plazo_de_obtencion INNER JOIN tbl_ids_expedientes" + 
-						" ON tbl_plazo_de_obtencion.ids_expedientes = tbl_ids_expedientes.ids_expedientes" + 
-						" WHERE tbl_plazo_de_obtencion.ids_expedientes = ?");
+				sentencia = conn.prepareStatement("SELECT id_plazo_de_obtencion, tipo_plazo FROM tbl_plazo_de_obtencion INNER JOIN tbl_feeds_expedientes" + 
+						" ON tbl_plazo_de_obtencion.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes" + 
+						" WHERE tbl_plazo_de_obtencion.feeds_expedientes = ?");
 				sentencia.setInt(1, ids_exp_ultimo);
 				
 				// Actualizo el ids_expediente al actual
 				rs = sentencia.executeQuery();
 				while (rs.next()){
-					sentencia = conn.prepareStatement("UPDATE tbl_plazo_de_obtencion SET ids_expedientes = ?");
-					sentencia.setInt(1, ids_expedientes);
+					sentencia = conn.prepareStatement("UPDATE tbl_plazo_de_obtencion SET feeds_expedientes = ?");
+					sentencia.setInt(1, feeds_expedientes);
 					sentencia.executeUpdate();
 				}
 				writePlazoDeObtencionSolicitudes(entry, conn);
 				aux = ids_exp_ultimo;
-				ids_exp_ultimo = ids_expedientes;
+				ids_exp_ultimo = feeds_expedientes;
 			}
 			rs.close();
 			sentencia.close();
@@ -487,8 +473,8 @@ public class ConexionSQL extends Parser{
 			ids_exp_ultimo = aux;
 			
 			// EXTENSION DE CONTRATO
-			sentencia = conn.prepareStatement("SELECT * FROM tbl_extension_de_contrato INNER JOIN tbl_ids_expedientes ON "
-					+ "tbl_extension_de_contrato.ids_expedientes = tbl_ids_expedientes.ids_expedientes WHERE tbl_ids_expedientes.expediente = ?");
+			sentencia = conn.prepareStatement("SELECT * FROM tbl_extension_de_contrato INNER JOIN tbl_feeds_expedientes ON "
+					+ "tbl_extension_de_contrato.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes WHERE tbl_feeds_expedientes.expediente = ?");
 			sentencia.setInt(1, Integer.parseInt(entry.getId()));
 			
 			rs = sentencia.executeQuery();
@@ -499,8 +485,8 @@ public class ConexionSQL extends Parser{
 			sentencia.close();
 			
 			// CONDICIONES DE LICITACION
-			sentencia = conn.prepareStatement("SELECT * FROM tbl_condiciones_de_licitacion INNER JOIN tbl_ids_expedientes ON "
-					+ "tbl_condiciones_de_licitacion.ids_expedientes = tbl_ids_expedientes.ids_expedientes WHERE tbl_ids_expedientes.expediente = ?");
+			sentencia = conn.prepareStatement("SELECT * FROM tbl_condiciones_de_licitacion INNER JOIN tbl_feeds_expedientes ON "
+					+ "tbl_condiciones_de_licitacion.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes WHERE tbl_feeds_expedientes.expediente = ?");
 			sentencia.setInt(1, Integer.parseInt(entry.getId()));
 			
 			rs = sentencia.executeQuery();
@@ -548,8 +534,8 @@ public class ConexionSQL extends Parser{
 			// GARANTÍA
 			RequiredFinancialGuarantee[] rfg = entry.getContractFolderStatus().getTenderingTerms().getRequiredFinancialGuaranteeList();
 			
-			sentencia = conn.prepareStatement("SELECT COUNT(*) FROM tbl_garantia INNER JOIN tbl_ids_expedientes ON "
-					+ "tbl_garantia.ids_expedientes = tbl_ids_expedientes.ids_expedientes WHERE tbl_ids_expedientes.expediente = ?");
+			sentencia = conn.prepareStatement("SELECT COUNT(*) FROM tbl_garantia INNER JOIN tbl_feeds_expedientes ON "
+					+ "tbl_garantia.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes WHERE tbl_feeds_expedientes.expediente = ?");
 			sentencia.setInt(1, Integer.parseInt(entry.getId()));
 			
 			rs = sentencia.executeQuery();
@@ -561,8 +547,8 @@ public class ConexionSQL extends Parser{
 			}
 			
 			if (rfg_tam > tam){
-				sentencia = conn.prepareStatement("SELECT * FROM tbl_garantia INNER JOIN tbl_ids_expedientes ON "
-						+ "tbl_garantia.ids_expedientes = tbl_ids_expedientes.ids_expedientes WHERE tbl_ids_expedientes.expediente = ?");
+				sentencia = conn.prepareStatement("SELECT * FROM tbl_garantia INNER JOIN tbl_feeds_expedientes ON "
+						+ "tbl_garantia.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes WHERE tbl_feeds_expedientes.expediente = ?");
 				sentencia.setInt(1, Integer.parseInt(entry.getId()));
 				
 				rs = sentencia.executeQuery();
@@ -591,9 +577,9 @@ public class ConexionSQL extends Parser{
 			}
 			
 			// 	REQUISITOS DE PARTICIPACION
-			sentencia = conn.prepareStatement("SELECT * FROM tbl_requisitos_de_participacion INNER JOIN tbl_ids_expedientes "
-					+ "ON tbl_requisitos_de_participacion.ids_expedientes = tbl_ids_expedientes.ids_expedientes "
-					+ "WHERE tbl_ids_expedientes.expediente = ?");
+			sentencia = conn.prepareStatement("SELECT * FROM tbl_requisitos_de_participacion INNER JOIN tbl_feeds_expedientes "
+					+ "ON tbl_requisitos_de_participacion.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes "
+					+ "WHERE tbl_feeds_expedientes.expediente = ?");
 			sentencia.setInt(1, Integer.parseInt(entry.getId()));
 			
 			rs = sentencia.executeQuery();
@@ -610,7 +596,7 @@ public class ConexionSQL extends Parser{
 				TechnicalEvaluationCriteria[] tec = entry.getContractFolderStatus().getTenderingTerms().getTendererQualificationRequest().getTechnicalEvaluationCriteriaList();
 				FinancialEvaluationCriteria[] fec = entry.getContractFolderStatus().getTenderingTerms().getTendererQualificationRequest().getFinancialEvaluationCriteriaList();
 				
-				sentencia = conn.prepareStatement("SELECT COUNT(*) FROM tbl_criterio_de_evaluacion INNER JOIN tbl_ids_expedientes ON tbl_criterio_de_evaluacion.ids_expedientes = tbl_ids_expedientes.ids_expedientes WHERE tbl_ids_expedientes.expediente = ?");
+				sentencia = conn.prepareStatement("SELECT COUNT(*) FROM tbl_criterio_de_evaluacion INNER JOIN tbl_feeds_expedientes ON tbl_criterio_de_evaluacion.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes WHERE tbl_feeds_expedientes.expediente = ?");
 				sentencia.setInt(1, Integer.parseInt(entry.getId()));
 				 
 				rs = sentencia.executeQuery();
@@ -625,7 +611,7 @@ public class ConexionSQL extends Parser{
 				
 				if ((tec_tam + fec_tam) > tam){
 					// Busco el distinto
-					sentencia = conn.prepareStatement("SELECT * FROM tbl_criterio_de_evaluacion INNER JOIN tbl_ids_expedientes ON tbl_criterio_de_evaluacion.ids_expedientes = tbl_ids_expedientes.ids_expedientes WHERE tbl_ids_expedientes.expediente = ?");
+					sentencia = conn.prepareStatement("SELECT * FROM tbl_criterio_de_evaluacion INNER JOIN tbl_feeds_expedientes ON tbl_criterio_de_evaluacion.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes WHERE tbl_feeds_expedientes.expediente = ?");
 					sentencia.setInt(1, Integer.parseInt(entry.getId()));
 					 
 					rs = sentencia.executeQuery();
@@ -685,9 +671,9 @@ public class ConexionSQL extends Parser{
 			}
 			
 			// SUBCONTRATACION PERMITIDA
-			sentencia = conn.prepareStatement("SELECT * FROM tbl_subcontratacion_permitida INNER JOIN tbl_ids_expedientes "
-					+ "ON tbl_subcontratacion_permitida.ids_expedientes = tbl_ids_expedientes.ids_expedientes "
-					+ "WHERE tbl_ids_expedientes.expediente = ?");
+			sentencia = conn.prepareStatement("SELECT * FROM tbl_subcontratacion_permitida INNER JOIN tbl_feeds_expedientes "
+					+ "ON tbl_subcontratacion_permitida.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes "
+					+ "WHERE tbl_feeds_expedientes.expediente = ?");
 			sentencia.setInt(1, Integer.parseInt(entry.getId()));
 			
 			rs = sentencia.executeQuery();
@@ -700,7 +686,7 @@ public class ConexionSQL extends Parser{
 			if (entry.getContractFolderStatus().getTenderingTerms().getAwardingTerms() != null){
 				AwardingCriteria[] ac = entry.getContractFolderStatus().getTenderingTerms().getAwardingTerms().getAwardingCriteriaList();
 				
-				sentencia = conn.prepareStatement("SELECT COUNT(*) FROM tbl_criterio_de_adjudicacion INNER JOIN tbl_ids_expedientes ON tbl_criterio_de_adjudicacion.ids_expedientes = tbl_ids_expedientes.ids_expedientes WHERE tbl_ids_expedientes.expediente = ?");
+				sentencia = conn.prepareStatement("SELECT COUNT(*) FROM tbl_criterio_de_adjudicacion INNER JOIN tbl_feeds_expedientes ON tbl_criterio_de_adjudicacion.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes WHERE tbl_feeds_expedientes.expediente = ?");
 				sentencia.setInt(1, Integer.parseInt(entry.getId()));
 				 
 				rs = sentencia.executeQuery();
@@ -713,7 +699,7 @@ public class ConexionSQL extends Parser{
 				}
 				
 				if (ac_tam > tam){
-					sentencia = conn.prepareStatement("SELECT * FROM tbl_criterio_de_adjudicacion INNER JOIN tbl_ids_expedientes ON tbl_criterio_de_adjudicacion.ids_expedientes = tbl_ids_expedientes.ids_expedientes WHERE tbl_ids_expedientes.expediente = ?");
+					sentencia = conn.prepareStatement("SELECT * FROM tbl_criterio_de_adjudicacion INNER JOIN tbl_feeds_expedientes ON tbl_criterio_de_adjudicacion.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes WHERE tbl_feeds_expedientes.expediente = ?");
 					sentencia.setInt(1, Integer.parseInt(entry.getId()));
 					
 					rs = sentencia.executeQuery();
@@ -744,7 +730,7 @@ public class ConexionSQL extends Parser{
 			// RESULTADO DEL PROCEDIMIENTO
 			TenderResult[] td = entry.getContractFolderStatus().getTenderResultList();
 			
-			sentencia = conn.prepareStatement("SELECT COUNT(*) FROM tbl_resultado_del_procedimiento INNER JOIN tbl_ids_expedientes ON tbl_resultado_del_procedimiento.ids_expedientes = tbl_ids_expedientes.ids_expedientes WHERE tbl_ids_expedientes.expediente = ?");
+			sentencia = conn.prepareStatement("SELECT COUNT(*) FROM tbl_resultado_del_procedimiento INNER JOIN tbl_feeds_expedientes ON tbl_resultado_del_procedimiento.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes WHERE tbl_feeds_expedientes.expediente = ?");
 			sentencia.setInt(1, Integer.parseInt(entry.getId()));
 			
 			rs = sentencia.executeQuery();
@@ -756,7 +742,7 @@ public class ConexionSQL extends Parser{
 			}
 			
 			if (td_tam > tam){
-				sentencia = conn.prepareStatement("SELECT * FROM tbl_resultado_del_procedimiento INNER JOIN tbl_ids_expedientes ON tbl_resultado_del_procedimiento.ids_expedientes = tbl_ids_expedientes.ids_expedientes WHERE tbl_ids_expedientes.expediente = ?");
+				sentencia = conn.prepareStatement("SELECT * FROM tbl_resultado_del_procedimiento INNER JOIN tbl_feeds_expedientes ON tbl_resultado_del_procedimiento.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes WHERE tbl_feeds_expedientes.expediente = ?");
 				sentencia.setInt(1, Integer.parseInt(entry.getId()));
 				
 				rs = sentencia.executeQuery();
@@ -769,7 +755,7 @@ public class ConexionSQL extends Parser{
 					for (int i = 0; i < td_tam; i++){
 						rs = sentencia.executeQuery();
 						while (rs.next() && !encontrado){
-							if (rs.getInt("resultado") == td[i].getResultCode() &&
+							if (rs.getInt("result_code") == td[i].getResultCode() &&
 									rs.getInt("ofertas_recibidas") == td[i].getReceivedTenderQuantity() &&
 									rs.getString("motivacion").compareTo(td[i].getDescription()) == 0){
 								encontrado = true;
@@ -787,9 +773,9 @@ public class ConexionSQL extends Parser{
 			// INFORMACION SOBRE EL CONTRATO, ADJUDICATARIO, IMPORTES DE LA ADJUDICACION y CONDICIONES DE SUBCONTRATACION VIENEN CON EL RESULTADO
 			
 			// JUSTIFICACION DEL PROCESO
-			sentencia = conn.prepareStatement("SELECT * FROM tbl_justificacion_del_proceso INNER JOIN tbl_ids_expedientes "
-					+ "ON tbl_justificacion_del_proceso.ids_expedientes = tbl_ids_expedientes.ids_expedientes "
-					+ "WHERE tbl_ids_expedientes.expediente = ?");
+			sentencia = conn.prepareStatement("SELECT * FROM tbl_justificacion_del_proceso INNER JOIN tbl_feeds_expedientes "
+					+ "ON tbl_justificacion_del_proceso.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes "
+					+ "WHERE tbl_feeds_expedientes.expediente = ?");
 			sentencia.setInt(1, Integer.parseInt(entry.getId()));
 			
 			rs = sentencia.executeQuery();
@@ -801,9 +787,9 @@ public class ConexionSQL extends Parser{
 			// MODIFICACIONES DE CONTRATO
 			ContractModification[] cm = entry.getContractFolderStatus().getContractModificationList();
 			
-			sentencia = conn.prepareStatement("SELECT COUNT(*) FROM tbl_modificaciones_de_contrato INNER JOIN tbl_ids_expedientes "
-					+ "ON tbl_modificaciones_de_contrato.ids_expedientes = tbl_ids_expedientes.ids_expedientes "
-					+ "WHERE tbl_ids_expedientes.expediente = ?");
+			sentencia = conn.prepareStatement("SELECT COUNT(*) FROM tbl_modificaciones_de_contrato INNER JOIN tbl_feeds_expedientes "
+					+ "ON tbl_modificaciones_de_contrato.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes "
+					+ "WHERE tbl_feeds_expedientes.expediente = ?");
 			sentencia.setInt(1, Integer.parseInt(entry.getId()));
 			
 			rs = sentencia.executeQuery();
@@ -815,9 +801,9 @@ public class ConexionSQL extends Parser{
 			}
 			
 			if (cm_tam > tam){
-				sentencia = conn.prepareStatement("SELECT * FROM tbl_modificaciones_de_contrato INNER JOIN tbl_ids_expedientes "
-						+ "ON tbl_modificaciones_de_contrato.ids_expedientes = tbl_ids_expedientes.ids_expedientes "
-						+ "WHERE tbl_ids_expedientes.expediente = ?");
+				sentencia = conn.prepareStatement("SELECT * FROM tbl_modificaciones_de_contrato INNER JOIN tbl_feeds_expedientes "
+						+ "ON tbl_modificaciones_de_contrato.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes "
+						+ "WHERE tbl_feeds_expedientes.expediente = ?");
 				sentencia.setInt(1, Integer.parseInt(entry.getId()));
 				
 				rs = sentencia.executeQuery();
@@ -848,9 +834,9 @@ public class ConexionSQL extends Parser{
 			// PUBLICACIONES OFICIALES
 			ValidNoticeInfo[] vni = entry.getContractFolderStatus().getValidNoticeInfoList();
 			
-			sentencia = conn.prepareStatement("SELECT COUNT(*) FROM tbl_publicaciones_oficiales INNER JOIN tbl_ids_expedientes "
-					+ "ON tbl_publicaciones_oficiales.ids_expedientes = tbl_ids_expedientes.ids_expedientes "
-					+ "WHERE tbl_ids_expedientes.expediente = ?");
+			sentencia = conn.prepareStatement("SELECT COUNT(*) FROM tbl_publicaciones_oficiales INNER JOIN tbl_feeds_expedientes "
+					+ "ON tbl_publicaciones_oficiales.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes "
+					+ "WHERE tbl_feeds_expedientes.expediente = ?");
 			sentencia.setInt(1, Integer.parseInt(entry.getId()));
 			
 			rs = sentencia.executeQuery();
@@ -862,9 +848,9 @@ public class ConexionSQL extends Parser{
 			}
 			
 			if (vni_tam > tam){
-				sentencia = conn.prepareStatement("SELECT * FROM tbl_publicaciones_oficiales INNER JOIN tbl_ids_expedientes "
-						+ "ON tbl_publicaciones_oficiales.ids_expedientes = tbl_ids_expedientes.ids_expedientes "
-						+ "WHERE tbl_ids_expedientes.expediente = ?");
+				sentencia = conn.prepareStatement("SELECT * FROM tbl_publicaciones_oficiales INNER JOIN tbl_feeds_expedientes "
+						+ "ON tbl_publicaciones_oficiales.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes "
+						+ "WHERE tbl_feeds_expedientes.expediente = ?");
 				sentencia.setInt(1, Integer.parseInt(entry.getId()));
 				
 				rs = sentencia.executeQuery();
@@ -917,9 +903,9 @@ public class ConexionSQL extends Parser{
 			// OTROS DOCUMENTOS
 			GeneralDocument[] gd = entry.getContractFolderStatus().getGeneralDocumentList();
 			
-			sentencia = conn.prepareStatement("SELECT COUNT(*) FROM tbl_otros_documentos INNER JOIN tbl_ids_expedientes "
-					+ "ON tbl_otros_documentos.ids_expedientes = tbl_ids_expedientes.ids_expedientes "
-					+ "WHERE tbl_ids_expedientes.expediente = ?");
+			sentencia = conn.prepareStatement("SELECT COUNT(*) FROM tbl_otros_documentos INNER JOIN tbl_feeds_expedientes "
+					+ "ON tbl_otros_documentos.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes "
+					+ "WHERE tbl_feeds_expedientes.expediente = ?");
 			sentencia.setInt(1, Integer.parseInt(entry.getId()));
 			
 			rs = sentencia.executeQuery();
@@ -931,9 +917,9 @@ public class ConexionSQL extends Parser{
 			}
 			
 			if (gd_tam > tam){
-				sentencia = conn.prepareStatement("SELECT * FROM tbl_otros_documentos INNER JOIN tbl_ids_expedientes "
-						+ "ON tbl_otros_documentos.ids_expedientes = tbl_ids_expedientes.ids_expedientes "
-						+ "WHERE tbl_ids_expedientes.expediente = ?");
+				sentencia = conn.prepareStatement("SELECT * FROM tbl_otros_documentos INNER JOIN tbl_feeds_expedientes "
+						+ "ON tbl_otros_documentos.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes "
+						+ "WHERE tbl_feeds_expedientes.expediente = ?");
 				sentencia.setInt(1, Integer.parseInt(entry.getId()));
 				
 				rs = sentencia.executeQuery();
@@ -984,7 +970,7 @@ public class ConexionSQL extends Parser{
 				sentencia = (CallableStatement) entry_conn.prepareCall("{call newLugarDeEjecucion(?, ?, ?, ?, ?, ?, ?)}");
 				
 				// Parametros
-				sentencia.setInt("ids_expedientes", ids_expedientes);
+				sentencia.setInt("feeds_expedientes", feeds_expedientes);
 				sentencia.setString("subentidad_territorial", entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getCountrySubentityCode());
 				
 				if (entry.getContractFolderStatus().getProcurementProject().getRealizedLocation().getAddress() != null){
@@ -1026,7 +1012,7 @@ public class ConexionSQL extends Parser{
 			sentencia = (CallableStatement) entry_conn.prepareCall("{call newProcesoDeLicitacion(?, ?, ?, ?, ?, ?, ?, ?)}");
 			
 			// Parametros
-			sentencia.setInt("ids_expedientes", ids_expedientes);
+			sentencia.setInt("feeds_expedientes", feeds_expedientes);
 			sentencia.setInt("procedure_code", entry.getContractFolderStatus().getTenderingProcess().getProcedureCode());
 			
 			if (entry.getContractFolderStatus().getTenderingProcess().getContractingSystemTypeCode() > 0){
@@ -1087,135 +1073,139 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	private void writeEntidadAdjudicadora(Entry entry, Connection entry_conn) throws SQLException{
+	private int writeEntidadAdjudicadora(Entry entry, Connection entry_conn) throws SQLException{
 		CallableStatement sentencia = null;
+		PreparedStatement sentencia_busqueda = null;
+		
+		int entidad_adjudicadora = -1;
 		
 		try {
-			sentencia = (CallableStatement) entry_conn.prepareCall("{call newEntidadAdjudicadora(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+			String query = "SELECT entidad_adjudicadora FROM tbl_entidad_adjudicadora WHERE ";
+			for (PartyIdentification pi : entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPartyIdentificationList()){
+				query += pi.getSchemeName() + " = '" + pi.getId() + "' OR ";
+			}
+			query = query.substring(0, query.length()-3); // Eliminamos el ultimo OR
 			
-			// Parametros
-			sentencia.setInt("ids_expedientes", ids_expedientes);
+			sentencia_busqueda = entry_conn.prepareStatement(query);
 			
-			// ubicacion_organica
-			boolean encontrado = false;
-			PartyIdentification[] pi = entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPartyIdentificationList();
+			ResultSet rs = sentencia_busqueda.executeQuery();
 			
-			for (int i = 0; i < pi.length; i++){
-				if (pi[i].getSchemeName().compareTo(UBICACION_ORGANICA) == 0){
-					encontrado = true;
-					sentencia.setString("ubicacion_organica", pi[i].getId());
-				// Parámetro NIF
-				}else if (pi[i].getSchemeName().compareTo("NIF") == 0){
-					sentencia.setString("NIF", pi[i].getId());
+			if(rs.next()){
+				entidad_adjudicadora = rs.getInt("entidad_adjudicadora");
+			}else{
+				sentencia = (CallableStatement) entry_conn.prepareCall("{call newEntidadAdjudicadora(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+				
+				// ubicacion_organica
+				boolean encontrado = false;
+				PartyIdentification[] pi = entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPartyIdentificationList();
+				
+				sentencia.setNull("NIF", java.sql.Types.NULL);
+				sentencia.setNull("DIR3", java.sql.Types.NULL);
+				sentencia.setNull("ID_PLATAFORMA", java.sql.Types.NULL);
+				
+				for (int i = 0; i < pi.length; i++){
+					// Parámetro DIR3
+					if (pi[i].getSchemeName().compareTo("DIR3") == 0){
+						encontrado = true;
+						sentencia.setString("ubicacion_organica", pi[i].getId());
+						sentencia.setString("DIR3", pi[i].getId());
+					// Parámetro NIF
+					}else if (pi[i].getSchemeName().compareTo("NIF") == 0){
+						sentencia.setString("NIF", pi[i].getId());
+					// Parámetro ID_PLATAFORMA
+					}else if (pi[i].getSchemeName().compareTo("ID_PLATAFORMA") == 0){
+						sentencia.setString("ID_PLATAFORMA", pi[i].getId());
+					}
 				}
-			}
-			
-			if (!encontrado){
-				sentencia.setString("ubicacion_organica", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPartyName().getName());
-			}
-			
-			// nombre
-			sentencia.setString("nombre", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPartyName().getName());
-			
-			// tipo_administracion
-			sentencia.setInt("tipo_administracion", entry.getContractFolderStatus().getLocatedContractingParty().getContractingPartyTypeCode());
-			
-			// sitio_web
-			sentencia.setString("sitio_web", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getWebsiteURI());
-			
-			// calle
-			if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress() != null){
-				if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress().getAddressLine() != null){
-					sentencia.setString("calle", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress().getAddressLine().getLine());
+				
+				if (!encontrado){
+					sentencia.setString("ubicacion_organica", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPartyName().getName());
+				}
+				
+				// nombre
+				sentencia.setString("nombre", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPartyName().getName());
+				
+				// tipo_administracion
+				sentencia.setInt("tipo_administracion", entry.getContractFolderStatus().getLocatedContractingParty().getContractingPartyTypeCode());
+				
+				// sitio_web
+				sentencia.setString("sitio_web", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getWebsiteURI());
+				
+				// calle
+				if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress() != null){
+					if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress().getAddressLine() != null){
+						sentencia.setString("calle", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress().getAddressLine().getLine());
+					}else{
+						sentencia.setString("calle", null);
+					}
 				}else{
 					sentencia.setString("calle", null);
 				}
-			}else{
-				sentencia.setString("calle", null);
-			}
-			
-			// codigo_postal
-			if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress() != null){
-				sentencia.setString("codigo_postal", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress().getPostalZone());
-			}else{
-				sentencia.setString("codigo_postal", null);
-			}
-			
-			// poblacion
-			if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress() != null){
-				sentencia.setString("poblacion", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress().getCityName());
-			}else{
-				sentencia.setString("poblacion", null);
-			}
-			
-			// pais
-			if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress() != null){
-				if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress().getCountry() != null){
-					sentencia.setString("pais", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress().getCountry().getIdentificationCode());
+				
+				// codigo_postal
+				if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress() != null){
+					sentencia.setString("codigo_postal", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress().getPostalZone());
+				}else{
+					sentencia.setString("codigo_postal", null);
+				}
+				
+				// poblacion
+				if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress() != null){
+					sentencia.setString("poblacion", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress().getCityName());
+				}else{
+					sentencia.setString("poblacion", null);
+				}
+				
+				// pais
+				if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress() != null){
+					if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress().getCountry() != null){
+						sentencia.setString("pais", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getPostalAddress().getCountry().getIdentificationCode());
+					}else{
+						sentencia.setString("pais", null);
+					}
 				}else{
 					sentencia.setString("pais", null);
 				}
-			}else{
-				sentencia.setString("pais", null);
-			}
 
-			// nombre_contacto
-			if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact() != null){
-				sentencia.setString("nombre_contacto", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact().getName());
-			}else{
-				sentencia.setString("nombre_contacto", null);
-			}
-			
-			// telefono
-			if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact() != null){
-				sentencia.setString("telefono", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact().getTelephone());
-			}else{
-				sentencia.setString("telefono", null);
-			}
-			
-			// fax
-			if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact() != null){
-				sentencia.setString("fax", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact().getTelefax());
-			}else{
-				sentencia.setString("fax", null);
-			}
-			
-			// correo_electronico
-			if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact() != null){
-				sentencia.setString("correo_electronico", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact().getElectronicMail());
-			}else{
-				sentencia.setString("correo_electronico", null);
-			}
-			
-			// Ejecucion
-			sentencia.execute();
-			
-			int entidad_adjudicadora = sentencia.getInt("entidad_adjudicadora");
-			
-			// ID's
-			for (int i = 0; i < pi.length; i++){
-				sentencia = (CallableStatement) entry_conn.prepareCall("{call newId(?, ?, ?)}");
+				// nombre_contacto
+				if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact() != null){
+					sentencia.setString("nombre_contacto", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact().getName());
+				}else{
+					sentencia.setString("nombre_contacto", null);
+				}
 				
-				// Parametros
-				sentencia.setString("tipo_id", pi[i].getSchemeName());
-				sentencia.setString("valor", pi[i].getId());
+				// telefono
+				if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact() != null){
+					sentencia.setString("telefono", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact().getTelephone());
+				}else{
+					sentencia.setString("telefono", null);
+				}
+				
+				// fax
+				if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact() != null){
+					sentencia.setString("fax", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact().getTelefax());
+				}else{
+					sentencia.setString("fax", null);
+				}
+				
+				// correo_electronico
+				if (entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact() != null){
+					sentencia.setString("correo_electronico", entry.getContractFolderStatus().getLocatedContractingParty().getParty().getContact().getElectronicMail());
+				}else{
+					sentencia.setString("correo_electronico", null);
+				}
 				
 				// Ejecucion
 				sentencia.execute();
 				
-				int id = sentencia.getInt("id");
-				
-				sentencia.close();
-				
-				sentencia = (CallableStatement) entry_conn.prepareCall("{call newEntidadAdjudicadora_ID(?, ?)}");
-				sentencia.setInt("entidad_adjudicadora", entidad_adjudicadora);
-				sentencia.setInt("id", id);
-				sentencia.execute();
+				entidad_adjudicadora = sentencia.getInt("entidad_adjudicadora");
 			}
+			return entidad_adjudicadora;
 		} finally {
 			// Cerramos las conexiones
 			try {
 				if (sentencia != null) sentencia.close();
+				if (sentencia_busqueda != null) sentencia_busqueda.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -1254,7 +1244,7 @@ public class ConexionSQL extends Parser{
 		try{
 			sentencia = (CallableStatement) entry_conn.prepareCall("{call newPlazoDeObtencion(?, ?, ?, ?, ?)}");
 			
-			sentencia.setInt("ids_expedientes", ids_expedientes);
+			sentencia.setInt("feeds_expedientes", feeds_expedientes);
 			sentencia.setInt("tipo_plazo", PLAZO_PLIEGOS);
 			
 			if (entry.getContractFolderStatus().getTenderingProcess().getDocumentAvailabilityPeriod().getEndDate() != null){
@@ -1287,7 +1277,7 @@ public class ConexionSQL extends Parser{
 		try{
 			sentencia = (CallableStatement) entry_conn.prepareCall("{call newPlazoDeObtencion(?, ?, ?, ?, ?)}");
 			
-			sentencia.setInt("ids_expedientes", ids_expedientes);
+			sentencia.setInt("feeds_expedientes", feeds_expedientes);
 			sentencia.setInt("tipo_plazo", PLAZO_OFERTA);
 			
 			if (entry.getContractFolderStatus().getTenderingProcess().getTenderSubmissionDeadlinePeriod().getEndDate() != null){
@@ -1325,7 +1315,7 @@ public class ConexionSQL extends Parser{
 		try{
 			sentencia = (CallableStatement) entry_conn.prepareCall("{call newPlazoDeObtencion(?, ?, ?, ?, ?)}");
 			
-			sentencia.setInt("ids_expedientes", ids_expedientes);
+			sentencia.setInt("feeds_expedientes", feeds_expedientes);
 			sentencia.setInt("tipo_plazo", PLAZO_SOLICITUDES);
 			
 			if (entry.getContractFolderStatus().getTenderingProcess().getParticipationRequestReceptionPeriod().getEndDate() != null){
@@ -1363,7 +1353,7 @@ public class ConexionSQL extends Parser{
 			if (entry.getContractFolderStatus().getProcurementProject().getContractExtension() != null){
 				sentencia = (CallableStatement) entry_conn.prepareCall("{call newExtensionDeContrato(?, ?, ?)}");
 			
-				sentencia.setInt("ids_expedientes", ids_expedientes);
+				sentencia.setInt("feeds_expedientes", feeds_expedientes);
 			
 				sentencia.setString("opciones", entry.getContractFolderStatus().getProcurementProject().getContractExtension().getOptionsDescription());
 				if (entry.getContractFolderStatus().getProcurementProject().getContractExtension().getOptionValidityPeriod() != null){
@@ -1389,7 +1379,7 @@ public class ConexionSQL extends Parser{
 			sentencia = (CallableStatement) entry_conn.prepareCall("{call newCondicionesDeLicitacion(?, ?, ?, ?, ?, ?)}");
 			
 			// Plazo de obteción de PLIEGOS
-			sentencia.setInt("ids_expedientes", ids_expedientes);
+			sentencia.setInt("feeds_expedientes", feeds_expedientes);
 		
 			sentencia.setBoolean("cv", entry.getContractFolderStatus().getTenderingTerms().getRequiredCurriculaIndicator());
 			sentencia.setBoolean("admision_de_variantes", entry.getContractFolderStatus().getTenderingTerms().getVariantConstraintIndicator());
@@ -1433,7 +1423,7 @@ public class ConexionSQL extends Parser{
 				for (int i = 0; i < rfg.length; i++){
 					sentencia = (CallableStatement) entry_conn.prepareCall("{call newGarantia(?, ?, ?, ?, ?)}");
 					
-					sentencia.setInt("ids_expedientes", ids_expedientes);
+					sentencia.setInt("feeds_expedientes", feeds_expedientes);
 					
 					// Primero insertamos la garantía, y luego la relación con ids
 					sentencia.setInt("guarantee_type_code", rfg[i].getGuaranteeTypeCode());
@@ -1470,7 +1460,7 @@ public class ConexionSQL extends Parser{
 		try {
 			sentencia = (CallableStatement) entry_conn.prepareCall("{call newGarantia(?, ?, ?, ?, ?)}");
 			
-			sentencia.setInt("ids_expedientes", ids_expedientes);
+			sentencia.setInt("feeds_expedientes", feeds_expedientes);
 			
 			// Primero insertamos la garantía, y luego la relación con ids
 			sentencia.setInt("guarantee_type_code", rfg.getGuaranteeTypeCode());
@@ -1520,7 +1510,7 @@ public class ConexionSQL extends Parser{
 					sentencia.setString("solvencia_requerida", null);	
 				}
 				
-				sentencia.setInt("ids_expedientes", ids_expedientes);
+				sentencia.setInt("feeds_expedientes", feeds_expedientes);
 				
 				sentencia.execute();
 			
@@ -1593,7 +1583,7 @@ public class ConexionSQL extends Parser{
 			// CRITERIO TECNICO
 			sentencia = (CallableStatement) entry_conn.prepareCall("{call newCriterioDeEvaluacion(?, ?, ?, ?, ?)}");
 			
-			sentencia.setInt("ids_expedientes", ids_expedientes);
+			sentencia.setInt("feeds_expedientes", feeds_expedientes);
 			sentencia.setString("descripcion", tec.getDescription());
 			sentencia.setInt("tipo_evaluacion", EVALUACION_TECNICA);
 			sentencia.setString("tipo_technical", tec.getEvaluationCriteriaTypeCode());
@@ -1616,7 +1606,7 @@ public class ConexionSQL extends Parser{
 			// CRITERIO TECNICO
 			sentencia = (CallableStatement) entry_conn.prepareCall("{call newCriterioDeEvaluacion(?, ?, ?, ?, ?)}");
 			
-			sentencia.setInt("ids_expedientes", ids_expedientes);
+			sentencia.setInt("feeds_expedientes", feeds_expedientes);
 			sentencia.setString("descripcion", fec.getDescription());
 			sentencia.setInt("tipo_evaluacion", EVALUACION_ECONOMICA_FINANCIERA);
 			sentencia.setNull("tipo_technical", java.sql.Types.NULL);
@@ -1639,7 +1629,7 @@ public class ConexionSQL extends Parser{
 			if (entry.getContractFolderStatus().getTenderingTerms().getAllowedSubcontractTerms() != null){
 				sentencia = (CallableStatement) entry_conn.prepareCall("{call newSubcontratacionPermitida(?, ?, ?)}");
 				
-				sentencia.setInt("ids_expedientes", ids_expedientes);
+				sentencia.setInt("feeds_expedientes", feeds_expedientes);
 				
 				if (entry.getContractFolderStatus().getTenderingTerms().getAllowedSubcontractTerms().getRate() > 0){
 					sentencia.setDouble("porcentaje", entry.getContractFolderStatus().getTenderingTerms().getAllowedSubcontractTerms().getRate());
@@ -1675,7 +1665,7 @@ public class ConexionSQL extends Parser{
 					for (int i = 0; i < ac.length; i++){
 						sentencia = (CallableStatement) entry_conn.prepareCall("{call newCriterioDeAdjudicacion(?, ?, ?)}");
 						
-						sentencia.setInt("ids_expedientes", ids_expedientes);
+						sentencia.setInt("feeds_expedientes", feeds_expedientes);
 						sentencia.setString("descripcion", ac[i].getDescription());
 						
 						if (ac[i].getWeightNumeric() > 0){
@@ -1703,7 +1693,7 @@ public class ConexionSQL extends Parser{
 		try{
 			sentencia = (CallableStatement) entry_conn.prepareCall("{call newCriterioDeAdjudicacion(?, ?, ?)}");
 			
-			sentencia.setInt("ids_expedientes", ids_expedientes);
+			sentencia.setInt("feeds_expedientes", feeds_expedientes);
 			sentencia.setString("descripcion", ac.getDescription());
 			
 			if (ac.getWeightNumeric() > 0){
@@ -1729,15 +1719,29 @@ public class ConexionSQL extends Parser{
 			TenderResult[] tr = entry.getContractFolderStatus().getTenderResultList();
 			if (tr != null){
 				for (int i = 0; i < tr.length; i++){
-					sentencia = (CallableStatement) entry_conn.prepareCall("{call newResultadoDelProcedimiento(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+					int adjudicatario = -1;
 					
-					sentencia.setInt("ids_expedientes", ids_expedientes);
-					sentencia.setInt("resultado", tr[i].getResultCode());
+					// Adjudicatario
+					WinningParty wp = tr[i].getWinningParty();
+					if (wp != null){
+						adjudicatario = writeAdjudicatario(wp, tr[i].getSMEAwardedIndicator(), entry_conn);
+					}
+					
+					sentencia = (CallableStatement) entry_conn.prepareCall("{call newResultadoDelProcedimiento(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+					
+					sentencia.setInt("feeds_expedientes", feeds_expedientes);
+					sentencia.setInt("result_code", tr[i].getResultCode());
 					
 					if (tr[i].getDescription() != null){
 						sentencia.setString("motivacion", tr[i].getDescription());
 					}else{
 						sentencia.setString("motivacion", null);
+					}
+					
+					if (adjudicatario != -1){
+						sentencia.setInt("adjudicatario", adjudicatario);
+					}else{
+						sentencia.setNull("adjudicatario", java.sql.Types.NULL);
 					}
 					
 					sentencia.setDate("fecha_acuerdo", tr[i].getAwardDate());
@@ -1770,12 +1774,6 @@ public class ConexionSQL extends Parser{
 						writeInformacionDelContrato(resultado, tr[i].getStartDate(), c, entry_conn);
 					}
 					
-					// Adjudicatario
-					WinningParty wp = tr[i].getWinningParty();
-					if (wp != null){
-						writeAdjudicatario(resultado, wp, tr[i].getSMEAwardedIndicator(), entry_conn);
-					}
-					
 					// Importe de adjudicación
 					if (tr[i].getAwardedTenderedProject() != null && tr[i].getAwardedTenderedProject().getLegalMonetaryTotalList() != null){
 						LegalMonetaryTotal[] lmt = tr[i].getAwardedTenderedProject().getLegalMonetaryTotalList();
@@ -1805,15 +1803,29 @@ public class ConexionSQL extends Parser{
 		
 		try {
 			if (tr != null){
-				sentencia = (CallableStatement) entry_conn.prepareCall("{call newResultadoDelProcedimiento(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+				int adjudicatario = -1;
 				
-				sentencia.setInt("ids_expedientes", ids_expedientes);
-				sentencia.setInt("resultado", tr.getResultCode());
+				// Adjudicatario
+				WinningParty wp = tr.getWinningParty();
+				if (wp != null){
+					adjudicatario = writeAdjudicatario(wp, tr.getSMEAwardedIndicator(), entry_conn);
+				}
+				
+				sentencia = (CallableStatement) entry_conn.prepareCall("{call newResultadoDelProcedimiento(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+				
+				sentencia.setInt("feeds_expedientes", feeds_expedientes);
+				sentencia.setInt("result_code", tr.getResultCode());
 				
 				if (tr.getDescription() != null){
 					sentencia.setString("motivacion", tr.getDescription());
 				}else{
 					sentencia.setString("motivacion", null);
+				}
+				
+				if (adjudicatario != -1){
+					sentencia.setInt("adjudicatario", adjudicatario);
+				}else{
+					sentencia.setNull("adjudicatario", java.sql.Types.NULL);
 				}
 				
 				sentencia.setDate("fecha_acuerdo", tr.getAwardDate());
@@ -1850,12 +1862,6 @@ public class ConexionSQL extends Parser{
 					writeInformacionDelContrato(resultado, tr.getStartDate(), c, entry_conn);
 				}
 				
-				// Adjudicatario
-				WinningParty wp = tr.getWinningParty();
-				if (wp != null){
-					writeAdjudicatario(resultado, wp, tr.getSMEAwardedIndicator(), entry_conn);
-				}
-				
 				// Importe de adjudicación
 				if (tr.getAwardedTenderedProject() != null && tr.getAwardedTenderedProject().getLegalMonetaryTotalList() != null){
 					LegalMonetaryTotal[] lmt = tr.getAwardedTenderedProject().getLegalMonetaryTotalList();
@@ -1885,7 +1891,7 @@ public class ConexionSQL extends Parser{
 			for (int i = 0; i < c.length; i++){
 				sentencia = (CallableStatement) entry_conn.prepareCall("{call newContrato(?, ?, ?, ?)}");
 				
-				sentencia.setInt("resultado", resultado);
+				sentencia.setInt("resultado_del_procedimiento", resultado);
 				
 				if (c[i].getId() != null){
 					sentencia.setString("numero_contrato", c[i].getId());
@@ -1916,46 +1922,53 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	private void writeAdjudicatario(int resultado, WinningParty wp, boolean pyme, Connection entry_conn) throws SQLException{
+	private int writeAdjudicatario(WinningParty wp, boolean pyme, Connection entry_conn) throws SQLException{
 		CallableStatement sentencia = null;
+		PreparedStatement sentencia_busqueda = null;
+		int adjudicatario = -1;
 		
+		// Adjudicatorio
 		try {
-			// Adjudicatorio
-			sentencia = (CallableStatement) entry_conn.prepareCall("{call newAdjudicatario(?, ?, ?, ?)}");
+			// Buscamos el adjudicatario, si existe se añade la referencia, si no existe se crea y se referencia
+			String schemeName = wp.getPartyIdentificationList()[0].getSchemeName();
+			String id = wp.getPartyIdentificationList()[0].getId();
 			
-			sentencia.setInt("resultado", resultado);
-			sentencia.setString("nombre", wp.getPartyName().getName());
-			sentencia.setBoolean("pyme", pyme);
+			sentencia_busqueda = entry_conn.prepareStatement("SELECT adjudicatario FROM tbl_adjudicatario WHERE " + schemeName + " = '" + id + "'");
+			ResultSet rs = sentencia_busqueda.executeQuery();
 			
-			sentencia.execute();
-			
-			int adjudicatario = sentencia.getInt("adjudicatario");
-			
-			sentencia.close();
-			
-			// ID
-			PartyIdentification[] pi = wp.getPartyIdentificationList();
-			for (int i = 0; i < pi.length; i++){
-				sentencia = (CallableStatement) entry_conn.prepareCall("{call newId(?, ?, ?)}");
-				sentencia.setString("tipo_id", pi[i].getSchemeName());
-				sentencia.setString("valor", pi[i].getId());
+			if(rs.next()){
+				adjudicatario = rs.getInt("adjudicatario");
+			}else{
+				sentencia = (CallableStatement) entry_conn.prepareCall("{call newAdjudicatario(?, ?, ?, ?, ?, ?)}");
+				
+				sentencia.setString("nombre", wp.getPartyName().getName());
+				sentencia.setBoolean("pyme", pyme);
+				
+				if (schemeName.compareTo("NIF") == 0){
+					sentencia.setString("NIF", id);
+					sentencia.setNull("UTE", java.sql.Types.NULL);
+					sentencia.setNull("OTROS", java.sql.Types.NULL);
+				}else if (schemeName.compareTo("UTE") == 0){
+					sentencia.setString("UTE", id);
+					sentencia.setNull("NIF", java.sql.Types.NULL);
+					sentencia.setNull("OTROS", java.sql.Types.NULL);
+				}else if (schemeName.compareTo("OTROS") == 0){
+					sentencia.setString("OTROS", id);
+					sentencia.setNull("UTE", java.sql.Types.NULL);
+					sentencia.setNull("NIF", java.sql.Types.NULL);
+				}
+				
 				sentencia.execute();
 				
-				int id = sentencia.getInt("id");
-				
-				sentencia.close();
-				
-				// Linkeamos con tbl_adjudicatario
-				sentencia = (CallableStatement) entry_conn.prepareCall("{call newAdjudicatario_ID(?, ?)}");
-				sentencia.setInt("adjudicatario", adjudicatario);
-				sentencia.setInt("id", id);
-				sentencia.execute();
+				adjudicatario = sentencia.getInt("adjudicatario");
 			}
 			
+			return adjudicatario;
 		} finally {
 			// Cerramos las conexiones
 			try {
 				if (sentencia != null) sentencia.close();
+				if (sentencia_busqueda != null) sentencia_busqueda.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -1966,7 +1979,7 @@ public class ConexionSQL extends Parser{
 		
 		try {
 			sentencia = (CallableStatement) entry_conn.prepareCall("{call newImportesDeAdjudicacion(?, ?, ?, ?)}");
-			sentencia.setInt("resultado", resultado);
+			sentencia.setInt("resultado_del_procedimiento", resultado);
 			sentencia.setDouble("total_sin_impuestos", sin_imp);
 			sentencia.setDouble("total_con_impuestos", con_imp);
 			sentencia.setString("currencyID", currencyID);
@@ -1985,7 +1998,7 @@ public class ConexionSQL extends Parser{
 		
 		try {
 			sentencia = (CallableStatement) entry_conn.prepareCall("{call newCondicionesDeSubcontratacion(?, ?, ?)}");
-			sentencia.setInt("resultado", resultado);
+			sentencia.setInt("resultado_del_procedimiento", resultado);
 			if (s.getDescription() != null){
 				sentencia.setString("descripcion", s.getDescription());
 			}else{
@@ -2013,7 +2026,7 @@ public class ConexionSQL extends Parser{
 			if (entry.getContractFolderStatus().getTenderingProcess().getProcessJustification() != null){
 				sentencia = (CallableStatement) entry_conn.prepareCall("{call newJustificacionDelProceso(?, ?, ?)}");
 				
-				sentencia.setInt("ids_expedientes", ids_expedientes);
+				sentencia.setInt("feeds_expedientes", feeds_expedientes);
 				
 				if (entry.getContractFolderStatus().getTenderingProcess().getProcessJustification().getReasonCode() != null){
 					sentencia.setString("codigo_de_motivo", entry.getContractFolderStatus().getTenderingProcess().getProcessJustification().getReasonCode());
@@ -2047,7 +2060,7 @@ public class ConexionSQL extends Parser{
 				for (int i = 0; i < cm.length; i++){
 					sentencia = (CallableStatement) entry_conn.prepareCall("{call newModificacionesDeContrato(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 					
-					sentencia.setInt("ids_expedientes", ids_expedientes);
+					sentencia.setInt("feeds_expedientes", feeds_expedientes);
 					sentencia.setString("numero_de_contrato", cm[i].getContractID());
 					sentencia.setInt("numero_de_modificacion", cm[i].getID());
 					
@@ -2107,7 +2120,7 @@ public class ConexionSQL extends Parser{
 			if (cm != null){
 				sentencia = (CallableStatement) entry_conn.prepareCall("{call newModificacionesDeContrato(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 				
-				sentencia.setInt("ids_expedientes", ids_expedientes);
+				sentencia.setInt("feeds_expedientes", feeds_expedientes);
 				sentencia.setString("numero_de_contrato", cm.getContractID());
 				sentencia.setInt("numero_de_modificacion", cm.getID());
 				
@@ -2167,7 +2180,7 @@ public class ConexionSQL extends Parser{
 			if (vni != null){
 				for (int i = 0; i < vni.length; i++){
 					sentencia = (CallableStatement) entry_conn.prepareCall("{call newPublicacionesOficiales(?, ?, ?)}");
-					sentencia.setInt("ids_expedientes", ids_expedientes);
+					sentencia.setInt("feeds_expedientes", feeds_expedientes);
 					sentencia.setString("tipo_de_anuncio", vni[i].getNoticeTypeCode());
 					
 					sentencia.execute();
@@ -2190,7 +2203,7 @@ public class ConexionSQL extends Parser{
 		try {
 			if (vni != null){
 				sentencia = (CallableStatement) entry_conn.prepareCall("{call newPublicacionesOficiales(?, ?, ?)}");
-				sentencia.setInt("ids_expedientes", ids_expedientes);
+				sentencia.setInt("feeds_expedientes", feeds_expedientes);
 				sentencia.setString("tipo_de_anuncio", vni.getNoticeTypeCode());
 				
 				sentencia.execute();
@@ -2279,7 +2292,7 @@ public class ConexionSQL extends Parser{
 				for (int i = 0; i < gd.length; i++){
 					sentencia = (CallableStatement) entry_conn.prepareCall("{call newOtrosDocumentos(?, ?, ?, ?)}");
 					
-					sentencia.setInt("ids_expedientes", ids_expedientes);
+					sentencia.setInt("feeds_expedientes", feeds_expedientes);
 					sentencia.setString("ID", gd[i].getGeneralDocumentDocumentReference().getId());
 					
 					if (gd[i].getGeneralDocumentDocumentReference().getAttachment().getExternalReference().getURI() != null){
@@ -2313,7 +2326,7 @@ public class ConexionSQL extends Parser{
 			if (gd != null){
 				sentencia = (CallableStatement) entry_conn.prepareCall("{call newOtrosDocumentos(?, ?, ?, ?)}");
 				
-				sentencia.setInt("ids_expedientes", ids_expedientes);
+				sentencia.setInt("feeds_expedientes", feeds_expedientes);
 				sentencia.setString("ID", gd.getGeneralDocumentDocumentReference().getId());
 				
 				if (gd.getGeneralDocumentDocumentReference().getAttachment().getExternalReference().getURI() != null){
@@ -2383,7 +2396,7 @@ public class ConexionSQL extends Parser{
 		Timestamp fecha = null;
 		
 		try {
-			sentencia = conn.prepareStatement("SELECT DISTINCT atom_date FROM tbl_ids_expedientes ORDER BY atom_date DESC LIMIT 1");
+			sentencia = conn.prepareStatement("SELECT DISTINCT updated FROM tbl_feeds ORDER BY updated DESC LIMIT 1");
 			ResultSet rs = sentencia.executeQuery();
 			rs.next();
 			fecha = rs.getTimestamp(1);

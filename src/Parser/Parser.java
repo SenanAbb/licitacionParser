@@ -50,7 +50,7 @@ public class Parser {
 	private static final int POS_UNICO_ELEMENTO = 0; 
 	private static final int MODO_AUTOMATICO = 1; 
 	private static final int MODO_MANUAL = 2; 
-	private int ids;
+	private int ids, feeds;
 	private static Timestamp fecha_limite;
 	
 	private String NIF = "";
@@ -60,7 +60,6 @@ public class Parser {
 	private Timestamp updated;
 	private String nextLink, selfLink;
 	private int entryCont = 0;
-	private ArrayList<Entry> entries = new ArrayList<Entry>();
 	private ArrayList<String> expedientes = new ArrayList<String>();
 	
 	/* modo = [EXP, NIF] */
@@ -81,15 +80,17 @@ public class Parser {
         
         Document doc = db.parse(conexion.getInputStream());
         
+        // Recogemos el updated y el link next
+ 		readUpdateDate(doc);
+ 		readLinks(doc);
+ 		
+ 		createFeeds(URL);
+        
         System.out.println("URL: " + URL);
         checkAtom(primera_lectura, conexion, doc);
 	}
 	
 	public void checkAtom(boolean primera_lectura, URLConnection conexion, Document doc) throws SQLException, FileNotFoundException, ParserConfigurationException, SAXException, IOException, ParseException{
-		// Recogemos el updated y el link next
-		readUpdateDate(doc);
-		readLinks(doc);
-		
 		// Si la fecha del .atom es posterior al limite, leo
 		if (fecha_limite.before(updated)){
 			System.out.println("ATOM DATE: " + updated);
@@ -198,25 +199,16 @@ public class Parser {
 			newEntry.readContractFolderStatus(e, POS_UNICO_ELEMENTO);
 			//newEntry.print();
 			this.entry = newEntry;
-			entries.add(this.entry);	
-			
-			/* ----> CONEXION CON BD <----
-			 * Vamos a insertar en la BD la entry:
-			 * 	1. Debemos crear un registro en tbl_ids para guardar la fecha en que se produjo esta lectura
-			 * 	2. Guardamos el ids generado automáticamente para linkearlo con expedientes (FK)
-			 * 	3. Almacenamos los datos del entry
-			 * 	3.1. Creamos la conexion en la clase ConexionSQL
-			 * 	3.2. Le pasamos al entry el objeto sql para que pueda hacer la llamada a la creación de su sentencia, y ejecutarla
-			 */
 			
 			if (escribir){
 				ConexionSQL conn = new ConexionSQL();
-				conn.writeExpediente(newEntry, ids, updated, primera_lectura);
+				conn.writeExpediente(newEntry, feeds, primera_lectura);
 				
 				// ESCRIBIMOS LOS DATOS EN EL LOG DESPUES DE ESCRIBIR EN LA BD
 				escribirLog(updated, selfLink, entryUpdate, entryId, newEntry.getContractFolderStatus().getContractFolderStatusCode());
 			}
 		}catch(Exception ex){
+			ex.printStackTrace();
 		}
 	}
 	
@@ -370,7 +362,7 @@ public class Parser {
 			ConexionSQL conn = new ConexionSQL();
 			fecha_limite = conn.getLastUpdateDate();
 		}else{
-			String fecha = "2021-06-02 19:00:00.000";
+			String fecha = "2020-01-01 00:00:00.000";
 			
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.s");
 			Date date = dateFormat.parse(fecha);
@@ -392,6 +384,44 @@ public class Parser {
 		if (!rs.next()) primera_lectura = true;
 		
 		return primera_lectura;
+	}
+	
+	public void createFeeds(String URL){
+		int feeds = 0;
+		ConexionSQL sql = new ConexionSQL();
+		Connection conn = sql.conectarMySQL();
+		CallableStatement sentencia = null;
+		
+		try{
+			sentencia = (CallableStatement) conn.prepareCall("{call newFeeds(?, ?, ?, ?)}");
+			
+			// Parametros del procedimiento almacenado
+			sentencia.setInt("ids", this.ids);
+			sentencia.setString("URL", URL);
+			sentencia.setTimestamp("updated", this.updated);
+			
+			// Definimos los tipos de los params de salida del procedimiento almacenado
+			sentencia.registerOutParameter("feeds", java.sql.Types.INTEGER);
+			
+			// Ejecutamos el procedimiento
+			sentencia.execute();
+			
+			// Se obtiene la salida
+			feeds = sentencia.getInt("feeds");
+			this.feeds = feeds;
+		} catch (SQLException e) {
+			System.out.println("Error para rollback: " + e.getMessage());
+			e.printStackTrace();
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 	
 	/* Creación de un IDS -> información sobre esta ejecución del Parser */
@@ -512,20 +542,6 @@ public class Parser {
 			throw e;
 		}
 		return document;
-	}
-	
-	public void printData(){
-		System.out.println("*************************************");
-		System.out.println("En este archivo hay un total de " + entryCont + " entries, de los cuales " + entries.size() + " son válidos.");
-		System.out.println("Fecha de actualización: " + updated);
-		System.out.println("*************************************");
-		System.out.println("Las entries son: ");
-		for (Entry e : entries){
-			System.out.println("ID: " + e.getId());
-			System.out.println("Fecha de actualización: " + e.getUpdated());
-			System.out.println("------------");
-		}
-		System.out.println("Link siguiente: " + nextLink);
 	}
 
 	public void setURL(File file) {

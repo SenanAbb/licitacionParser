@@ -23,6 +23,7 @@ public class main {
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, TransformerException, SQLException, ParseException {
 		Parser p = new Parser();
 		boolean primera_lectura = p.getPrimeraLectura();
+//		boolean primera_lectura = true;
 		p.createIds();
 		p.setFechaLimite(primera_lectura);
 		
@@ -47,7 +48,12 @@ public class main {
 		File f = new File(path);
 		File[] listado = f.listFiles();
 		
-		Parser p = new Parser(exp, "EXP");
+		Parser p = new Parser();
+		
+		p.createIds();
+		try {
+			p.setFechaLimite(primera_lectura);
+		} catch (ParseException e) {e.printStackTrace();}
 		
 		if (listado == null || listado.length == 0) {
 		    System.out.println("No hay elementos dentro de la carpeta actual");
@@ -84,7 +90,7 @@ public class main {
 	
 	private static void leerArchivo(boolean primera_lectura) throws FileNotFoundException, ParserConfigurationException, SAXException, IOException, SQLException{
 		/** PARSER DE UN SOLO ARCHIVO */
-		String URL = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/Documentacion/Informacion/pruebas_licitacion.atom";
+		String URL = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/LicitacionParser/Licitaciones 20-21/PRUEBAS/2.atom";
 		//String URL = "Licitaciones 20-21/2020_12/licitacionesPerfilesContratanteCompleto3_20201230_181906_1";
 		ArrayList<String> exp = new ArrayList<String>();
 		exp.add("PDT.-3.9/19");
@@ -92,7 +98,7 @@ public class main {
 		
 		Parser p = new Parser();
 		p.setURL(new File(URL));
-    	p.readUpdateDate();
+		p.createIds();
 		p.readEntries(primera_lectura, null);
 	}
 	
