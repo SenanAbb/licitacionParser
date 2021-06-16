@@ -154,6 +154,7 @@ public class TenderResult {
 		Element atp = (Element) tr.getElementsByTagName("cac:AwardedTenderedProject").item(POS_UNICO_ELEMENTO);
 		if (atp != null){
 			this.awardedTenderedProject = new AwardedTenderedProject();
+			this.awardedTenderedProject.readAttributes(atp, POS_UNICO_ELEMENTO);
 			this.awardedTenderedProject.readLegalMoneratyTotalList(atp, POS_UNICO_ELEMENTO);
 			this.awardedTenderedProject.readContractFormalizationPeriod(atp, POS_UNICO_ELEMENTO);
 		}

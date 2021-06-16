@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import procurementProject.RequiredCommodityClassification;
+import procurementProjectLot.ProcurementProjectLot;
 import tenderResult.Contract;
 import tenderResult.LegalMonetaryTotal;
 import tenderResult.SubcontractTerms;
@@ -155,7 +156,7 @@ public class ConexionSQL extends Parser{
 		try {
 			conn.setAutoCommit(false);
 			
-			sentencia = (CallableStatement) conn.prepareCall("{call newExpediente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+			sentencia = (CallableStatement) conn.prepareCall("{call newExpediente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 			
 			// Parametros del procedimiento almacenado
 			sentencia.setInt("expedientes", Integer.parseInt(entry.getId()));
@@ -192,6 +193,7 @@ public class ConexionSQL extends Parser{
 			sentencia.setString("unitcode", entry.getContractFolderStatus().getProcurementProject().getPlannedPeriod().getUnitCode());
 			sentencia.setInt("typecode", entry.getContractFolderStatus().getProcurementProject().getTypeCode());
 			sentencia.setInt("subtypecode", entry.getContractFolderStatus().getProcurementProject().getSubTypeCode());
+			sentencia.setInt("num_lotes", 0);
 			
 			// Ejecutamos el procedimiento
 			sentencia.execute();
@@ -299,6 +301,7 @@ public class ConexionSQL extends Parser{
 				conn.setAutoCommit(false);
 				
 				writeLugarDeEjecucion(entry, conn);
+				writeLotes(entry, conn);
 				writeProcesoDeLicitacion(entry, conn);
 				writePlazoDeObtencion(entry, conn);
 				writeExtensionDeContrato(entry, conn);
@@ -329,6 +332,9 @@ public class ConexionSQL extends Parser{
 				sentencia.execute();
 				
 				feeds_expedientes = sentencia.getInt("feeds_expediente");
+				
+				writeLotes(entry, conn);
+				writeResultadoDelProcedimiento(entry, conn);
 			}
 		} catch (SQLException e){
 			e.printStackTrace();
@@ -365,6 +371,41 @@ public class ConexionSQL extends Parser{
 			}
 			rs.close();
 			sentencia.close();
+			
+			// LOTES
+			// Si tengo lotes, hago comprobaciones
+			ProcurementProjectLot[] ppl = entry.getContractFolderStatus().getProcurementProjectLotList();
+			if (ppl != null){
+				// Miro si tengo más lotes que los almacenados en la BD
+				int num_lotes = 0;
+				
+				sentencia = conn.prepareStatement("SELECT num_lotes FROM tbl_expedientes WHERE expedientes = ?");
+				sentencia.setInt(1, Integer.parseInt(entry.getId()));
+				
+				rs = sentencia.executeQuery();
+				if (rs.next()){
+					num_lotes = rs.getInt("num_lotes");
+				}
+				
+				if (num_lotes < ppl.length){
+					// Actualizamos el parámetro num_lotes en tbl_expediente
+					sentencia= conn.prepareStatement("UPDATE tbl_expedientes SET num_lotes = ?");
+					sentencia.setInt(1, ppl.length);
+					sentencia.executeUpdate();
+					
+					// Busco los que no tengo en la BD y los inserto
+					for (ProcurementProjectLot p : ppl){
+						sentencia = conn.prepareStatement("SELECT * FROM tbl_lotes WHERE numero_de_lote = ? AND expedientes = ?");
+						sentencia.setString(1, p.getID());
+						sentencia.setInt(2, Integer.parseInt(entry.getId()));
+						
+						rs = sentencia.executeQuery();
+						if (!rs.next()){
+							writeLotes_Unico(p, Integer.parseInt(entry.getId()), conn);
+						}
+					}
+				}
+			}	
 			
 			// PROCESO DE LICITACION
 			sentencia = conn.prepareStatement("SELECT * FROM tbl_proceso_de_licitacion INNER JOIN tbl_feeds_expedientes ON "
@@ -422,7 +463,7 @@ public class ConexionSQL extends Parser{
 			if (!rs.next() && entry.getContractFolderStatus().getTenderingProcess().getTenderSubmissionDeadlinePeriod() != null){
 				// Busco todos los plazos del expediente
 				sentencia = conn.prepareStatement("SELECT id_plazo_de_obtencion, tipo_plazo FROM tbl_plazo_de_obtencion INNER JOIN tbl_feeds_expedientes" + 
-						" ON tbl_plazo_de_obtencion.feeds_expedientes = tbl_ids_expedientes.feeds_expedientes" + 
+						" ON tbl_plazo_de_obtencion.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes" + 
 						" WHERE tbl_plazo_de_obtencion.feeds_expedientes = ?");
 				sentencia.setInt(1, ids_exp_ultimo);
 				
@@ -728,46 +769,41 @@ public class ConexionSQL extends Parser{
 			}
 			
 			// RESULTADO DEL PROCEDIMIENTO
-			TenderResult[] td = entry.getContractFolderStatus().getTenderResultList();
+			TenderResult[] tr = entry.getContractFolderStatus().getTenderResultList();
 			
-			sentencia = conn.prepareStatement("SELECT COUNT(*) FROM tbl_resultado_del_procedimiento INNER JOIN tbl_feeds_expedientes ON tbl_resultado_del_procedimiento.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes WHERE tbl_feeds_expedientes.expediente = ?");
+			// Miro si estoy con lotes o no
+			sentencia = conn.prepareStatement("SELECT num_lotes FROM tbl_expedientes WHERE expedientes = ?");
 			sentencia.setInt(1, Integer.parseInt(entry.getId()));
-			
 			rs = sentencia.executeQuery();
 			rs.next();
-			tam = rs.getInt(1);
-			int td_tam = 0;
-			if (td != null){
-				td_tam = td.length;
-			}
+
+			boolean lotes = rs.getInt("num_lotes") > 0;
 			
-			if (td_tam > tam){
-				sentencia = conn.prepareStatement("SELECT * FROM tbl_resultado_del_procedimiento INNER JOIN tbl_feeds_expedientes ON tbl_resultado_del_procedimiento.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes WHERE tbl_feeds_expedientes.expediente = ?");
-				sentencia.setInt(1, Integer.parseInt(entry.getId()));
+			for (TenderResult t : tr){
+				boolean encontrado = false;
 				
-				rs = sentencia.executeQuery();
+				PreparedStatement sentencia1 = conn.prepareStatement("SELECT * FROM tbl_resultado_del_procedimiento INNER JOIN tbl_feeds_expedientes ON tbl_resultado_del_procedimiento.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes WHERE tbl_feeds_expedientes.expediente = ?");
+				sentencia1.setInt(1, Integer.parseInt(entry.getId()));
 				
-				// Si no hay ningun resultado
-				if (!rs.next()){
-					writeResultadoDelProcedimiento(entry, conn);
-				}else{
-					boolean encontrado = false;
-					for (int i = 0; i < td_tam; i++){
-						rs = sentencia.executeQuery();
-						while (rs.next() && !encontrado){
-							if (rs.getInt("result_code") == td[i].getResultCode() &&
-									rs.getInt("ofertas_recibidas") == td[i].getReceivedTenderQuantity() &&
-									rs.getString("motivacion").compareTo(td[i].getDescription()) == 0){
-								encontrado = true;
-							}
-						}
-						if (!encontrado){
-							writeResultadoDelProcedimiento_Unico(td[i], conn);
-						}
-						rs.close();
-						encontrado = false;
+				rs = sentencia1.executeQuery();
+				
+				while (rs.next() && !encontrado){
+					if (rs.getInt("result_code") == t.getResultCode() &&
+							rs.getInt("ofertas_recibidas") == t.getReceivedTenderQuantity() &&
+							rs.getString("motivacion").compareTo(t.getDescription()) == 0 &&
+							rs.getDouble("precio_oferta_mas_baja") == t.getLowerTenderAmount() &&
+							rs.getDouble("precio_oferta_mas_alta") == t.getHigherTenderAmount()){
+						encontrado = true;
 					}
 				}
+				
+				if (!encontrado && lotes){
+					writeResultadoDelProcedimiento_Unico(t, conn, t.getAwardedTenderedProject().getProcurementProjectLotID());
+				}else if (!encontrado && !lotes){
+					writeResultadoDelProcedimiento_Unico(t, conn, null);
+				}
+				sentencia1.close();
+				rs.close();
 			}
 			
 			// INFORMACION SOBRE EL CONTRATO, ADJUDICATARIO, IMPORTES DE LA ADJUDICACION y CONDICIONES DE SUBCONTRATACION VIENEN CON EL RESULTADO
@@ -1000,6 +1036,149 @@ public class ConexionSQL extends Parser{
 			// Cerramos las conexiones
 			try {
 				if (sentencia != null) sentencia.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	private void writeLotes(Entry entry, Connection entry_conn) throws SQLException{
+		CallableStatement sentencia = null;
+		PreparedStatement sentencia_busqueda = null;
+		
+		try {
+			ProcurementProjectLot[] ppl = entry.getContractFolderStatus().getProcurementProjectLotList();
+			
+			if (ppl != null){
+				int lote = 0, num_lotes;
+				
+				// Actualizamos el parámetro num_lotes en tbl_expediente
+				sentencia_busqueda = entry_conn.prepareStatement("SELECT num_lotes FROM tbl_expedientes WHERE expedientes = ?");
+				sentencia_busqueda.setInt(1, Integer.parseInt(entry.getId()));
+				ResultSet rs = sentencia_busqueda.executeQuery();
+				rs.next();
+				
+				num_lotes = rs.getInt("num_lotes");
+				
+				sentencia_busqueda.close();
+				
+				for (int i = 0; i < ppl.length; i++){
+					// Compruebo si ese lote lo tengo en la BD
+					sentencia_busqueda = entry_conn.prepareStatement("SELECT lotes FROM tbl_lotes WHERE numero_de_lote = ? AND expedientes = ?");
+					sentencia_busqueda.setString(1, ppl[i].getID());
+					sentencia_busqueda.setInt(2, Integer.parseInt(entry.getId()));
+					
+					rs = sentencia_busqueda.executeQuery();
+					
+					// Si no lo tengo, lo añado y sumo 1 al numero de lotes
+					if (!rs.next()){
+						sentencia = (CallableStatement) entry_conn.prepareCall("{call newLote(?, ?, ?, ?, ?, ?, ?)}");
+						
+						sentencia.setInt("expedientes", Integer.parseInt(entry.getId()));
+						
+						sentencia.setString("numero_de_lote", ppl[i].getID());
+						sentencia.setString("objeto", ppl[i].getProcurementProject().getName());
+						sentencia.setDouble("importe_sin_impuestos", ppl[i].getProcurementProject().getBudgetAmount().getTotalAmount());
+						sentencia.setDouble("importe_con_impuestos", ppl[i].getProcurementProject().getBudgetAmount().getTaxExclusiveAmount());
+						
+						sentencia_busqueda.close();
+						
+						// Para el lugar de ejecución -> el del expediente que lo contiene
+						sentencia_busqueda = entry_conn.prepareStatement("SELECT lugar_de_ejecucion FROM tbl_lugar_de_ejecucion INNER JOIN tbl_feeds_expedientes "
+								+ "ON tbl_lugar_de_ejecucion.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes "
+								+ "WHERE expediente = ?");
+						sentencia_busqueda.setInt(1, Integer.parseInt(entry.getId()));
+						
+						rs = sentencia_busqueda.executeQuery();
+						if (rs.next()){
+							sentencia.setInt("lugar_de_ejecucion", rs.getInt("lugar_de_ejecucion"));
+						}
+						
+						sentencia.execute();
+						
+						lote = sentencia.getInt("lote");
+						
+						sentencia.close();
+						
+						// CPV
+						for (RequiredCommodityClassification r : ppl[i].getProcurementProject().getRequiredCommodityClassificationList()){
+							sentencia = (CallableStatement) entry_conn.prepareCall("{call newLote_CPV(?, ?)}");
+							
+							// Parametros
+							sentencia.setInt("code", r.getItemClassificationCode());
+							sentencia.setInt("lotes", lote);
+							
+							// Ejecutamos
+							sentencia.execute();
+							sentencia.close();
+						}
+						
+						num_lotes++;
+					}
+				}
+				
+				sentencia_busqueda = entry_conn.prepareStatement("UPDATE tbl_expedientes SET num_lotes = ?");
+				sentencia_busqueda.setInt(1, num_lotes);
+				sentencia_busqueda.executeUpdate();
+			}
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (sentencia_busqueda != null) sentencia_busqueda.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	private void writeLotes_Unico(ProcurementProjectLot p, int id, Connection entry_conn) throws SQLException{
+		CallableStatement sentencia = null;
+		PreparedStatement sentencia_busqueda = null;
+		
+		try {
+			int lote = 0;
+			sentencia = (CallableStatement) entry_conn.prepareCall("{call newLote(?, ?, ?, ?, ?, ?, ?)}");
+			
+			sentencia.setInt("expedientes", id);
+			
+			sentencia.setString("numero_de_lote", p.getID());
+			sentencia.setString("objeto", p.getProcurementProject().getName());
+			sentencia.setDouble("importe_sin_impuestos", p.getProcurementProject().getBudgetAmount().getTotalAmount());
+			sentencia.setDouble("importe_con_impuestos", p.getProcurementProject().getBudgetAmount().getTaxExclusiveAmount());
+			
+			// Para el lugar de ejecución primero miramos si existe, si no existe lo creamos
+			sentencia_busqueda = entry_conn.prepareStatement("SELECT lugar_de_ejecucion FROM tbl_lugar_de_ejecucion INNER JOIN tbl_feeds_expedientes "
+					+ "ON tbl_lugar_de_ejecucion.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes "
+					+ "WHERE expediente = ?");
+			sentencia_busqueda.setInt(1, id);
+			
+			ResultSet rs = sentencia_busqueda.executeQuery();
+			if (rs.next()){
+				sentencia.setInt("lugar_de_ejecucion", rs.getInt("lugar_de_ejecucion"));
+			}
+			
+			sentencia.execute();
+			
+			lote = sentencia.getInt("lote");
+			
+			sentencia.close();
+			
+			// CPV
+			for (RequiredCommodityClassification r : p.getProcurementProject().getRequiredCommodityClassificationList()){
+				sentencia = (CallableStatement) entry_conn.prepareCall("{call newLote_CPV(?, ?)}");
+				
+				// Parametros
+				sentencia.setInt("code", r.getItemClassificationCode());
+				sentencia.setInt("lotes", lote);
+				
+				// Ejecutamos
+				sentencia.execute();
+				sentencia.close();
+			}
+		} finally {
+			// Cerramos las conexiones
+			try {
+				if (sentencia != null) sentencia.close();
+				if (sentencia_busqueda != null) sentencia_busqueda.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -1714,77 +1893,159 @@ public class ConexionSQL extends Parser{
 	}
 	private void writeResultadoDelProcedimiento(Entry entry, Connection entry_conn) throws SQLException {
 		CallableStatement sentencia = null;
+		PreparedStatement sentencia_busqueda = null;
 		
 		try {
 			TenderResult[] tr = entry.getContractFolderStatus().getTenderResultList();
 			if (tr != null){
-				for (int i = 0; i < tr.length; i++){
-					int adjudicatario = -1;
-					
-					// Adjudicatario
-					WinningParty wp = tr[i].getWinningParty();
-					if (wp != null){
-						adjudicatario = writeAdjudicatario(wp, tr[i].getSMEAwardedIndicator(), entry_conn);
-					}
-					
-					sentencia = (CallableStatement) entry_conn.prepareCall("{call newResultadoDelProcedimiento(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
-					
-					sentencia.setInt("feeds_expedientes", feeds_expedientes);
-					sentencia.setInt("result_code", tr[i].getResultCode());
-					
-					if (tr[i].getDescription() != null){
-						sentencia.setString("motivacion", tr[i].getDescription());
-					}else{
-						sentencia.setString("motivacion", null);
-					}
-					
-					if (adjudicatario != -1){
-						sentencia.setInt("adjudicatario", adjudicatario);
-					}else{
-						sentencia.setNull("adjudicatario", java.sql.Types.NULL);
-					}
-					
-					sentencia.setDate("fecha_acuerdo", tr[i].getAwardDate());
-					
-					sentencia.setDouble("ofertas_recibidas", tr[i].getReceivedTenderQuantity());
-					
-					if(tr[i].getLowerTenderAmount() >= 0){
-						sentencia.setDouble("precio_oferta_mas_baja", tr[i].getLowerTenderAmount());
-					}else{
-						sentencia.setNull("precio_oferta_mas_baja", java.sql.Types.NULL);
-					}
-					
-					if(tr[i].getHigherTenderAmount() >= 0){
-						sentencia.setDouble("precio_oferta_mas_alta", tr[i].getHigherTenderAmount());
-					}else{
-						sentencia.setNull("precio_oferta_mas_alta", java.sql.Types.NULL);
-					}
-					
-					sentencia.setBoolean("excluidos", tr[i].getAbnormallyLowTenderIndicator());
-					
-					sentencia.execute();
-					
-					int resultado = sentencia.getInt("resultado_del_procedimiento");
-					
-					sentencia.close();
-					
-					// Información sobre el contrato
-					Contract[] c = tr[i].getContractList();
-					if (c != null){
-						writeInformacionDelContrato(resultado, tr[i].getStartDate(), c, entry_conn);
-					}
-					
-					// Importe de adjudicación
-					if (tr[i].getAwardedTenderedProject() != null && tr[i].getAwardedTenderedProject().getLegalMonetaryTotalList() != null){
-						LegalMonetaryTotal[] lmt = tr[i].getAwardedTenderedProject().getLegalMonetaryTotalList();
-						for(int j = 0; j < lmt.length; j++){
-							writeImporteDeAdjudicacion(resultado, lmt[j].getPayableAmount(), lmt[j].getTaxExclusiveAmount(), lmt[j].getCurrencyID(), entry_conn);
+				// Miramos si estamos en un expediente con lotes o no
+				sentencia_busqueda = entry_conn.prepareStatement("SELECT num_lotes FROM tbl_expedientes WHERE expedientes = ?");
+				sentencia_busqueda.setInt(1, Integer.parseInt(entry.getId()));
+				
+				ResultSet rs = sentencia_busqueda.executeQuery();
+				rs.next();
+				
+				if (rs.getInt("num_lotes") > 0){
+					for (int i = 0; i < tr.length; i++){
+						int adjudicatario = -1;
+						
+						// Adjudicatario
+						WinningParty wp = tr[i].getWinningParty();
+						if (wp != null){
+							adjudicatario = writeAdjudicatario(wp, tr[i].getSMEAwardedIndicator(), entry_conn);
+						}
+						
+						sentencia = (CallableStatement) entry_conn.prepareCall("{call newResultadoDelProcedimiento(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+						
+						sentencia.setInt("feeds_expedientes", feeds_expedientes);
+						sentencia.setInt("result_code", tr[i].getResultCode());
+						
+						if (tr[i].getDescription() != null){
+							sentencia.setString("motivacion", tr[i].getDescription());
+						}else{
+							sentencia.setString("motivacion", null);
+						}
+						
+						if (adjudicatario != -1){
+							sentencia.setInt("adjudicatario", adjudicatario);
+						}else{
+							sentencia.setNull("adjudicatario", java.sql.Types.NULL);
+						}
+						
+						sentencia.setDate("fecha_acuerdo", tr[i].getAwardDate());
+						
+						sentencia.setDouble("ofertas_recibidas", tr[i].getReceivedTenderQuantity());
+						
+						if(tr[i].getLowerTenderAmount() >= 0){
+							sentencia.setDouble("precio_oferta_mas_baja", tr[i].getLowerTenderAmount());
+						}else{
+							sentencia.setNull("precio_oferta_mas_baja", java.sql.Types.NULL);
+						}
+						
+						if(tr[i].getHigherTenderAmount() >= 0){
+							sentencia.setDouble("precio_oferta_mas_alta", tr[i].getHigherTenderAmount());
+						}else{
+							sentencia.setNull("precio_oferta_mas_alta", java.sql.Types.NULL);
+						}
+						
+						sentencia.setBoolean("excluidos", tr[i].getAbnormallyLowTenderIndicator());
+						sentencia.setString("numero_de_lote", tr[i].getAwardedTenderedProject().getProcurementProjectLotID());
+						
+						sentencia.execute();
+						
+						int resultado = sentencia.getInt("resultado_del_procedimiento");
+						
+						sentencia.close();
+						
+						// Información sobre el contrato
+						Contract[] c = tr[i].getContractList();
+						if (c != null){
+							writeInformacionDelContrato(resultado, tr[i].getStartDate(), c, entry_conn);
+						}
+						
+						// Importe de adjudicación
+						if (tr[i].getAwardedTenderedProject() != null && tr[i].getAwardedTenderedProject().getLegalMonetaryTotalList() != null){
+							LegalMonetaryTotal[] lmt = tr[i].getAwardedTenderedProject().getLegalMonetaryTotalList();
+							for(int j = 0; j < lmt.length; j++){
+								writeImporteDeAdjudicacion(resultado, lmt[j].getPayableAmount(), lmt[j].getTaxExclusiveAmount(), lmt[j].getCurrencyID(), entry_conn);
+							}
+						}
+						
+						// Condiciones de subcontratación
+						if (tr[i].getSubcontractTerms() != null){
+							writeCondicionesDeSubcontratacion(resultado, tr[i].getSubcontractTerms(), entry_conn);
 						}
 					}
-					
-					// Condiciones de subcontratación
-					if (tr[i].getSubcontractTerms() != null){
-						writeCondicionesDeSubcontratacion(resultado, tr[i].getSubcontractTerms(), entry_conn);
+				}else{
+					for (int i = 0; i < tr.length; i++){
+						int adjudicatario = -1;
+						
+						// Adjudicatario
+						WinningParty wp = tr[i].getWinningParty();
+						if (wp != null){
+							adjudicatario = writeAdjudicatario(wp, tr[i].getSMEAwardedIndicator(), entry_conn);
+						}
+						
+						sentencia = (CallableStatement) entry_conn.prepareCall("{call newResultadoDelProcedimiento(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+						
+						sentencia.setInt("feeds_expedientes", feeds_expedientes);
+						sentencia.setInt("result_code", tr[i].getResultCode());
+						
+						if (tr[i].getDescription() != null){
+							sentencia.setString("motivacion", tr[i].getDescription());
+						}else{
+							sentencia.setString("motivacion", null);
+						}
+						
+						if (adjudicatario != -1){
+							sentencia.setInt("adjudicatario", adjudicatario);
+						}else{
+							sentencia.setNull("adjudicatario", java.sql.Types.NULL);
+						}
+						
+						sentencia.setDate("fecha_acuerdo", tr[i].getAwardDate());
+						
+						sentencia.setDouble("ofertas_recibidas", tr[i].getReceivedTenderQuantity());
+						
+						if(tr[i].getLowerTenderAmount() >= 0){
+							sentencia.setDouble("precio_oferta_mas_baja", tr[i].getLowerTenderAmount());
+						}else{
+							sentencia.setNull("precio_oferta_mas_baja", java.sql.Types.NULL);
+						}
+						
+						if(tr[i].getHigherTenderAmount() >= 0){
+							sentencia.setDouble("precio_oferta_mas_alta", tr[i].getHigherTenderAmount());
+						}else{
+							sentencia.setNull("precio_oferta_mas_alta", java.sql.Types.NULL);
+						}
+						
+						sentencia.setBoolean("excluidos", tr[i].getAbnormallyLowTenderIndicator());
+						sentencia.setNull("numero_de_lote", java.sql.Types.NULL);
+						
+						sentencia.execute();
+						
+						int resultado = sentencia.getInt("resultado_del_procedimiento");
+						
+						sentencia.close();
+						
+						// Información sobre el contrato
+						Contract[] c = tr[i].getContractList();
+						if (c != null){
+							writeInformacionDelContrato(resultado, tr[i].getStartDate(), c, entry_conn);
+						}
+						
+						// Importe de adjudicación
+						if (tr[i].getAwardedTenderedProject() != null && tr[i].getAwardedTenderedProject().getLegalMonetaryTotalList() != null){
+							LegalMonetaryTotal[] lmt = tr[i].getAwardedTenderedProject().getLegalMonetaryTotalList();
+							for(int j = 0; j < lmt.length; j++){
+								writeImporteDeAdjudicacion(resultado, lmt[j].getPayableAmount(), lmt[j].getTaxExclusiveAmount(), lmt[j].getCurrencyID(), entry_conn);
+							}
+						}
+						
+						// Condiciones de subcontratación
+						if (tr[i].getSubcontractTerms() != null){
+							writeCondicionesDeSubcontratacion(resultado, tr[i].getSubcontractTerms(), entry_conn);
+						}
 					}
 				}
 			}
@@ -1798,7 +2059,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	private void writeResultadoDelProcedimiento_Unico(TenderResult tr, Connection entry_conn) throws SQLException {
+	private void writeResultadoDelProcedimiento_Unico(TenderResult tr, Connection entry_conn, String loteId) throws SQLException {
 		CallableStatement sentencia = null;
 		
 		try {
@@ -1811,7 +2072,7 @@ public class ConexionSQL extends Parser{
 					adjudicatario = writeAdjudicatario(wp, tr.getSMEAwardedIndicator(), entry_conn);
 				}
 				
-				sentencia = (CallableStatement) entry_conn.prepareCall("{call newResultadoDelProcedimiento(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+				sentencia = (CallableStatement) entry_conn.prepareCall("{call newResultadoDelProcedimiento(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 				
 				sentencia.setInt("feeds_expedientes", feeds_expedientes);
 				sentencia.setInt("result_code", tr.getResultCode());
@@ -1849,6 +2110,12 @@ public class ConexionSQL extends Parser{
 				}
 				
 				sentencia.setBoolean("excluidos", tr.getAbnormallyLowTenderIndicator());
+				
+				if (loteId == null){
+					sentencia.setNull("numero_de_lote", java.sql.Types.NULL);
+				}else{
+					sentencia.setString("numero_de_lote", loteId);
+				}
 				
 				sentencia.execute();
 				

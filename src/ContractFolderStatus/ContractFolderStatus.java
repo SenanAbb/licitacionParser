@@ -12,6 +12,7 @@ import documents.LegalDocumentReference;
 import documents.TechnicalDocumentReference;
 import documents.ValidNoticeInfo;
 import procurementProject.ProcurementProject;
+import procurementProjectLot.ProcurementProjectLot;
 import tenderResult.TenderResult;
 import tenderingProcess.TenderingProcess;
 import tenderingTerms.TenderingTerms;
@@ -22,6 +23,7 @@ import tenderingTerms.TenderingTerms;
  * 		contractFolderStatusCode: String[1]
  * 		locatedContractingParty: LocatedContractingParty[1]
  * 		procurementProject: ProcurementProject[1]
+ * 		procurementProjectLotList: ProcurementProjectLot[0..*]
  *		tenderResultList: TenderResult[] [0..*]
  *		tenderingTerms: TenderingTerms[1]
  *		tenderingProcess: TenderingProcess[1]
@@ -36,6 +38,7 @@ public class ContractFolderStatus {
 	private String contractFolderID, contractFolderStatusCode;
 	private LocatedContractingParty locatedContractingParty;
 	private ProcurementProject procurementProject;
+	private ProcurementProjectLot[] procurementProjectLotList;
 	private TenderResult[] tenderResultList;
 	private TenderingTerms tenderingTerms;
 	private TenderingProcess tenderingProcess;
@@ -109,6 +112,25 @@ public class ContractFolderStatus {
 		}catch(Exception e){
 			System.err.print("ERROR FATAL: " + e.getMessage() + "\n");
 			e.printStackTrace();
+		}
+	}
+	
+	public void readProcurementProjectLot(Element cfs, int POS_UNICO_ELEMENTO){
+		this.procurementProjectLotList = null;
+		
+		NodeList procurementProjectLotList = cfs.getElementsByTagName("cac:ProcurementProjectLot");
+		if (procurementProjectLotList.getLength() > 0){
+			this.procurementProjectLotList = new ProcurementProjectLot[procurementProjectLotList.getLength()];
+			
+			for (int i = 0; i < procurementProjectLotList.getLength(); i++){
+				ProcurementProjectLot procurementProjectLot = new ProcurementProjectLot();
+				Element ppl = (Element) procurementProjectLotList.item(i);
+				
+				procurementProjectLot.readAttributes(ppl, POS_UNICO_ELEMENTO);
+				procurementProjectLot.readProcurementProject(ppl, POS_UNICO_ELEMENTO);
+				
+				this.procurementProjectLotList[i] = procurementProjectLot;
+			}
 		}
 	}
 	
@@ -387,6 +409,10 @@ public class ContractFolderStatus {
 		return procurementProject;
 	}
 	
+	public ProcurementProjectLot[] getProcurementProjectLotList() {
+		return procurementProjectLotList;
+	}
+
 	public String getContractFolderStatusCode() {
 		return contractFolderStatusCode;
 	}

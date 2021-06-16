@@ -42,7 +42,7 @@ public class main {
 		exp.add("PDT.-3.8/19");
 		
 		/* PARSER DE DIRECTORIO */
-		String path = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/LicitacionParser/Licitaciones 20-21/PRUEBAS/";
+		String path = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/Licitaciones 20-21/PRUEBAS_LOTES/";
 		String[] files = null;
 		
 		File f = new File(path);
@@ -51,6 +51,7 @@ public class main {
 		Parser p = new Parser();
 		
 		p.createIds();
+		p.createFeeds(path);
 		try {
 			p.setFechaLimite(primera_lectura);
 		} catch (ParseException e) {e.printStackTrace();}

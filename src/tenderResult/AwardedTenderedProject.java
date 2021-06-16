@@ -9,9 +9,18 @@ import org.w3c.dom.NodeList;
  *		contractFormalizationPeriod: ContractFormalizationPeriod [0..1]
  */
 public class AwardedTenderedProject {
-	//private int procurementProjectLotID;
+	private String procurementProjectLotID;
 	private LegalMonetaryTotal[] legalMonetaryTotalList;
 	private ContractFormalizationPeriod contractFormalizationPeriod;
+	
+	public void readAttributes(Element atp, int POS_UNICO_ELEMENTO){
+		procurementProjectLotID = null;
+		
+		Element pplId = (Element) atp.getElementsByTagName("cbc:ProcurementProjectLotID").item(POS_UNICO_ELEMENTO);
+		if(pplId != null){
+			procurementProjectLotID = pplId.getTextContent();
+		}
+	}
 	
 	public void readLegalMoneratyTotalList(Element atp, int POS_UNICO_ELEMENTO) {
 		legalMonetaryTotalList = null;
@@ -62,5 +71,9 @@ public class AwardedTenderedProject {
 
 	public LegalMonetaryTotal[] getLegalMonetaryTotalList() {
 		return legalMonetaryTotalList;
+	}
+
+	public String getProcurementProjectLotID() {
+		return procurementProjectLotID;
 	}
 }

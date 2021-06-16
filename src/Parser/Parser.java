@@ -93,11 +93,23 @@ public class Parser {
 	public void checkAtom(boolean primera_lectura, URLConnection conexion, Document doc) throws SQLException, FileNotFoundException, ParserConfigurationException, SAXException, IOException, ParseException{
 		// Si la fecha del .atom es posterior al limite, leo
 		if (fecha_limite.before(updated)){
+			int dataSize = 1024*1024;
+			
+			System.out.println("Memoria máxima: " + Runtime.getRuntime().maxMemory()/dataSize + "MB");
+			System.out.println("Memoria total: " + Runtime.getRuntime().totalMemory()/dataSize + "MB");
+			System.out.println("Memoria libre: " + Runtime.getRuntime().freeMemory()/dataSize + "MB");
+			System.out.println("Memoria usada: " + (Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/dataSize + "MB");
+			
 			System.out.println("ATOM DATE: " + updated);
 			readEntries(primera_lectura, doc);
 			
-			// Pasamos al siguiente next
-			readOpenData(primera_lectura, nextLink);
+			System.out.println("Memoria máxima: " + Runtime.getRuntime().maxMemory()/dataSize + "MB");
+			System.out.println("Memoria total: " + Runtime.getRuntime().totalMemory()/dataSize + "MB");
+			System.out.println("Memoria libre: " + Runtime.getRuntime().freeMemory()/dataSize + "MB");
+			System.out.println("Memoria usada: " + (Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/dataSize + "MB");
+			garbageCollector();
+			
+	        readOpenData(primera_lectura, nextLink);
 		}else{
 			System.out.println("COMPLETO HASTA " + fecha_limite.toString());
 		}
@@ -138,6 +150,13 @@ public class Parser {
 						readAttributesAndWrite(e, primera_lectura);
 					}
 				}else{
+					
+					// PARA LECTURA DE DIRECTORIO
+					try {
+						readUpdateDate(document);
+					} catch (ParseException e1) {e1.printStackTrace();}
+			 		readLinks(document);
+					
 					readAttributesAndWrite(e, primera_lectura);		
 				}
 			}
@@ -272,6 +291,15 @@ public class Parser {
 	/**********************/
 	/** AUXILIARY METHODS**/
 	/**********************/
+	
+	private void garbageCollector(){
+		Runtime garbage = Runtime.getRuntime();
+        System.out.println("Memoria libre antes de limpieza: " + garbage.freeMemory());
+ 
+        garbage.gc();
+ 
+        System.out.println("Memoria libre tras la limpieza: " + garbage.freeMemory());
+	}
 	
 	public void escribirLogError(Exception e){
 		FileWriter fichero = null;
