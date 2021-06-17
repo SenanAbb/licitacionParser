@@ -620,6 +620,7 @@ CREATE TABLE `tbl_expedientes` (
   `unitcode` varchar(45) DEFAULT NULL,
   `typecode` int(11) DEFAULT NULL,
   `subtypecode` int(11) DEFAULT NULL,
+  `num_lotes` int(11) NOT NULL,
   PRIMARY KEY (`expedientes`),
   KEY `typecode_idx` (`typecode`),
   KEY `subtypecode_idx` (`subtypecode`),
@@ -902,7 +903,7 @@ CREATE TABLE `tbl_ids` (
   PRIMARY KEY (`ids`),
   KEY `modosid_idx` (`modosid`),
   CONSTRAINT `modosid` FOREIGN KEY (`modosid`) REFERENCES `tbl_modosid` (`modosid`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -995,6 +996,65 @@ LOCK TABLES `tbl_language` WRITE;
 /*!40000 ALTER TABLE `tbl_language` DISABLE KEYS */;
 INSERT INTO `tbl_language` VALUES ('ca','Catalán'),('en','Ingles'),('es','Español'),('eu','Euskera'),('gl','Gallego');
 /*!40000 ALTER TABLE `tbl_language` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_lotes`
+--
+
+DROP TABLE IF EXISTS `tbl_lotes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_lotes` (
+  `lotes` int(11) NOT NULL AUTO_INCREMENT,
+  `expedientes` int(11) NOT NULL,
+  `numero_de_lote` varchar(3) NOT NULL,
+  `objeto` varchar(1700) NOT NULL,
+  `importe_sin_impuestos` decimal(12,2) NOT NULL,
+  `importe_con_impuestos` decimal(12,2) NOT NULL,
+  `lugar_de_ejecucion` int(11) NOT NULL,
+  `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`lotes`),
+  KEY `fk_tbl_lotes_tbl_lugar_de_ejecucion1_idx` (`lugar_de_ejecucion`),
+  KEY `fk_tbl_lotes_tbl_expedientes1_idx` (`expedientes`),
+  CONSTRAINT `fk_tbl_lotes_tbl_expedientes1` FOREIGN KEY (`expedientes`) REFERENCES `tbl_expedientes` (`expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbl_lotes_tbl_lugar_de_ejecucion1` FOREIGN KEY (`lugar_de_ejecucion`) REFERENCES `tbl_lugar_de_ejecucion` (`lugar_de_ejecucion`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_lotes`
+--
+
+LOCK TABLES `tbl_lotes` WRITE;
+/*!40000 ALTER TABLE `tbl_lotes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_lotes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_lotes_cpv`
+--
+
+DROP TABLE IF EXISTS `tbl_lotes_cpv`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_lotes_cpv` (
+  `lotes` int(11) NOT NULL,
+  `code` int(11) NOT NULL,
+  KEY `fk_tbl_lotes_cpv_tbl_lotes1_idx` (`lotes`),
+  KEY `fk_tbl_lotes_cpv_tbl_cpv1_idx` (`code`),
+  CONSTRAINT `fk_tbl_lotes_cpv_tbl_cpv1` FOREIGN KEY (`code`) REFERENCES `tbl_cpv` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbl_lotes_cpv_tbl_lotes1` FOREIGN KEY (`lotes`) REFERENCES `tbl_lotes` (`lotes`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_lotes_cpv`
+--
+
+LOCK TABLES `tbl_lotes_cpv` WRITE;
+/*!40000 ALTER TABLE `tbl_lotes_cpv` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_lotes_cpv` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1127,7 +1187,7 @@ CREATE TABLE `tbl_otros_documentos` (
   `feeds_expedientes` int(11) NOT NULL,
   `ID` varchar(50) DEFAULT NULL,
   `URI` varchar(500) DEFAULT NULL,
-  `file_name` varchar(200) DEFAULT NULL,
+  `file_name` varchar(500) DEFAULT NULL,
   `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`tbl_otros_documentos`),
   KEY `fk_tbl_otros_documentos_tbl_ids_expedientes1_idx` (`feeds_expedientes`),
@@ -1447,6 +1507,7 @@ CREATE TABLE `tbl_resultado_del_procedimiento` (
   `precio_oferta_mas_baja` decimal(17,2) DEFAULT NULL,
   `precio_oferta_mas_alta` decimal(17,2) DEFAULT NULL,
   `excluidos` tinyint(4) DEFAULT NULL,
+  `numero_de_lote` varchar(3) DEFAULT NULL,
   `fecha_actualizacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`resultado_del_procedimiento`),
   KEY `fk_tbl_resultado_del_procedimiento_tbl_tender_result_code1_idx` (`result_code`),
@@ -2206,13 +2267,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `newExpediente`(
     IN duracion DECIMAL(17,0),
     IN unitcode VARCHAR(45),
     IN typecode INT, 
-    IN subtypecode INT)
+    IN subtypecode INT,
+    IN num_lotes INT)
 BEGIN
 	START TRANSACTION;
 		INSERT INTO tbl_expedientes (expedientes, numero_expediente, title, link, objeto_contrato, valor_estimado, presupuesto_sin_impuestos,
-				presupuesto_con_impuestos, start_date, end_date, duracion, unitcode, typecode, subtypecode)
+				presupuesto_con_impuestos, start_date, end_date, duracion, unitcode, typecode, subtypecode, num_lotes)
 		VALUES (expedientes, numero_expediente, title, link, objeto_contrato, valor_estimado, presupuesto_sin_impuestos,
-				presupuesto_con_impuestos, start_date, end_date, duracion, unitcode, typecode, subtypecode);
+				presupuesto_con_impuestos, start_date, end_date, duracion, unitcode, typecode, subtypecode, num_lotes);
     COMMIT;
 END ;;
 DELIMITER ;
@@ -2546,6 +2608,55 @@ BEGIN
 		INSERT INTO tbl_language (code, nombre)
         VALUES (code, nombre);
     COMMIT;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newLote` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newLote`(
+	IN expedientes INT,
+	IN numero_de_lote VARCHAR(3),
+    IN objeto VARCHAR(1700),
+    IN importe_sin_impuestos DECIMAL(12,2),
+    IN importe_con_impuestos DECIMAL(12,2),
+    IN lugar_de_ejecucion INT,
+    OUT lote INT)
+BEGIN
+	INSERT INTO tbl_lotes (expedientes, numero_de_lote, objeto, importe_sin_impuestos, importe_con_impuestos, lugar_de_ejecucion)
+    VALUES (expedientes, numero_de_lote, objeto, importe_sin_impuestos, importe_con_impuestos, lugar_de_ejecucion);
+    SET lote = last_insert_id();
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `newLote_CPV` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `newLote_CPV`(
+	IN lotes INT, 
+    IN code INT)
+BEGIN
+	INSERT INTO tbl_lotes_cpv (lotes, code) VALUES (lotes, code);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -2937,7 +3048,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `newResultadoDelProcedimiento`(
 	IN feeds_expedientes INT,
@@ -2949,10 +3060,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `newResultadoDelProcedimiento`(
     IN precio_oferta_mas_baja DECIMAL(17,2),
     IN precio_oferta_mas_alta DECIMAL(17,2),
     IN excluidos BOOLEAN,
+    IN numero_de_lote VARCHAR(3),
     OUT resultado_del_procedimiento INT)
 BEGIN
-	INSERT INTO tbl_resultado_del_procedimiento (feeds_expedientes, result_code, motivacion, adjudicatario, fecha_acuerdo, ofertas_recibidas, precio_oferta_mas_baja, precio_oferta_mas_alta, excluidos)
-    VALUES (feeds_expedientes, result_code, motivacion, adjudicatario, fecha_acuerdo, ofertas_recibidas, precio_oferta_mas_baja, precio_oferta_mas_alta, excluidos);
+	INSERT INTO tbl_resultado_del_procedimiento (feeds_expedientes, result_code, motivacion, adjudicatario, fecha_acuerdo, ofertas_recibidas, precio_oferta_mas_baja, precio_oferta_mas_alta, excluidos, numero_de_lote)
+    VALUES (feeds_expedientes, result_code, motivacion, adjudicatario, fecha_acuerdo, ofertas_recibidas, precio_oferta_mas_baja, precio_oferta_mas_alta, excluidos, numero_de_lote);
     
     SET resultado_del_procedimiento = last_insert_id();
 END ;;
@@ -3231,4 +3343,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-11 13:31:11
+-- Dump completed on 2021-06-16 13:26:06

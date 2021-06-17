@@ -92,7 +92,7 @@ public class Parser {
 	
 	public void checkAtom(boolean primera_lectura, URLConnection conexion, Document doc) throws SQLException, FileNotFoundException, ParserConfigurationException, SAXException, IOException, ParseException{
 		// Si la fecha del .atom es posterior al limite, leo
-		if (fecha_limite.before(updated)){
+		while (fecha_limite.before(updated)){
 			int dataSize = 1024*1024;
 			
 			System.out.println("Memoria máxima: " + Runtime.getRuntime().maxMemory()/dataSize + "MB");
@@ -110,9 +110,8 @@ public class Parser {
 			garbageCollector();
 			
 	        readOpenData(primera_lectura, nextLink);
-		}else{
-			System.out.println("COMPLETO HASTA " + fecha_limite.toString());
 		}
+		System.out.println("COMPLETO HASTA " + fecha_limite.toString());
 	}
 	
 	public void readEntries(boolean primera_lectura, Document doc) throws FileNotFoundException, ParserConfigurationException, SAXException, IOException, SQLException{
@@ -151,11 +150,11 @@ public class Parser {
 					}
 				}else{
 					
-					// PARA LECTURA DE DIRECTORIO
-					try {
-						readUpdateDate(document);
-					} catch (ParseException e1) {e1.printStackTrace();}
-			 		readLinks(document);
+//					// PARA LECTURA DE DIRECTORIO
+//					try {
+//						readUpdateDate(document);
+//					} catch (ParseException e1) {e1.printStackTrace();}
+//			 		readLinks(document);
 					
 					readAttributesAndWrite(e, primera_lectura);		
 				}
