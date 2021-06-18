@@ -61,14 +61,14 @@ public class ConexionSQL extends Parser{
     private String username = "root"; // Nombre de usuario    
     private String password = "root"; // Clave de usuario
     
-    public Connection conectarMySQL(){
+    public Connection conectarMySQL() throws Exception{
     	Connection conn = null;
     	
     	try{
     		Class.forName(driver);
     		conn = DriverManager.getConnection(url, username, password);
     	} catch (ClassNotFoundException | SQLException e){
-    		e.printStackTrace();
+    		throw e;
     	}
     	
     	return conn;
@@ -76,7 +76,7 @@ public class ConexionSQL extends Parser{
 	
 	/* TABLAS GENERALES */
 	
-	public void writeExpediente(Entry entry, int feeds, boolean primera_lectura) throws SQLException {
+	public void writeExpediente(Entry entry, int feeds, boolean primera_lectura) throws Exception {
 		if (primera_lectura){
 			writeData_firstTime(entry, feeds);
 		}else{
@@ -84,7 +84,7 @@ public class ConexionSQL extends Parser{
 		}
 	}
 	
-	private void writeData_firstTime(Entry entry, int feeds) throws SQLException {
+	private void writeData_firstTime(Entry entry, int feeds) throws Exception {
 		boolean existe = searchExpediente(Integer.parseInt(entry.getId()));
 		boolean todo;
 		if(existe){
@@ -97,7 +97,7 @@ public class ConexionSQL extends Parser{
 		}
 	}
 	
-	private void writeData_notFirstTime(Entry entry, int feeds) throws SQLException {
+	private void writeData_notFirstTime(Entry entry, int feeds) throws Exception {
 		boolean existe = searchExpediente(Integer.parseInt(entry.getId()));
 		boolean todo;
 		if(existe){
@@ -148,7 +148,7 @@ public class ConexionSQL extends Parser{
 		}
 	}
 
-	private void writeNewExpediente(Entry entry) throws SQLException{
+	private void writeNewExpediente(Entry entry) throws Exception{
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -261,8 +261,8 @@ public class ConexionSQL extends Parser{
 			
 			conn.commit();
 		} catch (SQLException e){
-			e.printStackTrace();
 			if (conn != null) conn.rollback();
+			throw e;
 		} finally {
 			// Cerramos las conexiones
 			try {
@@ -274,7 +274,7 @@ public class ConexionSQL extends Parser{
 		}
 	}
 
-	private void writeNewFeedsExpediente(Entry entry, int feeds, boolean todo) throws SQLException{
+	private void writeNewFeedsExpediente(Entry entry, int feeds, boolean todo) throws Exception{
 		Connection conn = conectarMySQL();
 		CallableStatement sentencia = null;
 		int entidad_adjudicadora = writeEntidadAdjudicadora(entry, conn);
@@ -337,9 +337,8 @@ public class ConexionSQL extends Parser{
 				writeResultadoDelProcedimiento(entry, conn);
 			}
 		} catch (SQLException e){
-			e.printStackTrace();
-			super.escribirLogError(e);
 			if (conn != null) conn.rollback();
+			throw e;
 		} finally {
 			// Cerramos las conexiones
 			try {
@@ -351,7 +350,7 @@ public class ConexionSQL extends Parser{
 		}
 	}
 
-	private void checkTables(Entry entry, int ids_exp_ultimo) throws SQLException{
+	private void checkTables(Entry entry, int ids_exp_ultimo) throws Exception{
 		Connection conn = conectarMySQL();
 		PreparedStatement sentencia = null;
 		ResultSet rs = null;
@@ -771,39 +770,40 @@ public class ConexionSQL extends Parser{
 			// RESULTADO DEL PROCEDIMIENTO
 			TenderResult[] tr = entry.getContractFolderStatus().getTenderResultList();
 			
-			// Miro si estoy con lotes o no
-			sentencia = conn.prepareStatement("SELECT num_lotes FROM tbl_expedientes WHERE expedientes = ?");
-			sentencia.setInt(1, Integer.parseInt(entry.getId()));
-			rs = sentencia.executeQuery();
-			rs.next();
+			if (tr != null){
+				// Miro si estoy con lotes o no
+				sentencia = conn.prepareStatement("SELECT num_lotes FROM tbl_expedientes WHERE expedientes = ?");
+				sentencia.setInt(1, Integer.parseInt(entry.getId()));
+				rs = sentencia.executeQuery();
+				rs.next();
 
-			boolean lotes = rs.getInt("num_lotes") > 0;
-			
-			for (TenderResult t : tr){
-				boolean encontrado = false;
+				boolean lotes = rs.getInt("num_lotes") > 0;
 				
-				PreparedStatement sentencia1 = conn.prepareStatement("SELECT * FROM tbl_resultado_del_procedimiento INNER JOIN tbl_feeds_expedientes ON tbl_resultado_del_procedimiento.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes WHERE tbl_feeds_expedientes.expediente = ?");
-				sentencia1.setInt(1, Integer.parseInt(entry.getId()));
-				
-				rs = sentencia1.executeQuery();
-				
-				while (rs.next() && !encontrado){
-					if (rs.getInt("result_code") == t.getResultCode() &&
-							rs.getInt("ofertas_recibidas") == t.getReceivedTenderQuantity() &&
-							rs.getString("motivacion").compareTo(t.getDescription()) == 0 &&
-							rs.getDouble("precio_oferta_mas_baja") == t.getLowerTenderAmount() &&
-							rs.getDouble("precio_oferta_mas_alta") == t.getHigherTenderAmount()){
-						encontrado = true;
+				for (TenderResult t : tr){
+					boolean encontrado = false;
+					
+					PreparedStatement sentencia1 = conn.prepareStatement("SELECT * FROM tbl_resultado_del_procedimiento INNER JOIN tbl_feeds_expedientes ON tbl_resultado_del_procedimiento.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes WHERE tbl_feeds_expedientes.expediente = ?");
+					sentencia1.setInt(1, Integer.parseInt(entry.getId()));
+					
+					rs = sentencia1.executeQuery();
+					
+					while (rs.next() && !encontrado){
+						if (rs.getInt("result_code") == t.getResultCode() &&
+								rs.getString("motivacion").compareTo(t.getDescription()) == 0 &&
+								rs.getDouble("precio_oferta_mas_baja") == t.getLowerTenderAmount() &&
+								rs.getDouble("precio_oferta_mas_alta") == t.getHigherTenderAmount()){
+							encontrado = true;
+						}
 					}
+					
+					if (!encontrado && lotes){
+						writeResultadoDelProcedimiento_Unico(t, conn, t.getAwardedTenderedProject().getProcurementProjectLotID());
+					}else if (!encontrado && !lotes){
+						writeResultadoDelProcedimiento_Unico(t, conn, null);
+					}
+					sentencia1.close();
+					rs.close();
 				}
-				
-				if (!encontrado && lotes){
-					writeResultadoDelProcedimiento_Unico(t, conn, t.getAwardedTenderedProject().getProcurementProjectLotID());
-				}else if (!encontrado && !lotes){
-					writeResultadoDelProcedimiento_Unico(t, conn, null);
-				}
-				sentencia1.close();
-				rs.close();
 			}
 			
 			// INFORMACION SOBRE EL CONTRATO, ADJUDICATARIO, IMPORTES DE LA ADJUDICACION y CONDICIONES DE SUBCONTRATACION VIENEN CON EL RESULTADO
@@ -985,8 +985,8 @@ public class ConexionSQL extends Parser{
 			conn.commit();
 			
 		} catch (SQLException e){
-			e.printStackTrace();
 			if (conn != null) conn.rollback();
+			throw e;
 		} finally {
 			// Cerramos las conexiones
 			try {
@@ -1037,7 +1037,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -1099,17 +1099,19 @@ public class ConexionSQL extends Parser{
 						
 						sentencia.close();
 						
-						// CPV
-						for (RequiredCommodityClassification r : ppl[i].getProcurementProject().getRequiredCommodityClassificationList()){
-							sentencia = (CallableStatement) entry_conn.prepareCall("{call newLote_CPV(?, ?)}");
-							
-							// Parametros
-							sentencia.setInt("code", r.getItemClassificationCode());
-							sentencia.setInt("lotes", lote);
-							
-							// Ejecutamos
-							sentencia.execute();
-							sentencia.close();
+						if (ppl[i].getProcurementProject().getRequiredCommodityClassificationList() != null){
+							// CPV
+							for (RequiredCommodityClassification r : ppl[i].getProcurementProject().getRequiredCommodityClassificationList()){
+								sentencia = (CallableStatement) entry_conn.prepareCall("{call newLote_CPV(?, ?)}");
+								
+								// Parametros
+								sentencia.setInt("code", r.getItemClassificationCode());
+								sentencia.setInt("lotes", lote);
+								
+								// Ejecutamos
+								sentencia.execute();
+								sentencia.close();
+							}
 						}
 						
 						num_lotes++;
@@ -1126,7 +1128,7 @@ public class ConexionSQL extends Parser{
 				if (sentencia != null) sentencia.close();
 				if (sentencia_busqueda != null) sentencia_busqueda.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -1180,7 +1182,7 @@ public class ConexionSQL extends Parser{
 				if (sentencia != null) sentencia.close();
 				if (sentencia_busqueda != null) sentencia_busqueda.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -1248,7 +1250,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -1386,7 +1388,7 @@ public class ConexionSQL extends Parser{
 				if (sentencia != null) sentencia.close();
 				if (sentencia_busqueda != null) sentencia_busqueda.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -1413,7 +1415,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -1446,7 +1448,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -1484,7 +1486,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -1521,7 +1523,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -1547,7 +1549,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -1588,7 +1590,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -1629,7 +1631,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}	
 	}
@@ -1665,7 +1667,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}	
 	}
@@ -1728,7 +1730,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -1774,7 +1776,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -1797,7 +1799,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -1829,7 +1831,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -1862,7 +1864,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -1887,7 +1889,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -2055,7 +2057,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -2147,7 +2149,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -2185,7 +2187,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -2237,7 +2239,7 @@ public class ConexionSQL extends Parser{
 				if (sentencia != null) sentencia.close();
 				if (sentencia_busqueda != null) sentencia_busqueda.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -2256,7 +2258,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -2282,7 +2284,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -2314,7 +2316,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -2376,7 +2378,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -2435,7 +2437,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -2460,7 +2462,7 @@ public class ConexionSQL extends Parser{
 			try {
 				if (sentencia != null) sentencia.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -2621,7 +2623,7 @@ public class ConexionSQL extends Parser{
 	}
 	/* AUXILIARES */
 	
-	private boolean searchExpediente(int id) {
+	private boolean searchExpediente(int id) throws Exception {
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -2657,7 +2659,7 @@ public class ConexionSQL extends Parser{
 		return existe;
 	}
 	
-	public Timestamp getLastUpdateDate() throws SQLException{
+	public Timestamp getLastUpdateDate() throws Exception{
 		PreparedStatement sentencia = null;
 		Connection conn = conectarMySQL();
 		Timestamp fecha = null;
@@ -2685,7 +2687,7 @@ public class ConexionSQL extends Parser{
 	
 	/** TYPE CODES */
     
-	public void writeSubTypeCode(int code, String nombre, int tipo) {
+	public void writeSubTypeCode(int code, String nombre, int tipo) throws Exception {
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -2713,7 +2715,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeCPVCode(int code, String nombre) {
+	public void writeCPVCode(int code, String nombre) throws Exception {
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -2740,7 +2742,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeCountryIdentificationCode(String code, String nombre){
+	public void writeCountryIdentificationCode(String code, String nombre) throws Exception{
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -2767,7 +2769,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeCountrySubentityCode(String code, String nombre){
+	public void writeCountrySubentityCode(String code, String nombre) throws Exception{
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -2794,7 +2796,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeProcedureCode(int code, String nombre){
+	public void writeProcedureCode(int code, String nombre) throws Exception{
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -2821,7 +2823,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeContractingSystemTypeCode(int code, String nombre){
+	public void writeContractingSystemTypeCode(int code, String nombre) throws Exception{
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -2848,7 +2850,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeUrgencyCode(int code, String nombre){
+	public void writeUrgencyCode(int code, String nombre) throws Exception{
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -2875,7 +2877,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeSubmissionMethodCode(int code, String nombre){
+	public void writeSubmissionMethodCode(int code, String nombre) throws Exception{
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -2902,7 +2904,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeLanguage(String code, String nombre){
+	public void writeLanguage(String code, String nombre) throws Exception{
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -2929,7 +2931,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeProcurementLegislation(String code, String nombre){
+	public void writeProcurementLegislation(String code, String nombre) throws Exception{
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -2956,7 +2958,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeContractingPartyTypeCode(String code, String nombre) {
+	public void writeContractingPartyTypeCode(String code, String nombre) throws Exception {
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -2983,7 +2985,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeModosId(int code, String descripcion){
+	public void writeModosId(int code, String descripcion) throws Exception{
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -3010,7 +3012,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeContractFolderStatusCode(String code, String nombre, int orden) {
+	public void writeContractFolderStatusCode(String code, String nombre, int orden) throws Exception {
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -3038,7 +3040,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeTypèCode(int code, String nombre) {
+	public void writeTypèCode(int code, String nombre) throws Exception {
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -3065,7 +3067,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeTipoPliego(int id, String tipo){
+	public void writeTipoPliego(int id, String tipo) throws Exception{
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -3092,7 +3094,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeTipoPlazo(int id, String tipo){
+	public void writeTipoPlazo(int id, String tipo) throws Exception{
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -3119,7 +3121,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeFundingProgramCode(String code, String nombre){
+	public void writeFundingProgramCode(String code, String nombre) throws Exception{
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -3146,7 +3148,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeGuarateeTypeCode(int code, String nombre){
+	public void writeGuarateeTypeCode(int code, String nombre) throws Exception{
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -3173,7 +3175,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeRequiredBusinessProfileCode(String code, String nombre){
+	public void writeRequiredBusinessProfileCode(String code, String nombre) throws Exception{
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -3200,7 +3202,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeDeclarationTypeCode(int code, String nombre){
+	public void writeDeclarationTypeCode(int code, String nombre) throws Exception{
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -3227,7 +3229,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeTechnicalCapabilityTypeCode(String code, String nombre) {
+	public void writeTechnicalCapabilityTypeCode(String code, String nombre) throws Exception {
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -3254,7 +3256,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeFinancialCapabilityTypeCode(String code, String nombre) {
+	public void writeFinancialCapabilityTypeCode(String code, String nombre) throws Exception {
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -3281,7 +3283,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeTipoEvaluacion(int tipo, String descripcion){
+	public void writeTipoEvaluacion(int tipo, String descripcion) throws Exception{
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -3308,7 +3310,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeTenderResultCode(int code, String nombre) {
+	public void writeTenderResultCode(int code, String nombre) throws Exception {
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -3335,7 +3337,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeReasonCode(String code, String nombre){
+	public void writeReasonCode(String code, String nombre) throws Exception{
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -3362,7 +3364,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeNoticeTypeCode(String code, String nombre){
+	public void writeNoticeTypeCode(String code, String nombre) throws Exception{
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;
@@ -3389,7 +3391,7 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
-	public void writeDocumentTypeCode(String code, String nombre){
+	public void writeDocumentTypeCode(String code, String nombre) throws Exception{
 		Connection conn = conectarMySQL();
 		
 		CallableStatement sentencia = null;

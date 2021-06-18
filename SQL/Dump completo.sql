@@ -2782,7 +2782,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `newOtrosDocumentos`(
 	IN feeds_expedientes INT,
     IN ID VARCHAR(50),
     IN URI VARCHAR(500),
-    IN file_name VARCHAR(200))
+    IN file_name VARCHAR(500))
 BEGIN
 	INSERT INTO tbl_otros_documentos (feeds_expedientes, ID, URI, file_name) VALUES (feeds_expedientes, ID, URI, file_name);
 END ;;

@@ -1,0 +1,417 @@
+java.lang.NullPointerException
+	at Conexion.ConexionSQL.checkTables(ConexionSQL.java:781)
+	at Conexion.ConexionSQL.writeData_notFirstTime(ConexionSQL.java:138)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:83)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:207)
+	at Parser.Parser.readEntries(Parser.java:159)
+	at Parser.Parser.checkAtom(Parser.java:104)
+	at Parser.Parser.readOpenData(Parser.java:90)
+	at main.main(main.java:33)
+[2021/06/18 09:23:43]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7705960
+	Exception: 
+===========================================================
+java.lang.NullPointerException
+	at Conexion.ConexionSQL.checkTables(ConexionSQL.java:781)
+	at Conexion.ConexionSQL.writeData_notFirstTime(ConexionSQL.java:138)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:83)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:207)
+	at Parser.Parser.readEntries(Parser.java:159)
+	at Parser.Parser.checkAtom(Parser.java:104)
+	at Parser.Parser.readOpenData(Parser.java:90)
+	at main.main(main.java:33)
+[2021/06/18 09:23:56]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7735389
+	Exception: 
+===========================================================
+java.lang.NullPointerException
+	at Conexion.ConexionSQL.checkTables(ConexionSQL.java:781)
+	at Conexion.ConexionSQL.writeData_notFirstTime(ConexionSQL.java:138)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:83)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:207)
+	at Parser.Parser.readEntries(Parser.java:159)
+	at Parser.Parser.checkAtom(Parser.java:104)
+	at Parser.Parser.readOpenData(Parser.java:90)
+	at main.main(main.java:33)
+[2021/06/18 09:24:10]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7592081
+	Exception: 
+===========================================================
+java.lang.NullPointerException
+	at Conexion.ConexionSQL.checkTables(ConexionSQL.java:781)
+	at Conexion.ConexionSQL.writeData_notFirstTime(ConexionSQL.java:138)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:83)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:207)
+	at Parser.Parser.readEntries(Parser.java:159)
+	at Parser.Parser.checkAtom(Parser.java:104)
+	at Parser.Parser.readOpenData(Parser.java:90)
+	at main.main(main.java:33)
+[2021/06/18 09:24:15]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7717272
+	Exception: 
+===========================================================
+java.lang.NullPointerException
+	at Conexion.ConexionSQL.checkTables(ConexionSQL.java:781)
+	at Conexion.ConexionSQL.writeData_notFirstTime(ConexionSQL.java:138)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:83)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:207)
+	at Parser.Parser.readEntries(Parser.java:159)
+	at Parser.Parser.checkAtom(Parser.java:104)
+	at Parser.Parser.readOpenData(Parser.java:90)
+	at main.main(main.java:33)
+[2021/06/18 09:24:29]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7717357
+	Exception: 
+===========================================================
+com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column 'file_name' at row 1
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:104)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:370)
+	at com.mysql.cj.jdbc.CallableStatement.execute(CallableStatement.java:845)
+	at Conexion.ConexionSQL.writeOtrosDocumentos(ConexionSQL.java:2576)
+	at Conexion.ConexionSQL.writeNewFeedsExpediente(ConexionSQL.java:318)
+	at Conexion.ConexionSQL.writeData_notFirstTime(ConexionSQL.java:147)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:83)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:207)
+	at Parser.Parser.readEntries(Parser.java:159)
+	at Parser.Parser.checkAtom(Parser.java:104)
+	at Parser.Parser.readOpenData(Parser.java:90)
+	at main.main(main.java:33)
+[2021/06/18 09:24:40]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7610930
+	Exception: 
+===========================================================
+java.lang.NullPointerException
+	at Conexion.ConexionSQL.checkTables(ConexionSQL.java:781)
+	at Conexion.ConexionSQL.writeData_notFirstTime(ConexionSQL.java:138)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:83)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:207)
+	at Parser.Parser.readEntries(Parser.java:159)
+	at Parser.Parser.checkAtom(Parser.java:104)
+	at Parser.Parser.readOpenData(Parser.java:90)
+	at main.main(main.java:33)
+[2021/06/18 09:25:20]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7735003
+	Exception: 
+===========================================================
+java.lang.NullPointerException
+	at Conexion.ConexionSQL.checkTables(ConexionSQL.java:781)
+	at Conexion.ConexionSQL.writeData_notFirstTime(ConexionSQL.java:138)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:83)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:207)
+	at Parser.Parser.readEntries(Parser.java:159)
+	at Parser.Parser.checkAtom(Parser.java:104)
+	at Parser.Parser.readOpenData(Parser.java:90)
+	at main.main(main.java:33)
+[2021/06/18 09:25:21]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7719648
+	Exception: 
+===========================================================
+java.lang.NullPointerException
+	at Conexion.ConexionSQL.checkTables(ConexionSQL.java:781)
+	at Conexion.ConexionSQL.writeData_notFirstTime(ConexionSQL.java:138)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:83)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:207)
+	at Parser.Parser.readEntries(Parser.java:159)
+	at Parser.Parser.checkAtom(Parser.java:104)
+	at Parser.Parser.readOpenData(Parser.java:90)
+	at main.main(main.java:33)
+[2021/06/18 09:25:24]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7717481
+	Exception: 
+===========================================================
+java.lang.NullPointerException
+	at Conexion.ConexionSQL.checkTables(ConexionSQL.java:781)
+	at Conexion.ConexionSQL.writeData_notFirstTime(ConexionSQL.java:138)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:83)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:207)
+	at Parser.Parser.readEntries(Parser.java:159)
+	at Parser.Parser.checkAtom(Parser.java:104)
+	at Parser.Parser.readOpenData(Parser.java:90)
+	at main.main(main.java:33)
+[2021/06/18 09:27:20]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7734139
+	Exception: 
+===========================================================
+com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column 'file_name' at row 1
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:104)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:370)
+	at com.mysql.cj.jdbc.CallableStatement.execute(CallableStatement.java:845)
+	at Conexion.ConexionSQL.writeOtrosDocumentos(ConexionSQL.java:2576)
+	at Conexion.ConexionSQL.writeNewFeedsExpediente(ConexionSQL.java:318)
+	at Conexion.ConexionSQL.writeData_notFirstTime(ConexionSQL.java:147)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:83)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:207)
+	at Parser.Parser.readEntries(Parser.java:159)
+	at Parser.Parser.checkAtom(Parser.java:104)
+	at Parser.Parser.readOpenData(Parser.java:90)
+	at main.main(main.java:33)
+[2021/06/18 09:27:52]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7133918
+	Exception: 
+===========================================================
+java.lang.NullPointerException
+	at Conexion.ConexionSQL.checkTables(ConexionSQL.java:781)
+	at Conexion.ConexionSQL.writeData_notFirstTime(ConexionSQL.java:138)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:83)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:207)
+	at Parser.Parser.readEntries(Parser.java:159)
+	at Parser.Parser.checkAtom(Parser.java:104)
+	at Parser.Parser.readOpenData(Parser.java:90)
+	at main.main(main.java:33)
+[2021/06/18 09:28:04]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7734146
+	Exception: 
+===========================================================
+java.lang.NullPointerException
+	at Conexion.ConexionSQL.checkTables(ConexionSQL.java:781)
+	at Conexion.ConexionSQL.writeData_notFirstTime(ConexionSQL.java:138)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:83)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:207)
+	at Parser.Parser.readEntries(Parser.java:159)
+	at Parser.Parser.checkAtom(Parser.java:104)
+	at Parser.Parser.readOpenData(Parser.java:90)
+	at main.main(main.java:33)
+[2021/06/18 09:28:15]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7681451
+	Exception: 
+===========================================================
+java.lang.NullPointerException
+	at Conexion.ConexionSQL.checkTables(ConexionSQL.java:781)
+	at Conexion.ConexionSQL.writeData_notFirstTime(ConexionSQL.java:138)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:83)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:207)
+	at Parser.Parser.readEntries(Parser.java:159)
+	at Parser.Parser.checkAtom(Parser.java:104)
+	at Parser.Parser.readOpenData(Parser.java:90)
+	at main.main(main.java:33)
+[2021/06/18 09:28:53]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7734952
+	Exception: 
+===========================================================
+java.lang.NullPointerException
+	at Conexion.ConexionSQL.checkTables(ConexionSQL.java:792)
+	at Conexion.ConexionSQL.writeData_notFirstTime(ConexionSQL.java:138)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:83)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:207)
+	at Parser.Parser.readEntries(Parser.java:159)
+	at Parser.Parser.checkAtom(Parser.java:104)
+	at Parser.Parser.readOpenData(Parser.java:90)
+	at main.main(main.java:33)
+[2021/06/18 09:29:09]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 6491608
+	Exception: 
+===========================================================
+java.lang.NullPointerException
+	at Conexion.ConexionSQL.checkTables(ConexionSQL.java:781)
+	at Conexion.ConexionSQL.writeData_notFirstTime(ConexionSQL.java:138)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:83)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:207)
+	at Parser.Parser.readEntries(Parser.java:159)
+	at Parser.Parser.checkAtom(Parser.java:104)
+	at Parser.Parser.readOpenData(Parser.java:90)
+	at main.main(main.java:33)
+[2021/06/18 09:31:51]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7734558
+	Exception: 
+===========================================================
+com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column 'file_name' at row 1
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:104)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:370)
+	at com.mysql.cj.jdbc.CallableStatement.execute(CallableStatement.java:845)
+	at Conexion.ConexionSQL.writeOtrosDocumentos(ConexionSQL.java:2576)
+	at Conexion.ConexionSQL.writeNewFeedsExpediente(ConexionSQL.java:318)
+	at Conexion.ConexionSQL.writeData_firstTime(ConexionSQL.java:96)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:81)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:207)
+	at Parser.Parser.readEntries(Parser.java:159)
+	at Parser.Parser.checkAtom(Parser.java:104)
+	at Parser.Parser.readOpenData(Parser.java:90)
+	at main.main(main.java:33)
+[2021/06/18 09:36:45]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7610930
+	Exception: 
+===========================================================
+com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column 'file_name' at row 1
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:104)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:370)
+	at com.mysql.cj.jdbc.CallableStatement.execute(CallableStatement.java:845)
+	at Conexion.ConexionSQL.writeOtrosDocumentos(ConexionSQL.java:2576)
+	at Conexion.ConexionSQL.writeNewFeedsExpediente(ConexionSQL.java:318)
+	at Conexion.ConexionSQL.writeData_firstTime(ConexionSQL.java:96)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:81)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:207)
+	at Parser.Parser.readEntries(Parser.java:159)
+	at Parser.Parser.checkAtom(Parser.java:104)
+	at Parser.Parser.readOpenData(Parser.java:90)
+	at main.main(main.java:33)
+[2021/06/18 09:37:49]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7133918
+	Exception: 
+===========================================================
+com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column 'file_name' at row 1
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:104)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:370)
+	at com.mysql.cj.jdbc.CallableStatement.execute(CallableStatement.java:845)
+	at Conexion.ConexionSQL.writeOtrosDocumentos(ConexionSQL.java:2576)
+	at Conexion.ConexionSQL.writeNewFeedsExpediente(ConexionSQL.java:318)
+	at Conexion.ConexionSQL.writeData_firstTime(ConexionSQL.java:96)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:81)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:216)
+	at Parser.Parser.readEntries(Parser.java:166)
+	at Parser.Parser.readOpenData(Parser.java:97)
+	at main.main(main.java:19)
+[2021/06/18 09:58:39]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7610930
+	Exception: 
+===========================================================
+com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column 'file_name' at row 1
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:104)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:370)
+	at com.mysql.cj.jdbc.CallableStatement.execute(CallableStatement.java:845)
+	at Conexion.ConexionSQL.writeOtrosDocumentos(ConexionSQL.java:2576)
+	at Conexion.ConexionSQL.writeNewFeedsExpediente(ConexionSQL.java:318)
+	at Conexion.ConexionSQL.writeData_firstTime(ConexionSQL.java:96)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:81)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:216)
+	at Parser.Parser.readEntries(Parser.java:166)
+	at Parser.Parser.readOpenData(Parser.java:97)
+	at main.main(main.java:19)
+[2021/06/18 10:01:04]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7133918
+	Exception: 
+===========================================================
+com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column 'file_name' at row 1
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:104)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:370)
+	at com.mysql.cj.jdbc.CallableStatement.execute(CallableStatement.java:845)
+	at Conexion.ConexionSQL.writeOtrosDocumentos(ConexionSQL.java:2576)
+	at Conexion.ConexionSQL.writeNewFeedsExpediente(ConexionSQL.java:318)
+	at Conexion.ConexionSQL.writeData_firstTime(ConexionSQL.java:96)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:81)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:218)
+	at Parser.Parser.readEntries(Parser.java:168)
+	at Parser.Parser.readOpenData(Parser.java:98)
+	at main.main(main.java:19)
+[2021/06/18 10:11:31]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7610930
+	Exception: 
+===========================================================
+com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column 'file_name' at row 1
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:104)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:370)
+	at com.mysql.cj.jdbc.CallableStatement.execute(CallableStatement.java:845)
+	at Conexion.ConexionSQL.writeOtrosDocumentos(ConexionSQL.java:2576)
+	at Conexion.ConexionSQL.writeNewFeedsExpediente(ConexionSQL.java:318)
+	at Conexion.ConexionSQL.writeData_firstTime(ConexionSQL.java:96)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:81)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:218)
+	at Parser.Parser.readEntries(Parser.java:168)
+	at Parser.Parser.readOpenData(Parser.java:98)
+	at main.main(main.java:19)
+[2021/06/18 10:15:42]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7610930
+	Exception: 
+===========================================================
+com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column 'file_name' at row 1
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:104)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:370)
+	at com.mysql.cj.jdbc.CallableStatement.execute(CallableStatement.java:845)
+	at Conexion.ConexionSQL.writeOtrosDocumentos(ConexionSQL.java:2576)
+	at Conexion.ConexionSQL.writeNewFeedsExpediente(ConexionSQL.java:318)
+	at Conexion.ConexionSQL.writeData_firstTime(ConexionSQL.java:96)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:81)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:218)
+	at Parser.Parser.readEntries(Parser.java:168)
+	at Parser.Parser.readOpenData(Parser.java:98)
+	at main.main(main.java:19)
+[2021/06/18 10:17:02]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7133918
+	Exception: 
+===========================================================
+com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column 'file_name' at row 1
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:104)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:370)
+	at com.mysql.cj.jdbc.CallableStatement.execute(CallableStatement.java:845)
+	at Conexion.ConexionSQL.writeOtrosDocumentos(ConexionSQL.java:2576)
+	at Conexion.ConexionSQL.writeNewFeedsExpediente(ConexionSQL.java:318)
+	at Conexion.ConexionSQL.writeData_firstTime(ConexionSQL.java:96)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:81)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:218)
+	at Parser.Parser.readEntries(Parser.java:168)
+	at Parser.Parser.readOpenData(Parser.java:98)
+	at main.main(main.java:19)
+[2021/06/18 10:35:35]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7610930
+	Exception: 
+===========================================================
+com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column 'file_name' at row 1
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:104)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:370)
+	at com.mysql.cj.jdbc.CallableStatement.execute(CallableStatement.java:845)
+	at Conexion.ConexionSQL.writeOtrosDocumentos(ConexionSQL.java:2576)
+	at Conexion.ConexionSQL.writeNewFeedsExpediente(ConexionSQL.java:318)
+	at Conexion.ConexionSQL.writeData_firstTime(ConexionSQL.java:96)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:81)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:218)
+	at Parser.Parser.readEntries(Parser.java:168)
+	at Parser.Parser.readOpenData(Parser.java:98)
+	at main.main(main.java:19)
+[2021/06/18 10:36:46]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+	Entry: 7133918
+	Exception: 
+===========================================================
+com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column 'medio_de_publicacion' at row 1
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:104)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:370)
+	at com.mysql.cj.jdbc.CallableStatement.execute(CallableStatement.java:845)
+	at Conexion.ConexionSQL.writeAdditionalPublicationStatus(ConexionSQL.java:2502)
+	at Conexion.ConexionSQL.writePublicacionesOficiales(ConexionSQL.java:2457)
+	at Conexion.ConexionSQL.writeNewFeedsExpediente(ConexionSQL.java:317)
+	at Conexion.ConexionSQL.writeData_firstTime(ConexionSQL.java:96)
+	at Conexion.ConexionSQL.writeExpediente(ConexionSQL.java:81)
+	at Parser.Parser.readAttributesAndWrite(Parser.java:218)
+	at Parser.Parser.readEntries(Parser.java:168)
+	at Parser.Parser.readOpenData(Parser.java:98)
+	at main.main(main.java:19)
+[2021/06/18 10:59:58]
+ 	URL: https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3_20210617_150035_1.atom
+	Entry: 7569269
+	Exception: 
+===========================================================

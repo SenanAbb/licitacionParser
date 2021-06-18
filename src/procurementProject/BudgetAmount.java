@@ -38,7 +38,7 @@ public class BudgetAmount {
 			this.estimatedOverallContractAmount = estimatedOverallContractAmount;
 			this.estimatedOverallContractAmountCurrencyID = estimatedOverallContractAmountCurrencyID;
 		}catch (NullPointerException e){
-			System.err.println("ERROR FATAL: ProcurementProject -> BudgetAmount -> ESTIMATED OVERALL CONTRACT AMOUNT no existe");
+			//System.err.println("ERROR FATAL: ProcurementProject -> BudgetAmount -> ESTIMATED OVERALL CONTRACT AMOUNT no existe");
 		}
 		
 		totalAmountNode = budgetAmount.getElementsByTagName("cbc:TotalAmount").item(POS_UNICO_ELEMENTO);

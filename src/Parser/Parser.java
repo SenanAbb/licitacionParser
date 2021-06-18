@@ -23,8 +23,6 @@ import java.util.Date;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -48,7 +46,7 @@ import Entry.Entry;
  */
 public class Parser {
 	private static final int POS_UNICO_ELEMENTO = 0; 
-	private static final int MODO_AUTOMATICO = 1; 
+//	private static final int MODO_AUTOMATICO = 1; 
 	private static final int MODO_MANUAL = 2; 
 	private int ids, feeds;
 	private static Timestamp fecha_limite;
@@ -59,7 +57,6 @@ public class Parser {
 	private Entry entry;
 	private Timestamp updated;
 	private String nextLink, selfLink;
-	private int entryCont = 0;
 	private ArrayList<String> expedientes = new ArrayList<String>();
 	
 	/* modo = [EXP, NIF] */
@@ -68,7 +65,7 @@ public class Parser {
 	/* Si escribir = true -> escribirá los datos en la BD */
 	private boolean escribir = true;
 
-	public void readOpenData(boolean primera_lectura, String URL) throws IOException, ParserConfigurationException, SAXException, SQLException, ParseException{
+	public void readOpenData(boolean primera_lectura, String URL) throws Exception{
 		URLConnection conexion;
 		URL url = new URL(URL);
         
@@ -84,37 +81,48 @@ public class Parser {
  		readUpdateDate(doc);
  		readLinks(doc);
  		
- 		createFeeds(URL);
-        
-        System.out.println("URL: " + URL);
-        checkAtom(primera_lectura, conexion, doc);
-	}
-	
-	public void checkAtom(boolean primera_lectura, URLConnection conexion, Document doc) throws SQLException, FileNotFoundException, ParserConfigurationException, SAXException, IOException, ParseException{
-		// Si la fecha del .atom es posterior al limite, leo
-		while (fecha_limite.before(updated)){
+ 		createFeeds(url.toString());
+ 		
+        while (fecha_limite.before(updated)){
+        	System.out.println("URL: " + url.toString());
+        	
 			int dataSize = 1024*1024;
 			
-			System.out.println("Memoria máxima: " + Runtime.getRuntime().maxMemory()/dataSize + "MB");
-			System.out.println("Memoria total: " + Runtime.getRuntime().totalMemory()/dataSize + "MB");
-			System.out.println("Memoria libre: " + Runtime.getRuntime().freeMemory()/dataSize + "MB");
-			System.out.println("Memoria usada: " + (Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/dataSize + "MB");
+			System.out.println("[MÁXIMA]: " + Runtime.getRuntime().maxMemory()/dataSize + "MB");
+			System.out.println("[TOTAL]: " + Runtime.getRuntime().totalMemory()/dataSize + "MB");
+			System.out.println("[LIBRE]: " + Runtime.getRuntime().freeMemory()/dataSize + "MB");
+			System.out.println("[USADA]: " + (Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/dataSize + "MB");
 			
 			System.out.println("ATOM DATE: " + updated);
+			System.out.print("\t LEYENDO ENTRYS (");
 			readEntries(primera_lectura, doc);
 			
-			System.out.println("Memoria máxima: " + Runtime.getRuntime().maxMemory()/dataSize + "MB");
-			System.out.println("Memoria total: " + Runtime.getRuntime().totalMemory()/dataSize + "MB");
-			System.out.println("Memoria libre: " + Runtime.getRuntime().freeMemory()/dataSize + "MB");
-			System.out.println("Memoria usada: " + (Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/dataSize + "MB");
+			System.out.println("[MÁXIMA]: " + Runtime.getRuntime().maxMemory()/dataSize + "MB");
+			System.out.println("[TOTAL]: " + Runtime.getRuntime().totalMemory()/dataSize + "MB");
+			System.out.println("[LIBRE]: " + Runtime.getRuntime().freeMemory()/dataSize + "MB");
+			System.out.println("[USADA]: " + (Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/dataSize + "MB");
 			garbageCollector();
 			
-	        readOpenData(primera_lectura, nextLink);
+	        url = new URL(this.nextLink);
+	        conexion = url.openConnection();
+	        conexion.connect();
+	     
+	        dbf = DocumentBuilderFactory.newInstance(); 
+	        db = dbf.newDocumentBuilder();
+	        
+	        doc = db.parse(conexion.getInputStream());
+	        
+	        // Recogemos el updated y el link next
+	 		readUpdateDate(doc);
+	 		readLinks(doc);
+	 		
+	 		createFeeds(URL);
 		}
+        
 		System.out.println("COMPLETO HASTA " + fecha_limite.toString());
 	}
 	
-	public void readEntries(boolean primera_lectura, Document doc) throws FileNotFoundException, ParserConfigurationException, SAXException, IOException, SQLException{
+	public void readEntries(boolean primera_lectura, Document doc) throws Exception{
 		Document document;
 		
 		//Iniciamos el DocumentBuilderFactory;
@@ -126,16 +134,17 @@ public class Parser {
 		
 		// Entries
 		NodeList entriesNodes = document.getElementsByTagName("entry");
+		System.out.println(entriesNodes.getLength() + ")");
 		
 		if (entriesNodes.getLength() > 0){
-			entryCont += entriesNodes.getLength();
+			entriesNodes.getLength();
 			for (int i = 0; i < entriesNodes.getLength(); i++){
 				// Cojo el nodo actual
 				Node entry = entriesNodes.item(i);
 				// Lo transformo a element
 				Element e = (Element) entry;
 				
-				System.out.print("Leyendo entry " + (i+1) + "/" + entriesNodes.getLength());
+				//System.out.print("\tLeyendo entry " + (i+1) + "/" + entriesNodes.getLength());
 				
 				String result = "";
 				if (modo_identificacion == "NIF"){
@@ -162,62 +171,48 @@ public class Parser {
 		}else{
 			throw new NullPointerException();
 		}
+		
+		entriesNodes = null;
 	}
 	
-	private void readAttributesAndWrite(Element e, boolean primera_lectura){
+	private void readAttributesAndWrite(Element e, boolean primera_lectura) throws Exception{
 		try{
 			String[] idSplit = null;
 			String id = null, entryId = null, entryLink = null, entrySummary = null, entryTitle = null;
 			Timestamp entryUpdate = null;
 			
+			// ID
 			Element idElement = (Element) e.getElementsByTagName("id").item(POS_UNICO_ELEMENTO);
-			try{
-				id = idElement.getTextContent();
-				idSplit = idElement.getTextContent().split("/");
-				entryId = idSplit[idSplit.length-1];
-			}catch (NullPointerException exID){
-				System.err.print("ERROR FATAL: Entry -> ID no existe\n");
-			}
-			
+			id = idElement.getTextContent();
+			idSplit = idElement.getTextContent().split("/");
+			entryId = idSplit[idSplit.length-1];
+		
+			// LINK
 			Element link = (Element) e.getElementsByTagName("link").item(POS_UNICO_ELEMENTO);
-			try{
-				entryLink = link.getAttributes().getNamedItem("href").getTextContent();
-			}catch (NullPointerException exLINK){
-				System.err.print("ERROR FATAL: Entry " + entryId + " -> LINK no existe\n");
-			}
-					
-			Element summary = (Element) e.getElementsByTagName("summary").item(POS_UNICO_ELEMENTO);		
-			try{
-				entrySummary = summary.getTextContent();
-			}catch (NullPointerException exSUMMARY){
-				System.err.print("ERROR FATAL: Entry " + entryId + " -> SUMMARY no existe\n");
-			}
-			
-			Element title = (Element) e.getElementsByTagName("title").item(POS_UNICO_ELEMENTO);
-			try{
-				entryTitle = title.getTextContent();
-			}catch (NullPointerException exTITLE){
-				System.err.print("ERROR FATAL: Entry " + entryId + " -> TITLE no existe\n");
-			}
-							
-			Element update = (Element) e.getElementsByTagName("updated").item(POS_UNICO_ELEMENTO);
-			try{
-				// Quitamos los espacios y los caracteres que no queremos
-				String date = update.getTextContent().replace("T", " ");
-				date = date.substring(0, date.indexOf("+"));
+			entryLink = link.getAttributes().getNamedItem("href").getTextContent();
 				
-				entryUpdate = Timestamp.valueOf(date);
-			}catch (NullPointerException exUPDATED){
-				System.err.print("ERROR FATAL: Entry " + entryId + " -> UPDATED no existe\n");
-			}
+			// SUMMARY
+			Element summary = (Element) e.getElementsByTagName("summary").item(POS_UNICO_ELEMENTO);		
+			entrySummary = summary.getTextContent();
 			
-			System.out.println(" -> ID: " + entryId);
-			
+			// TITLE
+			Element title = (Element) e.getElementsByTagName("title").item(POS_UNICO_ELEMENTO);
+			entryTitle = title.getTextContent();
+					
+			// UPDATE
+			Element update = (Element) e.getElementsByTagName("updated").item(POS_UNICO_ELEMENTO);
+			// Quitamos los espacios y los caracteres que no queremos
+			String date = update.getTextContent().replace("T", " ");
+			date = date.substring(0, date.indexOf("+"));
+			entryUpdate = Timestamp.valueOf(date);
+		
+			//System.out.println(" -> ID: " + entryId);
+		
 			Entry newEntry = new Entry(id, entryId, entryLink, entrySummary, entryTitle, entryUpdate);
 			newEntry.readContractFolderStatus(e, POS_UNICO_ELEMENTO);
 			//newEntry.print();
 			this.entry = newEntry;
-			
+		
 			if (escribir){
 				ConexionSQL conn = new ConexionSQL();
 				conn.writeExpediente(newEntry, feeds, primera_lectura);
@@ -225,8 +220,10 @@ public class Parser {
 				// ESCRIBIMOS LOS DATOS EN EL LOG DESPUES DE ESCRIBIR EN LA BD
 				escribirLog(updated, selfLink, entryUpdate, entryId, newEntry.getContractFolderStatus().getContractFolderStatusCode());
 			}
+			
+			newEntry = null;
 		}catch(Exception ex){
-			ex.printStackTrace();
+			escribirLogError(ex);
 		}
 	}
 	
@@ -316,15 +313,21 @@ public class Parser {
 			s.append("[");
 			s.append(dtf.format(fecha));
 			s.append("]\n ");
-			s.append("\tURL: ");
-			s.append(selfLink);
-			s.append("\n");
-			s.append("\tEntry: ");
-			s.append(this.entry.getId());
+			if (this.selfLink != null){
+				s.append("\tURL: ");
+				s.append(selfLink);
+				s.append("\n");
+			}
+			if (this.entry != null){
+				s.append("\tEntry: ");
+				s.append(this.entry.getId());
+			}
 			s.append("\n");
 			s.append("\tException: ");
-			s.append(e.getMessage());
-			
+			e.printStackTrace(pw);
+			s.append("\n");
+			s.append("===========================================================");
+		
 			String cadena = s.toString();
 			
 			pw.println(cadena);
@@ -384,7 +387,7 @@ public class Parser {
         }
 	}
 	
-	public void setFechaLimite(boolean primera_lectura) throws SQLException, ParseException{
+	public void setFechaLimite(boolean primera_lectura) throws Exception, ParseException{
 		if (!primera_lectura){
 			ConexionSQL conn = new ConexionSQL();
 			fecha_limite = conn.getLastUpdateDate();
@@ -399,7 +402,7 @@ public class Parser {
 		}
 	}
 	
-	public boolean getPrimeraLectura() throws SQLException{
+	public boolean getPrimeraLectura() throws Exception{
 		boolean primera_lectura = false;
 		
 		ConexionSQL sql = new ConexionSQL();
@@ -413,7 +416,7 @@ public class Parser {
 		return primera_lectura;
 	}
 	
-	public void createFeeds(String URL){
+	public void createFeeds(String URL) throws Exception{
 		int feeds = 0;
 		ConexionSQL sql = new ConexionSQL();
 		Connection conn = sql.conectarMySQL();
@@ -452,7 +455,7 @@ public class Parser {
 	}
 	
 	/* Creación de un IDS -> información sobre esta ejecución del Parser */
-	public void createIds(){
+	public void createIds() throws Exception{
 		int ids = 0;
 		ConexionSQL sql = new ConexionSQL();
 		Connection conn = sql.conectarMySQL();
@@ -580,9 +583,9 @@ public class Parser {
 	}
 	
 	
-	/** TYPE CODES */
+	/** TYPE CODES  */
 	
-	public void writeSubtypeCodes() throws ParserConfigurationException, SAXException, TransformerException {
+	public void writeSubtypeCodes() throws Exception {
 		try {
 			// 1 -> Suministros
 			// 2 -> Servicios
@@ -713,7 +716,7 @@ public class Parser {
 	        e.printStackTrace();
 	     }
 	}
-	public void writeCPV() throws ParserConfigurationException, SAXException, TransformerException {
+	public void writeCPV() throws Exception {
 		try {
 			int code = 0;
 			String nombre = "";
@@ -758,7 +761,7 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeCountryIdentificationCode() throws ParserConfigurationException, SAXException, TransformerException {
+	public void writeCountryIdentificationCode() throws Exception {
 		try {
 			String code = "", nombre = "";
 			ConexionSQL con = new ConexionSQL();
@@ -795,7 +798,7 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeCountrySubentityCode() throws ParserConfigurationException, SAXException, TransformerException {
+	public void writeCountrySubentityCode() throws Exception {
 		try {
 			String code = "", nombre = "";
 			ConexionSQL con = new ConexionSQL();
@@ -832,7 +835,7 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeProcedureCode() throws ParserConfigurationException, SAXException, TransformerException{
+	public void writeProcedureCode() throws Exception{
 		try {
 			int code = 0;
 			String nombre = "";
@@ -870,7 +873,7 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeContractingSystemTypeCode() throws ParserConfigurationException, SAXException, TransformerException{
+	public void writeContractingSystemTypeCode() throws Exception{
 		try {
 			int code = 0;
 			String nombre = "";
@@ -908,7 +911,7 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeUrgencyCode() throws ParserConfigurationException, SAXException, TransformerException{
+	public void writeUrgencyCode() throws Exception{
 		try {
 			int code = 0;
 			String nombre = "";
@@ -946,7 +949,7 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeSubmissionMethodCode() throws ParserConfigurationException, SAXException, TransformerException{
+	public void writeSubmissionMethodCode() throws Exception{
 		try {
 			int code = 0; 
 			String nombre = "";
@@ -984,7 +987,7 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeLanguage() throws ParserConfigurationException, SAXException, TransformerException{
+	public void writeLanguage() throws Exception{
 		try {
 			String code = "", nombre = "";
 			ConexionSQL con = new ConexionSQL();
@@ -1021,7 +1024,7 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeProcurementLegislation() throws ParserConfigurationException, SAXException, TransformerException{
+	public void writeProcurementLegislation() throws Exception{
 		try {
 			String code = "", nombre = "";
 			ConexionSQL con = new ConexionSQL();
@@ -1058,7 +1061,7 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeContractingPartyTypeCode() throws ParserConfigurationException, SAXException, TransformerException {
+	public void writeContractingPartyTypeCode() throws Exception {
 		try {
 			String code = "", nombre = "";
 			ConexionSQL con = new ConexionSQL();
@@ -1095,7 +1098,7 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeModosId() {
+	public void writeModosId() throws Exception {
 		ConexionSQL con = new ConexionSQL();
 		int modosid = 1;
 		String descripcion = "Automático";
@@ -1107,7 +1110,7 @@ public class Parser {
 		descripcion = "Manual";
 		con.writeModosId(modosid, descripcion);
 	}
-	public void writeContractFolderStatusCode() throws ParserConfigurationException, SAXException, TransformerException{
+	public void writeContractFolderStatusCode() throws Exception{
 		try {
 			String code = "", nombre = "";
 			int orden = 1;
@@ -1150,7 +1153,7 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}	
-	public void writeTypeCode() throws ParserConfigurationException, SAXException, TransformerException{
+	public void writeTypeCode() throws Exception{
 		try {
 			int code = 0;
 			String nombre = "";
@@ -1189,7 +1192,7 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeTipoPliego(){
+	public void writeTipoPliego() throws Exception{
 		ConexionSQL con = new ConexionSQL();
 		int id = 1;
 		String tipo = "Administrativo";
@@ -1203,7 +1206,7 @@ public class Parser {
 		tipo = "Adicional";
 		con.writeTipoPliego(id, tipo);
 	}
-	public void writeTipoPlazo(){
+	public void writeTipoPlazo() throws Exception{
 		ConexionSQL con = new ConexionSQL();
 		int id = 1;
 		String tipo = "Pliegos";
@@ -1217,7 +1220,7 @@ public class Parser {
 		tipo = "Solicitudes";
 		con.writeTipoPlazo(id, tipo);
 	}
-	public void writeFundingProgramCode() throws ParserConfigurationException, SAXException, TransformerException{
+	public void writeFundingProgramCode() throws Exception{
 		try {
 			String code = "";
 			String nombre = "";
@@ -1255,7 +1258,7 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeGuaranteeTypeCode() throws ParserConfigurationException, SAXException, TransformerException{
+	public void writeGuaranteeTypeCode() throws Exception{
 		try {
 			int code = 0;
 			String nombre = "";
@@ -1296,7 +1299,7 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeRequiredBusinessProfileCode() throws ParserConfigurationException, SAXException, TransformerException{
+	public void writeRequiredBusinessProfileCode() throws Exception{
 		try {
 			String code = "";
 			String nombre = "";
@@ -1334,7 +1337,7 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeDeclarationTypeCode() throws ParserConfigurationException, SAXException, TransformerException{
+	public void writeDeclarationTypeCode() throws Exception{
 		try {
 			int code = 0;
 			String nombre = "";
@@ -1372,7 +1375,7 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeTechnicalCapabilityTypeCode() throws ParserConfigurationException, SAXException, TransformerException{
+	public void writeTechnicalCapabilityTypeCode() throws Exception{
 		try {
 			String code = "";
 			String nombre = "";
@@ -1410,7 +1413,7 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeFinancialCapabilityTypeCode() throws ParserConfigurationException, SAXException, TransformerException{
+	public void writeFinancialCapabilityTypeCode() throws Exception{
 		try {
 			String code = "";
 			String nombre = "";
@@ -1448,7 +1451,7 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeTipoEvaluacion(){
+	public void writeTipoEvaluacion() throws Exception{
 		ConexionSQL con = new ConexionSQL();
 		int id = 1;
 		String tipo = "Técnica";
@@ -1458,7 +1461,7 @@ public class Parser {
 		tipo = "Económica-Financiera";
 		con.writeTipoEvaluacion(id, tipo);
 	}
-	public void writeTenderResultCode() throws ParserConfigurationException, SAXException, TransformerException{
+	public void writeTenderResultCode() throws Exception{
 		try {
 			int code = 0;
 			String nombre = "";
@@ -1496,7 +1499,7 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeReasonCode() throws ParserConfigurationException, SAXException, TransformerException{
+	public void writeReasonCode() throws Exception{
 		try {
 			String code = "";
 			String nombre = "";
@@ -1534,7 +1537,7 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeNoticeTypeCode() throws ParserConfigurationException, SAXException, TransformerException{
+	public void writeNoticeTypeCode() throws Exception{
 		try {
 			String code = "";
 			String nombre = "";
@@ -1572,7 +1575,7 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeDocumentTypeCode() throws ParserConfigurationException, SAXException, TransformerException{
+	public void writeDocumentTypeCode() throws Exception{
 		try {
 			String code = "";
 			String nombre = "";

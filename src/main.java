@@ -1,48 +1,38 @@
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
-
 import Parser.Parser;
 
 public class main {
-	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, TransformerException, SQLException, ParseException {
+	public static void main(String[] args) throws Exception{
 		Parser p = new Parser();
-		boolean primera_lectura = p.getPrimeraLectura();
-//		boolean primera_lectura = true;
-		p.createIds();
-		p.setFechaLimite(primera_lectura);
-		
-		String URL = "https://contrataciondelsectorpublico.gob.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom";
-		
-		p.readOpenData(primera_lectura, URL);
-		
-//		rellenar(p);
-//		leerDirectorio(primera_lectura);
-//		leerArchivo(primera_lectura);
+		try{
+			boolean primera_lectura = p.getPrimeraLectura();
+	//		boolean primera_lectura = true;
+			p.createIds();
+			p.setFechaLimite(primera_lectura);
+			
+			String URL = "https://contrataciondelsectorpublico.gob.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom";
+			
+			p.readOpenData(primera_lectura, URL);
+			
+	//		rellenar(p);
+	//		leerDirectorio(primera_lectura);
+	//		leerArchivo(primera_lectura);
+		}catch (Exception e){
+			p.escribirLogError(e);
+		}
 	}
 	
-	private static void leerDirectorio(boolean primera_lectura) throws FileNotFoundException, SAXException, IOException, SQLException, ParserConfigurationException {
+	private static void leerDirectorio(boolean primera_lectura) throws Exception {
 		ArrayList<String> exp = new ArrayList<String>();
 		//exp.add("PDT.-3.9/19");
 		exp.add("PDT.-3.8/19");
 		
 		/* PARSER DE DIRECTORIO */
-		String path = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/Licitaciones 20-21/PRUEBAS_LOTES/";
+		String path = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/Licitaciones 20-21/PRUEBAS_LOTES2/";
 		String[] files = null;
 		
 		File f = new File(path);
@@ -89,7 +79,7 @@ public class main {
 		}
 	}
 	
-	private static void leerArchivo(boolean primera_lectura) throws FileNotFoundException, ParserConfigurationException, SAXException, IOException, SQLException{
+	private static void leerArchivo(boolean primera_lectura) throws Exception{
 		/** PARSER DE UN SOLO ARCHIVO */
 		String URL = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/LicitacionParser/Licitaciones 20-21/PRUEBAS/2.atom";
 		//String URL = "Licitaciones 20-21/2020_12/licitacionesPerfilesContratanteCompleto3_20201230_181906_1";
@@ -103,7 +93,7 @@ public class main {
 		p.readEntries(primera_lectura, null);
 	}
 	
-	private static void rellenar(Parser p) throws ParserConfigurationException, SAXException, TransformerException{
+	private static void rellenar(Parser p) throws Exception{
 		// Rellenar las tablas TypeCode
 		System.out.println("ModosID"); p.writeModosId();
 		System.out.println("TypeCode"); p.writeTypeCode();
