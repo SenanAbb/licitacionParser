@@ -1951,7 +1951,12 @@ public class ConexionSQL extends Parser{
 						}
 						
 						sentencia.setBoolean("excluidos", tr[i].getAbnormallyLowTenderIndicator());
-						sentencia.setString("numero_de_lote", tr[i].getAwardedTenderedProject().getProcurementProjectLotID());
+						if (tr[i].getAwardedTenderedProject().getProcurementProjectLotID() != null){
+							sentencia.setString("numero_de_lote", tr[i].getAwardedTenderedProject().getProcurementProjectLotID());
+						}else{
+							sentencia.setString("numero_de_lote", null);
+						}
+						
 						
 						sentencia.execute();
 						

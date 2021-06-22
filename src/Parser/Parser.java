@@ -1,36 +1,19 @@
 package Parser;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import com.mysql.cj.jdbc.CallableStatement;
-
 import Conexion.ConexionSQL;
 import Entry.Entry;
 
@@ -46,91 +29,18 @@ import Entry.Entry;
  */
 public class Parser {
 	private static final int POS_UNICO_ELEMENTO = 0; 
-//	private static final int MODO_AUTOMATICO = 1; 
-	private static final int MODO_MANUAL = 2; 
-	private int ids, feeds;
-	private static Timestamp fecha_limite;
-	
-	private String NIF = "";
-	private File URL;
+ 
+	private int feeds;
 	
 	private Entry entry;
 	private Timestamp updated;
-	private String nextLink, selfLink;
-	private ArrayList<String> expedientes = new ArrayList<String>();
-	
-	/* modo = [EXP, NIF] */
-	private String modo_identificacion;
+	private String selfLink;
 	
 	/* Si escribir = true -> escribirá los datos en la BD */
 	private boolean escribir = true;
-
-	public void readOpenData(boolean primera_lectura, String URL) throws Exception{
-		URLConnection conexion;
-		URL url = new URL(URL);
-        
-		conexion = url.openConnection();
-        conexion.connect();
-     
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); 
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        
-        Document doc = db.parse(conexion.getInputStream());
-        
-        // Recogemos el updated y el link next
- 		readUpdateDate(doc);
- 		readLinks(doc);
- 		
- 		createFeeds(url.toString());
- 		
-        while (fecha_limite.before(updated)){
-        	System.out.println("URL: " + url.toString());
-        	
-			int dataSize = 1024*1024;
-			
-			System.out.println("[MÁXIMA]: " + Runtime.getRuntime().maxMemory()/dataSize + "MB");
-			System.out.println("[TOTAL]: " + Runtime.getRuntime().totalMemory()/dataSize + "MB");
-			System.out.println("[LIBRE]: " + Runtime.getRuntime().freeMemory()/dataSize + "MB");
-			System.out.println("[USADA]: " + (Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/dataSize + "MB");
-			
-			System.out.println("ATOM DATE: " + updated);
-			System.out.print("\t LEYENDO ENTRYS (");
-			readEntries(primera_lectura, doc);
-			
-			System.out.println("[MÁXIMA]: " + Runtime.getRuntime().maxMemory()/dataSize + "MB");
-			System.out.println("[TOTAL]: " + Runtime.getRuntime().totalMemory()/dataSize + "MB");
-			System.out.println("[LIBRE]: " + Runtime.getRuntime().freeMemory()/dataSize + "MB");
-			System.out.println("[USADA]: " + (Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/dataSize + "MB");
-			garbageCollector();
-			
-	        url = new URL(this.nextLink);
-	        conexion = url.openConnection();
-	        conexion.connect();
-	     
-	        dbf = DocumentBuilderFactory.newInstance(); 
-	        db = dbf.newDocumentBuilder();
-	        
-	        doc = db.parse(conexion.getInputStream());
-	        
-	        // Recogemos el updated y el link next
-	 		readUpdateDate(doc);
-	 		readLinks(doc);
-	 		
-	 		createFeeds(URL);
-		}
-        
-		System.out.println("COMPLETO HASTA " + fecha_limite.toString());
-	}
 	
 	public void readEntries(boolean primera_lectura, Document doc) throws Exception{
-		Document document;
-		
-		//Iniciamos el DocumentBuilderFactory;
-		if(doc == null){
-			document = initDocumentBuilder(this.URL);
-		}else{
-			document = doc;
-		}
+		Document document = doc;
 		
 		// Entries
 		NodeList entriesNodes = document.getElementsByTagName("entry");
@@ -144,29 +54,9 @@ public class Parser {
 				// Lo transformo a element
 				Element e = (Element) entry;
 				
-				//System.out.print("\tLeyendo entry " + (i+1) + "/" + entriesNodes.getLength());
+				System.out.println("\t\tLeyendo entry " + (i+1) + "/" + entriesNodes.getLength());
 				
-				String result = "";
-				if (modo_identificacion == "NIF"){
-					result = getEntryPartyID(e);
-					if (result.compareTo(NIF) == 0){
-						readAttributesAndWrite(e, primera_lectura);
-					}
-				}else if (modo_identificacion == "EXP"){
-					result = getEntryExp(e);
-					if (expedientes.contains(result)){
-						readAttributesAndWrite(e, primera_lectura);
-					}
-				}else{
-					
-//					// PARA LECTURA DE DIRECTORIO
-//					try {
-//						readUpdateDate(document);
-//					} catch (ParseException e1) {e1.printStackTrace();}
-//			 		readLinks(document);
-					
-					readAttributesAndWrite(e, primera_lectura);		
-				}
+				readAttributesAndWrite(e, primera_lectura);		
 			}
 		}else{
 			throw new NullPointerException();
@@ -227,55 +117,6 @@ public class Parser {
 		}
 	}
 	
-	public void readUpdateDate(Document document) throws FileNotFoundException, ParserConfigurationException, SAXException, IOException, ParseException{
-		try {
-			//Buscamos la lista de nodos en la raíz (feed) con la etiqueta "updated"
-			NodeList nodos = document.getElementsByTagName("updated");
-			
-			if (nodos.getLength() > 0){
-				
-				//Como sabemos que solo vamos a encontrar uno, lo almacenamos directamente
-				String date= nodos.item(POS_UNICO_ELEMENTO).getTextContent().replace("T", " ");
-				date = date.substring(0, date.indexOf("+"));
-				
-				updated = Timestamp.valueOf(date);
-			}else{
-				throw new NullPointerException();
-			}
-		}catch (NullPointerException e){
-			System.err.println("UPDATED del documento no existe");
-		}
-	}
-	
-	public void readLinks(Document document) throws FileNotFoundException, ParserConfigurationException, SAXException, IOException{
-		try {
-			// Recogemos primero el ID, para poder modificarlo despues
-			NodeList IDs = document.getElementsByTagName("id");
-			if(IDs.getLength() > 0){
-				// Buscamos la lista de nodos en FEED con la etiqueta link
-				NodeList links = document.getElementsByTagName("link");
-				
-				for (int i = 0; i < links.getLength(); i++){
-					// Recogo la información de cada link (href="" rel="")
-					String rel = links.item(i).getAttributes().getNamedItem("rel").getTextContent();
-					String href = links.item(i).getAttributes().getNamedItem("href").getTextContent();
-					
-					if (rel.compareTo("next") == 0){
-						//String link = rebuildLink(ID, href);
-						this.nextLink = href;
-					}else if (rel.compareTo("self") == 0){
-						this.selfLink = href;
-					}
-				}
-			}else{
-				throw new NullPointerException();
-			}
-		}catch (NullPointerException e){
-			e.getStackTrace();
-		}
-	}
-
-	
 	/******************/
 	/** CONSTRUCTORS **/
 	/******************/
@@ -287,15 +128,6 @@ public class Parser {
 	/**********************/
 	/** AUXILIARY METHODS**/
 	/**********************/
-	
-	private void garbageCollector(){
-		Runtime garbage = Runtime.getRuntime();
-        System.out.println("Memoria libre antes de limpieza: " + garbage.freeMemory());
- 
-        garbage.gc();
- 
-        System.out.println("Memoria libre tras la limpieza: " + garbage.freeMemory());
-	}
 	
 	public void escribirLogError(Exception e){
 		FileWriter fichero = null;
@@ -387,201 +219,17 @@ public class Parser {
         }
 	}
 	
-	public void setFechaLimite(boolean primera_lectura) throws Exception, ParseException{
-		if (!primera_lectura){
-			ConexionSQL conn = new ConexionSQL();
-			fecha_limite = conn.getLastUpdateDate();
-		}else{
-			String fecha = "2020-01-01 00:00:00.000";
-			
-			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.s");
-			Date date = dateFormat.parse(fecha);
-			long time = date.getTime();
-			
-			fecha_limite = new Timestamp(time);
-		}
-	}
-	
-	public boolean getPrimeraLectura() throws Exception{
-		boolean primera_lectura = false;
-		
-		ConexionSQL sql = new ConexionSQL();
-		Connection conn = sql.conectarMySQL();
-		
-		PreparedStatement sentencia = conn.prepareStatement("SELECT * FROM tbl_ids");
-		ResultSet rs = sentencia.executeQuery();
-		
-		if (!rs.next()) primera_lectura = true;
-		
-		return primera_lectura;
-	}
-	
-	public void createFeeds(String URL) throws Exception{
-		int feeds = 0;
-		ConexionSQL sql = new ConexionSQL();
-		Connection conn = sql.conectarMySQL();
-		CallableStatement sentencia = null;
-		
-		try{
-			sentencia = (CallableStatement) conn.prepareCall("{call newFeeds(?, ?, ?, ?)}");
-			
-			// Parametros del procedimiento almacenado
-			sentencia.setInt("ids", this.ids);
-			sentencia.setString("URL", URL);
-			sentencia.setTimestamp("updated", this.updated);
-			
-			// Definimos los tipos de los params de salida del procedimiento almacenado
-			sentencia.registerOutParameter("feeds", java.sql.Types.INTEGER);
-			
-			// Ejecutamos el procedimiento
-			sentencia.execute();
-			
-			// Se obtiene la salida
-			feeds = sentencia.getInt("feeds");
-			this.feeds = feeds;
-		} catch (SQLException e) {
-			System.out.println("Error para rollback: " + e.getMessage());
-			e.printStackTrace();
-		} finally {
-			// Cerramos las conexiones
-			try {
-				if (sentencia != null) sentencia.close();
-				if (conn != null) conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		
-	}
-	
-	/* Creación de un IDS -> información sobre esta ejecución del Parser */
-	public void createIds() throws Exception{
-		int ids = 0;
-		ConexionSQL sql = new ConexionSQL();
-		Connection conn = sql.conectarMySQL();
-		CallableStatement sentencia = null;
-		
-		try{
-			sentencia = (CallableStatement) conn.prepareCall("{call newIds(?, ?)}");
-			
-			// Parametro 1 del procedimiento almacenado
-			sentencia.setInt("modos_id", MODO_MANUAL);
-			
-			// Definimos los tipos de los params de salida del procedimiento almacenado
-			sentencia.registerOutParameter("ids", java.sql.Types.INTEGER);
-			
-			// Ejecutamos el procedimiento
-			sentencia.execute();
-			
-			// Se obtiene la salida
-			ids = sentencia.getInt("ids");
-			this.ids = ids;
-		} catch (SQLException e) {
-			System.out.println("Error para rollback: " + e.getMessage());
-			e.printStackTrace();
-		} finally {
-			// Cerramos las conexiones
-			try {
-				if (sentencia != null) sentencia.close();
-				if (conn != null) conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	/* Comprobación del identificador (NIF) del entry, para ver si es válido o no */
- 	private String getEntryPartyID(Element e){
-		String ID = "";
-		
-		// Busco el ContractFolderStatus -> Sabemos que solo hay uno
-		Element cfs = (Element)e.getElementsByTagName("cac-place-ext:ContractFolderStatus").item(POS_UNICO_ELEMENTO);
-		if (cfs != null){
-			
-			// Dentro del ContractFolderStatus, busco el LocatedContractingParty -> Sabemos que solo hay uno
-			Element lcp = (Element) cfs.getElementsByTagName("cac-place-ext:LocatedContractingParty").item(POS_UNICO_ELEMENTO);
-			if (lcp != null){
-				
-				// Dentro del LocatedContractingParty, busco el Party -> Sabemos que solo hay uno
-				Element party = (Element) lcp.getElementsByTagName("cac:Party").item(POS_UNICO_ELEMENTO);
-				if (party != null){
-					
-					// Dentro del Party, busco PartyIdentification, del cual pueden haber: minimo 1, maximo 3
-					NodeList PIDNodeList = party.getElementsByTagName("cac:PartyIdentification");
-					if (PIDNodeList.getLength() > 0){
-						
-						// Recorro la lista, y busco el NIF
-						for (int i = 0; i < PIDNodeList.getLength(); i++){
-							// Cojo el bloque <cac:PartyIdentification>
-							Element partyIdentification = (Element) PIDNodeList.item(i);
-							// Busco en sus hijos el ID -> Sabemos que por cada PartyIdentification solo vendra un ID
-							Element PID = (Element) partyIdentification.getElementsByTagName("cbc:ID").item(POS_UNICO_ELEMENTO);
-							// Miramos si el schemeName es NIF, en caso contrario pasamos al siguiente
-							if (PID.getAttributes().getNamedItem("schemeName").getTextContent().compareTo("NIF") == 0){
-								ID = PID.getTextContent();
-							}
-						}
-						
-					}else{
-						throw new NullPointerException("ENTRY -> CONTRACT FOLDER STATUS -> LOCATED CONTRACTING PARTY -> PARTY -> PARTY IDENTIFICATION no existe, no se puede obtener la identificación del entry");
-					}
-					
-				}else{
-					throw new NullPointerException("ENTRY -> CONTRACT FOLDER STATUS -> LOCATED CONTRACTING PARTY -> PARTY no existe, no se puede obtener la identificación del entry");
-				}
-				
-			}else{
-				throw new NullPointerException("ENTRY -> CONTRACT FOLDER STATUS -> LOCATED CONTRACTING PARTY no existe, no se puede obtener la identificación del entry");
-			}
-			
-		}else{
-			throw new NullPointerException("ENTRY -> CONTRACT FOLDER STATUS no existe, no se puede obtener la identificación del entry");
-		}
-		
-		return ID;
-	}
-	
- 	private String getEntryExp(Element e) {
- 		String exp = "";
-		
-		// Busco el ContractFolderStatus -> Sabemos que solo hay uno
-		Element cfs = (Element)e.getElementsByTagName("cac-place-ext:ContractFolderStatus").item(POS_UNICO_ELEMENTO);
-		if (cfs != null){
-			// Dentro del ContractFolderStatus, busco el ContractFolderID -> Sabemos que solo hay uno
-			Element cfid = (Element) cfs.getElementsByTagName("cbc:ContractFolderID").item(POS_UNICO_ELEMENTO);
-			if (cfid != null){
-				exp = cfid.getTextContent();
-			}else{
-				throw new NullPointerException("ENTRY -> CONTRACT FOLDER STATUS -> LOCATED CONTRACTING PARTY no existe, no se puede obtener la identificación del entry");
-			}
-		}else{
-			throw new NullPointerException("ENTRY -> CONTRACT FOLDER STATUS no existe, no se puede obtener la identificación del entry");
-		}
-	
-		return exp;
-	}
- 
-	private Document initDocumentBuilder(File url) throws ParserConfigurationException, SAXException, IOException, FileNotFoundException{
-		Document document = null;
-		try{
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
-            document = documentBuilder.parse(url);
-            document.getDocumentElement().normalize();
-		}catch (FileNotFoundException e){
-			throw e;
-		}
-		return document;
+	public void setFeeds(int feeds) {
+		this.feeds = feeds;
 	}
 
-	public void setURL(File file) {
-		this.URL = file;
+	public void setUpdated(Timestamp updated) {
+		this.updated = updated;
 	}
 
-	public String getSelfLink(){
-		return selfLink;
+	public void setSelfLink(String selfLink) {
+		this.selfLink = selfLink;
 	}
-	
 	
 	/** TYPE CODES  */
 	
