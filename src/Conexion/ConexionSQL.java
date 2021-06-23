@@ -1,5 +1,9 @@
 package Conexion;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,6 +12,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import procurementProject.RequiredCommodityClassification;
@@ -283,7 +289,7 @@ public class ConexionSQL extends Parser{
 			if (todo){
 				sentencia = (CallableStatement) conn.prepareCall("{call newFeeds_Expediente(?, ?, ?, ?, ?, ?, ?)}");
 				
-				sentencia.setInt("feeds", feeds);
+				sentencia.setInt("feedss", feeds);
 				sentencia.setInt("expediente", Integer.parseInt(entry.getId()));
 				sentencia.setString("summary", entry.getSummary());
 				sentencia.setTimestamp("updated", entry.getUpdated());
@@ -2626,6 +2632,43 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
+	
+	public void escribirLog(Timestamp atom_update, String atom_url, Timestamp entry_update, String entry_id, String estado) throws Exception{
+		Connection conn = conectarMySQL();
+		PreparedStatement stmt = conn.prepareStatement("INSERT INTO tbl_log (atom_update, atom_url, entry_update, entry_id, estado) "
+				+ "VALUES (?, ?, ?, ?, ?)");
+		stmt.setTimestamp(1, atom_update);
+		stmt.setString(2, atom_url);
+		stmt.setTimestamp(3, entry_update);
+		stmt.setInt(4, Integer.parseInt(entry_id));
+		stmt.setString(5, estado);
+		
+		stmt.executeUpdate();
+		
+		stmt.close();
+		conn.close();
+	}
+	
+	public void escribirLogError(String selfLink, String entry_id, Exception ex) throws Exception {
+		Connection conn = conectarMySQL();
+		PreparedStatement stmt = conn.prepareStatement("INSERT INTO tbl_log_errores (url, entry, traza) "
+				+ "VALUES (?, ?, ?)");
+		stmt.setString(1, selfLink);
+		stmt.setInt(2, Integer.parseInt(entry_id));
+		
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		ex.printStackTrace(pw);
+		String sStackTrace = sw.toString(); // stack trace as a string
+
+		stmt.setString(3, sStackTrace);
+		
+		stmt.executeUpdate();
+		
+		stmt.close();
+		conn.close();
+	}
+	
 	/* AUXILIARES */
 	
 	private boolean searchExpediente(int id) throws Exception {
@@ -3423,4 +3466,5 @@ public class ConexionSQL extends Parser{
 			}
 		}
 	}
+
 }

@@ -108,12 +108,13 @@ public class Parser {
 				conn.writeExpediente(newEntry, feeds, primera_lectura);
 				
 				// ESCRIBIMOS LOS DATOS EN EL LOG DESPUES DE ESCRIBIR EN LA BD
-				escribirLog(updated, selfLink, entryUpdate, entryId, newEntry.getContractFolderStatus().getContractFolderStatusCode());
+				conn.escribirLog(updated, selfLink, entryUpdate, entryId, newEntry.getContractFolderStatus().getContractFolderStatusCode());
 			}
 			
 			newEntry = null;
 		}catch(Exception ex){
-			escribirLogError(ex);
+			ConexionSQL conn = new ConexionSQL();
+			conn.escribirLogError(selfLink, this.entry.getId(), ex);
 		}
 	}
 	
@@ -128,96 +129,6 @@ public class Parser {
 	/**********************/
 	/** AUXILIARY METHODS**/
 	/**********************/
-	
-	public void escribirLogError(Exception e){
-		FileWriter fichero = null;
-		PrintWriter pw = null;
-		
-		try{
-			fichero = new FileWriter("C:\\Users\\senan\\OneDrive\\Escritorio\\LicitacionParser\\LicitacionParser\\log_errores.txt", true);
-			pw = new PrintWriter(fichero);
-			
-			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-			java.time.LocalDateTime fecha = LocalDateTime.now();
-			
-			StringBuilder s = new StringBuilder();
-			
-			s.append("[");
-			s.append(dtf.format(fecha));
-			s.append("]\n ");
-			if (this.selfLink != null){
-				s.append("\tURL: ");
-				s.append(selfLink);
-				s.append("\n");
-			}
-			if (this.entry != null){
-				s.append("\tEntry: ");
-				s.append(this.entry.getId());
-			}
-			s.append("\n");
-			s.append("\tException: ");
-			e.printStackTrace(pw);
-			s.append("\n");
-			s.append("===========================================================");
-		
-			String cadena = s.toString();
-			
-			pw.println(cadena);
-		} catch (Exception ex) {
-            e.printStackTrace();
-        } finally {
-           try {
-           // Nuevamente aprovechamos el finally para 
-           // asegurarnos que se cierra el fichero.
-           if (null != fichero)
-              fichero.close();
-           } catch (Exception e2) {
-              e2.printStackTrace();
-           }
-        }
-	}
-	
-	public void escribirLog(Timestamp atom_update, String atom_url, Timestamp entry_update, String entry_id, String estado){
-		FileWriter fichero = null;
-		PrintWriter pw = null;
-		
-		try{
-			fichero = new FileWriter("C:\\Users\\senan\\OneDrive\\Escritorio\\LicitacionParser\\LicitacionParser\\log.txt", true);
-			pw = new PrintWriter(fichero);
-			
-			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-			java.time.LocalDateTime fecha = LocalDateTime.now();
-			
-			StringBuilder s = new StringBuilder();
-			
-			s.append(dtf.format(fecha));
-			s.append(", ");
-			s.append(atom_update.toString());
-			s.append(", ");
-			s.append(atom_url);
-			s.append(", ");
-			s.append(entry_update.toString());
-			s.append(", ");
-			s.append(entry_id);
-			s.append(", ");
-			s.append(estado);
-			
-			String cadena = s.toString();
-			
-			pw.println(cadena);
-		} catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-           try {
-           // Nuevamente aprovechamos el finally para 
-           // asegurarnos que se cierra el fichero.
-           if (null != fichero)
-              fichero.close();
-           } catch (Exception e2) {
-              e2.printStackTrace();
-           }
-        }
-	}
 	
 	public void setFeeds(int feeds) {
 		this.feeds = feeds;

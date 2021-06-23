@@ -9,6 +9,9 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,7 +60,7 @@ public class main {
 		setFechaLimite(primera_lectura);
 		
 		// Seteamos el ATOM para la lectura (la primera)
-		String URL = "https://contrataciondelsectorpublico.gob.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom";
+		String URL = "https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom";
 		
 		// Iniciamos el Document
 		URLConnection conexion;
@@ -148,15 +151,6 @@ public class main {
 		}
 	}
 	
-	private static void garbageCollector(){
-		Runtime garbage = Runtime.getRuntime();
-        System.out.println("Memoria libre antes de limpieza: " + garbage.freeMemory());
- 
-        garbage.gc();
- 
-        System.out.println("Memoria libre tras la limpieza: " + garbage.freeMemory());
-	}
-	
 	private static void logMemoria(){
 		int dataSize = 1024*1024;
 		
@@ -218,6 +212,10 @@ public class main {
 		if (!primera_lectura){
 			ConexionSQL conn = new ConexionSQL();
 			fecha_limite = conn.getLastUpdateDate();
+			
+			// Sumamos un segundo a la fecha_limite para evitar errores de nanosegundos
+			// Por ejemplo, recoge 22:00:22.0 de la BD pero la fecha del ATOM es 22:00:22.123 
+			fecha_limite.setTime(fecha_limite.getTime()+1000);
 		}else{
 			String fecha = "2020-01-01 00:00:00.000";
 			
