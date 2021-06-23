@@ -289,7 +289,7 @@ public class ConexionSQL extends Parser{
 			if (todo){
 				sentencia = (CallableStatement) conn.prepareCall("{call newFeeds_Expediente(?, ?, ?, ?, ?, ?, ?)}");
 				
-				sentencia.setInt("feedss", feeds);
+				sentencia.setInt("feeds", feeds);
 				sentencia.setInt("expediente", Integer.parseInt(entry.getId()));
 				sentencia.setString("summary", entry.getSummary());
 				sentencia.setTimestamp("updated", entry.getUpdated());
