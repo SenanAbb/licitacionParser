@@ -1953,7 +1953,7 @@ public class ConexionSQL extends Parser{
 						}
 						
 						sentencia.setBoolean("excluidos", tr[i].getAbnormallyLowTenderIndicator());
-						if (tr[i].getAwardedTenderedProject().getProcurementProjectLotID() != null){
+						if (tr[i].getAwardedTenderedProject() != null){
 							sentencia.setString("numero_de_lote", tr[i].getAwardedTenderedProject().getProcurementProjectLotID());
 						}else{
 							sentencia.setString("numero_de_lote", null);

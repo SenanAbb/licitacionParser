@@ -50,7 +50,7 @@ public class Parser {
 				// Lo transformo a element
 				Element e = (Element) entry;
 				
-				System.out.println("\t\tLeyendo entry " + (i+1) + "/" + entriesNodes.getLength());
+				//System.out.println("\t\tLeyendo entry " + (i+1) + "/" + entriesNodes.getLength());
 				
 				readAttributesAndWrite(e, primera_lectura);		
 			}
