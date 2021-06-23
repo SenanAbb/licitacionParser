@@ -773,7 +773,7 @@ CREATE TABLE `tbl_feeds_expedientes` (
   CONSTRAINT `expediente` FOREIGN KEY (`expediente`) REFERENCES `tbl_expedientes` (`expedientes`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_feeds_expedientes_tbl_entidad_adjudicadora1` FOREIGN KEY (`entidad_adjudicadora`) REFERENCES `tbl_entidad_adjudicadora` (`entidad_adjudicadora`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_ids_expedientes_tbl_feeds1` FOREIGN KEY (`feeds`) REFERENCES `tbl_feeds` (`feeds`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -996,6 +996,56 @@ LOCK TABLES `tbl_language` WRITE;
 /*!40000 ALTER TABLE `tbl_language` DISABLE KEYS */;
 INSERT INTO `tbl_language` VALUES ('ca','Catalán'),('en','Ingles'),('es','Español'),('eu','Euskera'),('gl','Gallego');
 /*!40000 ALTER TABLE `tbl_language` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_log`
+--
+
+DROP TABLE IF EXISTS `tbl_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_log` (
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `atom_update` timestamp NULL DEFAULT NULL,
+  `atom_url` varchar(150) NOT NULL,
+  `entry_update` timestamp NULL DEFAULT NULL,
+  `entry_id` int(11) NOT NULL,
+  `estado` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_log`
+--
+
+LOCK TABLES `tbl_log` WRITE;
+/*!40000 ALTER TABLE `tbl_log` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_log` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_log_errores`
+--
+
+DROP TABLE IF EXISTS `tbl_log_errores`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tbl_log_errores` (
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `url` varchar(150) NOT NULL,
+  `entry` int(11) NOT NULL,
+  `traza` varchar(2000) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_log_errores`
+--
+
+LOCK TABLES `tbl_log_errores` WRITE;
+/*!40000 ALTER TABLE `tbl_log_errores` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbl_log_errores` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -3343,4 +3393,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-22  9:42:15
+-- Dump completed on 2021-06-23 10:28:40
