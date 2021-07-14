@@ -1,4 +1,4 @@
-package Conexion;
+package conexion;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import parser.Parser;
 import procurementProject.RequiredCommodityClassification;
 import procurementProjectLot.ProcurementProjectLot;
 import tenderResult.Contract;
@@ -28,7 +29,6 @@ import tenderingTerms.SpecificTendererRequirement;
 import tenderingTerms.TechnicalEvaluationCriteria;
 import utils.PartyIdentification;
 import Entry.Entry;
-import Parser.Parser;
 
 import com.mysql.cj.jdbc.CallableStatement;
 
@@ -63,6 +63,12 @@ public class ConexionSQL extends Parser{
     private String username = "root"; // Nombre de usuario    
     private String password = "root"; // Clave de usuario
     
+    /**
+     * Método encargado de crear la conexión con la BD
+     * 
+     * @return La conexión con la BD
+     * @throws Exception
+     */
     public Connection conectarMySQL() throws Exception{
     	Connection conn = null;
     	
@@ -78,6 +84,14 @@ public class ConexionSQL extends Parser{
 	
 	/* TABLAS GENERALES */
 	
+    /**
+     * Escribe en la BD los datos relativos al entry que se pasa como argumento. Dependiendo se si es la primera lectura o no, el comportamiento será diferente
+     * 
+     * @param entry Entry del ATOM a escribir en la BD
+     * @param feeds Registro de FEEDS correspondiente al documento ATOM leído
+     * @param primera_lectura Si se trata de la primera ejecución del programa o no
+     * @throws Exception
+     */
 	public void writeExpediente(Entry entry, int feeds, boolean primera_lectura) throws Exception {
 		if (primera_lectura){
 			writeData_firstTime(entry, feeds);
@@ -86,6 +100,16 @@ public class ConexionSQL extends Parser{
 		}
 	}
 	
+	/**
+	 * Este método solo se ejecuta si es la primera ejecución del programa.
+	 * Comprueba si existe un expediente con el ID del entry pasado como argumento. Si existe, escribimos solamente un registro en la BD relacionando
+	 * el documento ATOM leído con el expediente para saber dónde y cuándo se ha leído ese expediente; si no existe, escribimos todos los datos del expediente en la BD,
+	 * así como la relación entre el documento y dicho expediente.
+	 * 
+	 * @param entry
+	 * @param feeds
+	 * @throws Exception
+	 */
 	private void writeData_firstTime(Entry entry, int feeds) throws Exception {
 		boolean existe = searchExpediente(Integer.parseInt(entry.getId()));
 		boolean todo;
@@ -99,6 +123,19 @@ public class ConexionSQL extends Parser{
 		}
 	}
 	
+	/**
+	 * Este método solo se ejecuta si es la primera ejecución del programa.
+	 * Comprueba si el expediente existe en la BD. Si no existe, escribe los datos correspondientes y crea la relación entre el documento ATOM y el expediente;
+	 * si existe, comprueba si el estado del expediente es igual o mayor al último registrado. 
+	 *	1 - Orden MAYOR: Las tablas que no existan las creo y linkeo al nuevo feeds_expedientes
+	 * 	2 - Orden IGUAL: Es una RECTIFICACIÓN. Busco la tabla, junto con el valor que se modifica. Una vez encontrado:
+	 * 		2.1 - Creo un nuevo registro de la tabla linkeado al feeds_expediente nuevo
+	 * 	3 - Orden MENOR: ERROR
+	 * 
+	 * @param entry
+	 * @param feeds
+	 * @throws Exception
+	 */
 	private void writeData_notFirstTime(Entry entry, int feeds) throws Exception {
 		boolean existe = searchExpediente(Integer.parseInt(entry.getId()));
 		boolean todo;
@@ -129,13 +166,13 @@ public class ConexionSQL extends Parser{
 				}
 				
 				/* TRES POSIBILIDADES
-				 * 1 - Orden MAYOR: Las tablas que no existan las creo y linkeo al nuevo ids_expedientes
+				 * 1 - Orden MAYOR: Las tablas que no existan las creo y linkeo al nuevo feeds_expedientes
 				 * 2 - Orden IGUAL: Es una RECTIFICACIÓN. Busco la tabla, junto con el valor que se modifica. Una vez encontrado:
-				 * 	2.1 - Creo un nuevo registro de la tabla linkeado al ids_expediente nuevo
+				 * 	2.1 - Creo un nuevo registro de la tabla linkeado al feeds_expediente nuevo
 				 * 3 - Orden MENOR: ERROR
 				 */
 				
-				if (orden_entry >= orden_ultimo){ // HAY QUE QUITAR EL =
+				if (orden_entry >= orden_ultimo){ // HAY QUE QUITAR EL = (no implementado en esta versión las RECTIFICACIONES)
 					writeNewFeedsExpediente(entry, feeds, todo);
 					checkTables(entry, feeds_exp_ultimo);
 				}else if (orden_entry == orden_ultimo){ // PARA RECTIFICACION
@@ -149,7 +186,13 @@ public class ConexionSQL extends Parser{
 			writeNewFeedsExpediente(entry, feeds, todo);
 		}
 	}
-
+	
+	/**
+	 * Escribe un nuevo expediente en la BD
+	 * 
+	 * @param entry
+	 * @throws Exception
+	 */
 	private void writeNewExpediente(Entry entry) throws Exception{
 		Connection conn = conectarMySQL();
 		
@@ -276,6 +319,14 @@ public class ConexionSQL extends Parser{
 		}
 	}
 
+	/**
+	 * Escribe los datos relativos al un expediente y la relación entre este y el ATOM desde el que se lee
+	 * 
+	 * @param entry
+	 * @param feeds
+	 * @param todo Nos dice que hay que escribir todos los datos del expediente o no
+	 * @throws Exception
+	 */
 	private void writeNewFeedsExpediente(Entry entry, int feeds, boolean todo) throws Exception{
 		Connection conn = conectarMySQL();
 		CallableStatement sentencia = null;
@@ -352,7 +403,14 @@ public class ConexionSQL extends Parser{
 		}
 	}
 
-	private void checkTables(Entry entry, int ids_exp_ultimo) throws Exception{
+	/**
+	 * Comprueba todas las tablas relacionadas con un expediente y, si encuentra algún cambio, escribe (NO SOBREESCRIBE) los nuevos datos y los relaciona con el registro FEEDS correspondiente
+	 * 
+	 * @param entry
+	 * @param feeds_exp_ultimo
+	 * @throws Exception
+	 */
+	private void checkTables(Entry entry, int feeds_exp_ultimo) throws Exception{
 		Connection conn = conectarMySQL();
 		PreparedStatement sentencia = null;
 		ResultSet rs = null;
@@ -436,7 +494,7 @@ public class ConexionSQL extends Parser{
 				sentencia = conn.prepareStatement("SELECT id_plazo_de_obtencion, tipo_plazo FROM tbl_plazo_de_obtencion INNER JOIN tbl_feeds_expedientes" + 
 						" ON tbl_plazo_de_obtencion.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes" + 
 						" WHERE tbl_plazo_de_obtencion.feeds_expedientes = ?");
-				sentencia.setInt(1, ids_exp_ultimo);
+				sentencia.setInt(1, feeds_exp_ultimo);
 				
 				// Actualizo el ids_expediente al actual
 				rs = sentencia.executeQuery();
@@ -446,8 +504,8 @@ public class ConexionSQL extends Parser{
 					sentencia.executeUpdate();
 				}
 				writePlazoDeObtencionPliegos(entry, conn);
-				aux = ids_exp_ultimo;
-				ids_exp_ultimo = feeds_expedientes;
+				aux = feeds_exp_ultimo;
+				feeds_exp_ultimo = feeds_expedientes;
 			}
 			rs.close();
 			sentencia.close();
@@ -466,7 +524,7 @@ public class ConexionSQL extends Parser{
 				sentencia = conn.prepareStatement("SELECT id_plazo_de_obtencion, tipo_plazo FROM tbl_plazo_de_obtencion INNER JOIN tbl_feeds_expedientes" + 
 						" ON tbl_plazo_de_obtencion.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes" + 
 						" WHERE tbl_plazo_de_obtencion.feeds_expedientes = ?");
-				sentencia.setInt(1, ids_exp_ultimo);
+				sentencia.setInt(1, feeds_exp_ultimo);
 				
 				// Actualizo el ids_expediente al actual
 				rs = sentencia.executeQuery();
@@ -476,8 +534,8 @@ public class ConexionSQL extends Parser{
 					sentencia.executeUpdate();
 				}
 				writePlazoDeObtencionOferta(entry, conn);
-				aux = ids_exp_ultimo;
-				ids_exp_ultimo = feeds_expedientes;
+				aux = feeds_exp_ultimo;
+				feeds_exp_ultimo = feeds_expedientes;
 			}
 			rs.close();
 			sentencia.close();
@@ -496,7 +554,7 @@ public class ConexionSQL extends Parser{
 				sentencia = conn.prepareStatement("SELECT id_plazo_de_obtencion, tipo_plazo FROM tbl_plazo_de_obtencion INNER JOIN tbl_feeds_expedientes" + 
 						" ON tbl_plazo_de_obtencion.feeds_expedientes = tbl_feeds_expedientes.feeds_expedientes" + 
 						" WHERE tbl_plazo_de_obtencion.feeds_expedientes = ?");
-				sentencia.setInt(1, ids_exp_ultimo);
+				sentencia.setInt(1, feeds_exp_ultimo);
 				
 				// Actualizo el ids_expediente al actual
 				rs = sentencia.executeQuery();
@@ -506,13 +564,13 @@ public class ConexionSQL extends Parser{
 					sentencia.executeUpdate();
 				}
 				writePlazoDeObtencionSolicitudes(entry, conn);
-				aux = ids_exp_ultimo;
-				ids_exp_ultimo = feeds_expedientes;
+				aux = feeds_exp_ultimo;
+				feeds_exp_ultimo = feeds_expedientes;
 			}
 			rs.close();
 			sentencia.close();
 			
-			ids_exp_ultimo = aux;
+			feeds_exp_ultimo = aux;
 			
 			// EXTENSION DE CONTRATO
 			sentencia = conn.prepareStatement("SELECT * FROM tbl_extension_de_contrato INNER JOIN tbl_feeds_expedientes ON "
@@ -2629,6 +2687,16 @@ public class ConexionSQL extends Parser{
 		}
 	}
 	
+	/**
+	 * Escribe en el log el entry leído y datos relacionados a él
+	 * 
+	 * @param atom_update Fecha de actualización del documento ATOM
+	 * @param atom_url URL del ATOM
+	 * @param entry_update Fecha de actualización del entry 
+	 * @param entry_id ID del entry
+	 * @param estado Estado del expediente
+	 * @throws Exception
+	 */
 	public void escribirLog(Timestamp atom_update, String atom_url, Timestamp entry_update, String entry_id, String estado) throws Exception{
 		Connection conn = conectarMySQL();
 		PreparedStatement stmt = conn.prepareStatement("INSERT INTO tbl_log (atom_update, atom_url, entry_update, entry_id, estado) "
@@ -2645,6 +2713,14 @@ public class ConexionSQL extends Parser{
 		conn.close();
 	}
 	
+	/**
+	 * En caso de producirse un error durante la ejecución del programa, se captura la excepción y se escribe en la tabla correspondiente de la BD el registro
+	 * 
+	 * @param selfLink URL leído donde se ha producido el error
+	 * @param entry_id ID del entry que ha dado el error
+	 * @param ex Excepción que ha saltado al producirse el error para registrar la traza
+	 * @throws Exception
+	 */
 	public void escribirLogError(String selfLink, String entry_id, Exception ex) throws Exception {
 		Connection conn = conectarMySQL();
 		PreparedStatement stmt = conn.prepareStatement("INSERT INTO tbl_log_errores (url, entry, traza) "
@@ -2667,6 +2743,13 @@ public class ConexionSQL extends Parser{
 	
 	/* AUXILIARES */
 	
+	/**
+	 * Comprueba si el expediente con ID pasado como parámetro existe en la BD
+	 * 
+	 * @param id
+	 * @return Si existe o no el expediente
+	 * @throws Exception
+	 */
 	private boolean searchExpediente(int id) throws Exception {
 		Connection conn = conectarMySQL();
 		
@@ -2703,6 +2786,12 @@ public class ConexionSQL extends Parser{
 		return existe;
 	}
 	
+	/**
+	 * Devuelve la fecha de actualización más reciente registrada en la BD
+	 * 
+	 * @return Fecha de actualización
+	 * @throws Exception
+	 */
 	public Timestamp getLastUpdateDate() throws Exception{
 		PreparedStatement sentencia = null;
 		Connection conn = conectarMySQL();
@@ -2729,7 +2818,7 @@ public class ConexionSQL extends Parser{
 		return fecha;
 	}
 	
-	/** TYPE CODES */
+	//======================== TYPE CODES ========================
     
 	public void writeSubTypeCode(int code, String nombre, int tipo) throws Exception {
 		Connection conn = conectarMySQL();

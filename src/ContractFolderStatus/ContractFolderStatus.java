@@ -1,4 +1,4 @@
-package ContractFolderStatus;
+package contractFolderStatus;
 
 import locatedContractingParty.LocatedContractingParty;
 
@@ -17,8 +17,7 @@ import tenderResult.TenderResult;
 import tenderingProcess.TenderingProcess;
 import tenderingTerms.TenderingTerms;
 
-/**
- * @params
+/*
  * 		contractFolderID: String[1]
  * 		contractFolderStatusCode: String[1]
  * 		locatedContractingParty: LocatedContractingParty[1]
@@ -34,6 +33,7 @@ import tenderingTerms.TenderingTerms;
  *		generalDocumentList: GeneralDocument[] [0..*]
  *		contractModificationList: ContractModification[] [0..*]
  */
+
 public class ContractFolderStatus {
 	private String contractFolderID, contractFolderStatusCode;
 	private LocatedContractingParty locatedContractingParty;
@@ -49,6 +49,12 @@ public class ContractFolderStatus {
 	private ValidNoticeInfo[] validNoticeInfoList;
 	private GeneralDocument[] generalDocumentList;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param cfs El cac-place-ext:ContractFolderStatus que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element cfs, int POS_UNICO_ELEMENTO){
 		this.contractFolderID = null;
 		this.contractFolderStatusCode = null;
@@ -71,6 +77,12 @@ public class ContractFolderStatus {
 		}	
 	}
 	
+	/**
+	 * Lee el cac:LocatedContractingParty del documento
+	 * 
+	 * @param cfs El cac-place-ext:ContractFolderStatus que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readLocatedContractingParty(Element cfs, int POS_UNICO_ELEMENTO){
 		this.locatedContractingParty = null;
 		
@@ -86,6 +98,12 @@ public class ContractFolderStatus {
 		}
 	}
 	
+	/**
+	 * Lee el cac:ProcurementProject del documento
+	 * 
+	 * @param cfs El cac-place-ext:ContractFolderStatus que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readProcurementProject(Element cfs, int POS_UNICO_ELEMENTO){
 		this.procurementProject = null;
 		
@@ -115,6 +133,12 @@ public class ContractFolderStatus {
 		}
 	}
 	
+	/**
+	 * Lee el cac:ProcurementProjectLot del documento
+	 * 
+	 * @param cfs El cac-place-ext:ContractFolderStatus que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readProcurementProjectLot(Element cfs, int POS_UNICO_ELEMENTO){
 		this.procurementProjectLotList = null;
 		
@@ -134,6 +158,12 @@ public class ContractFolderStatus {
 		}
 	}
 	
+	/**
+	 * Lee el cac:TenderResult del documento
+	 * 
+	 * @param cfs El cac-place-ext:ContractFolderStatus que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readTenderResult(Element cfs, int POS_UNICO_ELEMENTO){
 		this.tenderResultList = null;
 		
@@ -156,6 +186,12 @@ public class ContractFolderStatus {
 		}
 	}
 
+	/**
+	 * Lee el cac:TenderingTerms del documento
+	 * 
+	 * @param cfs El cac-place-ext:ContractFolderStatus que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readTenderingTerms(Element cfs, int POS_UNICO_ELEMENTO){
 		this.tenderingTerms = null;
 		
@@ -181,6 +217,12 @@ public class ContractFolderStatus {
 		}
 	}
 	
+	/**
+	 * Lee el cac:TenderingProcess del documento
+	 * 
+	 * @param cfs El cac-place-ext:ContractFolderStatus que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readTenderingProcess(Element cfs, int POS_UNICO_ELEMENTO){
 		this.tenderingProcess = null;
 		
@@ -202,6 +244,12 @@ public class ContractFolderStatus {
 		}
 	}
 	
+	/**
+	 * Lee el cac:ContractModification del documento
+	 * 
+	 * @param cfs El cac-place-ext:ContractFolderStatus que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readContractModification(Element cfs, int POS_UNICO_ELEMENTO){
 		this.contractModificationList = null;
 		
@@ -222,6 +270,12 @@ public class ContractFolderStatus {
 		}
 	}
 	
+	/**
+	 * Lee el cac:LegalDocumentReference del documento
+	 * 
+	 * @param cfs El cac-place-ext:ContractFolderStatus que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readLegalDocumentReference(Element cfs, int POS_UNICO_ELEMENTO){
 		this.legalDocumentReference = null;
 		
@@ -233,6 +287,12 @@ public class ContractFolderStatus {
 		}
 	}
 	
+	/**
+	 * Lee el cac:TechnicalDocumentReference del documento
+	 * 
+	 * @param cfs El cac-place-ext:ContractFolderStatus que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readTechnicalDocumentReference(Element cfs, int POS_UNICO_ELEMENTO){
 		this.technicalDocumentReference = null;
 		
@@ -244,6 +304,12 @@ public class ContractFolderStatus {
 		}
 	}
 
+	/**
+	 * Lee el cac:AdditionalDocumentReference del documento
+	 * 
+	 * @param cfs El cac-place-ext:ContractFolderStatus que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAdditionalDocumentReference(Element cfs, int POS_UNICO_ELEMENTO){
 		this.additionalDocumentReferenceList = null;
 		
@@ -263,6 +329,12 @@ public class ContractFolderStatus {
 		}
 	}
 	
+	/**
+	 * Lee el cac:ValidNoticeInfo del documento
+	 * 
+	 * @param cfs El cac-place-ext:ContractFolderStatus que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readValidNoticeInfo(Element cfs, int POS_UNICO_ELEMENTO){
 		this.validNoticeInfoList = null;
 		
@@ -282,6 +354,12 @@ public class ContractFolderStatus {
 		}
 	}
 
+	/**
+	 * Lee el cac:GeneralDocument del documento
+	 * 
+	 * @param cfs El cac-place-ext:ContractFolderStatus que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readGeneralDocument(Element cfs, int POS_UNICO_ELEMENTO){
 		this.generalDocumentList = null;
 		
@@ -297,95 +375,6 @@ public class ContractFolderStatus {
 				
 				this.generalDocumentList[i] = gd;
 			}
-		}
-	}
-	
-	public void print(){
-		System.out.print("* CONTRACT FOLDER STATUS *\n" + 
-				 		 "-> Contract Folder ID: " + contractFolderID + "\n" + 
-						 "-> Contract Folder Status Code: " + contractFolderStatusCode + "\n" +
-						 "--------------------------------\n");
-		System.out.print("===============================================================\n");
-		this.locatedContractingParty.print();
-		
-		/* PROCUREMENT PROJECT */
-		if(this.procurementProject != null){
-			this.procurementProject.print();
-		}else{
-			System.out.print("** PROCUREMENT PROJECT: null **\n");
-		}
-		
-		/* TENDER RESULT */
-		if (tenderResultList != null){
-			for (TenderResult td : tenderResultList){
-				td.print();
-			}
-		}else{
-			System.out.print("** TENDER RESULT: null **\n");
-		}
-		
-		/* TENDERING TERMS */
-		if(this.tenderingTerms != null){
-			this.tenderingTerms.print();
-		}else{
-			System.out.print("** TENDERING TERMS: null **\n");
-		}
-		
-		/* TENDERING PROCESS */
-		if(this.tenderingProcess != null){
-			this.tenderingProcess.print();
-		}else{
-			System.out.print("** TENDERING PROCESS: null **\n");
-		}
-		 
-		/* CONTRACT MODIFICATION */
-		if (this.contractModificationList != null){
-			for (ContractModification c : contractModificationList){
-				c.print();
-			}
-		}else{
-			System.out.print("** CONTRACT MODIFICATION: null **\n");
-		}
-		
-		/* LEGAL DOCUMENT */
-		if (this.legalDocumentReference != null){
-			legalDocumentReference.print();
-		}else{
-			System.out.print("** LEGAL DOCUMENT REFERENCE: null **\n");
-		}
-		
-		/* TECHNICAL DOCUMENT */
-		if (this.technicalDocumentReference != null){
-			technicalDocumentReference.print();
-		}else{
-			System.out.print("** TECHNICAL DOCUMENT REFERENCE: null **\n");
-		}
-		
-		/* ADDITIONAL DOCUMENT */
-		if (this.additionalDocumentReferenceList != null){
-			for (AdditionalDocumentReference a : additionalDocumentReferenceList){
-				a.print();
-			}
-		}else{
-			System.out.print("** ADDITIONAL DOCUMENT REFERENCE: null **\n");
-		}
-	
-		/* VALID NOTICE INFO */
-		if (this.validNoticeInfoList != null){
-			for (ValidNoticeInfo v : validNoticeInfoList){
-				v.print();
-			}
-		}else{
-			System.out.print("** VALID NOTICE INFO: null **\n");
-		}
-		
-		/* GENERAL DOCUMENT */
-		if (this.generalDocumentList != null){
-			for (GeneralDocument g : generalDocumentList){
-				g.print();
-			}
-		}else{
-			System.out.print("** GENERAL DOCUMENT: null **\n");
 		}
 	}
 
@@ -437,7 +426,6 @@ public class ContractFolderStatus {
 		return contractModificationList;
 	}
 
-	
 	public ValidNoticeInfo[] getValidNoticeInfoList() {
 		return validNoticeInfoList;
 	}

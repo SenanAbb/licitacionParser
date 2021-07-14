@@ -2,14 +2,19 @@ package utils;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  *		id: String [1]
  *		schemeName: String[1]
  */
 public class PartyIdentification {
 	private String id, schemeName;
 
+	/**
+	 * Lee los atributos (las etiquitas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param pi El cac:PartyIdentification que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element pi, int POS_UNICO_ELEMENTO) {
 		this.id = null;
 		this.schemeName = null;
@@ -21,10 +26,6 @@ public class PartyIdentification {
 		}else{
 			System.err.print("ERROR FATAL: PartyIdentification -> ID no existe\n");
 		}
-	}
-	
-	public void print(){
-		System.out.print("----> Party Identification: " + id + " " + "(" + schemeName + ")" + "\n");
 	}
 
 	public String getId() {

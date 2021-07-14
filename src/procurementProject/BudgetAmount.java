@@ -3,19 +3,23 @@ package procurementProject;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-/**
- * @params
+/*
  * 		estimatedOverallContractAmount: double [1]
  * 		totalAmount: double [1]
  * 		taxExclusiveAmount: double [1]
  */
 public class BudgetAmount {
 	private double estimatedOverallContractAmount, totalAmount, taxExclusiveAmount;
-	//Atributos
 	private String estimatedOverallContractAmountCurrencyID,
 		totalAmountCurrencyID,
 		taxExclusiveAmountCurrencyID;
 
+	/**
+	 * Lee los atributos (las etiquitas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param budgetAmount El cac:BudgetAmount que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element budgetAmount, int POS_UNICO_ELEMENTO) {
 		// Inicializamos todas las variables que tendrá la subclase BudgetAmount
 		Node estimatedOverallContractAmountNode = null, totalAmountNode = null, taxExclusiveAmountNode = null;
@@ -62,14 +66,6 @@ public class BudgetAmount {
 		}catch (NullPointerException e){
 			System.err.println("ERROR FATAL: ProcurementProject -> BudgetAmount -> TAX EXCLUSIVE AMOUNT no existe");
 		}
-	}
-	
-	public void print(){
-		System.out.print("*** BUDGET AMOUNT ***\n" +
-				"---> Estimated Overall Contract Amount: " + estimatedOverallContractAmount + " " + estimatedOverallContractAmountCurrencyID + "\n" +
-				"---> Total Amount: " + totalAmount + " " + totalAmountCurrencyID + "\n" +
-				"---> Tax Exclusive Amount: " + taxExclusiveAmount + " " + taxExclusiveAmountCurrencyID + "\n" +
-				"--------------------------------\n");
 	}
 
 	public double getEstimatedOverallContractAmount(){

@@ -2,8 +2,7 @@ package utils;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  * 		addressFormatCode: int [0..1]
  * 		cityName: String [0..1]
  * 		postalZone: String [0..1]
@@ -13,9 +12,15 @@ import org.w3c.dom.Element;
 public class Address {
 	private int addressFormatCode;
 	private String cityName, postalZone;
-	AddressLine addressLine;
+	private AddressLine addressLine;
 	private Country country;
 	
+	/**
+	 * Lee los atributos (las etiquitas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param address El cac:Address que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element address, int POS_UNICO_ELEMENTO) {
 		this.addressFormatCode = -1;
 		this.cityName = null;
@@ -55,23 +60,6 @@ public class Address {
 			this.country.readAttributes(country, POS_UNICO_ELEMENTO);
 		}
 		
-	}
-	
-	public void print() {
-		System.out.print("**** ADDRESS ****\n" +
-				"----> Address Format Code: " + addressFormatCode + "\n" +
-				"----> City Name: " + cityName + "\n" +
-				"----> Postal Zone: " + postalZone + "\n");
-		if (addressLine != null){
-			addressLine.print();
-		}else{
-			System.out.print("**** ADDRESS LINE: null ****\n");
-		}
-		if (country != null){
-			country.print();
-		}else{
-			System.out.print("**** COUNTRY: null ****\n");
-		}
 	}
 
 	public Country getCountry() {

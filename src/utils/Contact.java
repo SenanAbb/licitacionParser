@@ -2,8 +2,7 @@ package utils;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  *		name: String [0..1]
  *		electronicMail: String [0..1]
  *		telephone: String [0..1]
@@ -12,6 +11,12 @@ import org.w3c.dom.Element;
 public class Contact {
 	private String name, electronicMail, telephone, telefax; 
 	
+	/**
+	 * Lee los atributos (las etiquitas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param c El cac:Contract que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element c, int POS_UNICO_ELEMENTO) {
 		this.name = null;
 		this.electronicMail = null;
@@ -41,15 +46,6 @@ public class Contact {
 		if (telefax != null){
 			this.telefax = telefax.getTextContent();
 		}
-	}
-
-	public void print(){
-		System.out.print("**** CONTACT ****\n" + 
-						 "----> Name: " + name + "\n" +
-						 "----> Electronic mail: " + electronicMail + "\n" +
-						 "----> Telephone: " + telephone + "\n" +
-						 "----> Telefax: " + telefax + "\n" +
-						 "--------------------------------\n");	
 	}
 
 	

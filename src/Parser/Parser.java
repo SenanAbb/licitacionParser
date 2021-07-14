@@ -1,16 +1,19 @@
-package Parser;
+package parser;
 
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import Conexion.ConexionSQL;
+
+import conexion.ConexionSQL;
 import Entry.Entry;
 
 /**
@@ -32,9 +35,13 @@ public class Parser {
 	private Timestamp updated;
 	private String selfLink;
 	
-	/* Si escribir = true -> escribirá los datos en la BD */
-	private boolean escribir = true;
-	
+	/**
+	 * Método que recorre todas las entrys del documento ATOM y los trata uno a uno
+	 * 
+	 * @param primera_lectura Si se trata o no de la primera ejecución del programa
+	 * @param doc Documento desde el que leer los datos
+	 * @throws Exception
+	 */
 	public void readEntries(boolean primera_lectura, Document doc) throws Exception{
 		Document document = doc;
 		
@@ -61,6 +68,13 @@ public class Parser {
 		entriesNodes = null;
 	}
 	
+	/**
+	 * Lee todos los atributos del entry y los almacena en la BD en sus respectivas tablas
+	 * 
+	 * @param e Entry a leer
+	 * @param primera_lectura Si se trata o no de la primera ejecución del programa
+	 * @throws Exception
+	 */
 	private void readAttributesAndWrite(Element e, boolean primera_lectura) throws Exception{
 		try{
 			String[] idSplit = null;
@@ -99,13 +113,11 @@ public class Parser {
 			//newEntry.print();
 			this.entry = newEntry;
 		
-			if (escribir){
-				ConexionSQL conn = new ConexionSQL();
-				conn.writeExpediente(newEntry, feeds, primera_lectura);
-				
-				// ESCRIBIMOS LOS DATOS EN EL LOG DESPUES DE ESCRIBIR EN LA BD
-				conn.escribirLog(updated, selfLink, entryUpdate, entryId, newEntry.getContractFolderStatus().getContractFolderStatusCode());
-			}
+			ConexionSQL conn = new ConexionSQL();
+			conn.writeExpediente(newEntry, feeds, primera_lectura);
+			
+			// ESCRIBIMOS LOS DATOS EN EL LOG DESPUES DE ESCRIBIR EN LA BD
+			conn.escribirLog(updated, selfLink, entryUpdate, entryId, newEntry.getContractFolderStatus().getContractFolderStatusCode());
 			
 			newEntry = null;
 		}catch(Exception ex){
@@ -114,32 +126,114 @@ public class Parser {
 		}
 	}
 	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	// Sin nada (leemos todo)
-	public Parser(){}
-	
-	
-	/**********************/
-	/** AUXILIARY METHODS**/
-	/**********************/
-	
+	/**
+	 * Setea el valor de feeds para las escrituras de los datos en la BD
+	 * 
+	 * @param feeds Corresponde al registro FEEDS creado previamente en la BD. Para cada documento a leer hay un solo feed.
+	 */
 	public void setFeeds(int feeds) {
 		this.feeds = feeds;
 	}
 
+	/**
+	 * Setea el valor de la fecha de actualización del documento
+	 * 
+	 * @param updated Fecha de actualización del documento
+	 */
 	public void setUpdated(Timestamp updated) {
 		this.updated = updated;
 	}
 
+	/**
+	 * Setea la URL del documento actual
+	 * 
+	 * @param selfLink Campo <self> correspondiente a la URL del documento actual
+	 */
 	public void setSelfLink(String selfLink) {
 		this.selfLink = selfLink;
 	}
 	
-	/** TYPE CODES  */
+	//======================== TYPE CODES ========================
 	
+	/**
+	 * Escribe en la BD los datos de modos de lectura (propias del Parser)
+	 * 
+	 * @throws Exception
+	 */
+	public void writeModosId() throws Exception {
+		ConexionSQL con = new ConexionSQL();
+		int modosid = 1;
+		String descripcion = "Automático";
+		
+		// Escribimos en la BD
+		con.writeModosId(modosid, descripcion);
+		
+		modosid = 2;
+		descripcion = "Manual";
+		con.writeModosId(modosid, descripcion);
+	}
+	
+	/**
+	 * Escribe en la BD los datos de los tipos de pliegos
+	 * 
+	 * @throws Exception
+	 */
+	public void writeTipoPliego() throws Exception{
+		ConexionSQL con = new ConexionSQL();
+		int id = 1;
+		String tipo = "Administrativo";
+		con.writeTipoPliego(id, tipo);
+		
+		id = 2;
+		tipo = "Técnico";
+		con.writeTipoPliego(id, tipo);
+		
+		id = 3;
+		tipo = "Adicional";
+		con.writeTipoPliego(id, tipo);
+	}
+	
+	/**
+	 * Escribe en la BD los datos de los tipos de plazos
+	 * 
+	 * @throws Exception
+	 */
+	public void writeTipoPlazo() throws Exception{
+		ConexionSQL con = new ConexionSQL();
+		int id = 1;
+		String tipo = "Pliegos";
+		con.writeTipoPlazo(id, tipo);
+		
+		id = 2;
+		tipo = "Oferta";
+		con.writeTipoPlazo(id, tipo);
+		
+		id = 3;
+		tipo = "Solicitudes";
+		con.writeTipoPlazo(id, tipo);
+	}
+	
+	/**
+	 * Escribe en la BD los datos de los tipos de evaluación
+	 * 
+	 * @throws Exception
+	 */
+	public void writeTipoEvaluacion() throws Exception{
+		ConexionSQL con = new ConexionSQL();
+		int id = 1;
+		String tipo = "Técnica";
+		con.writeTipoEvaluacion(id, tipo);
+		
+		id = 2;
+		tipo = "Económica-Financiera";
+		con.writeTipoEvaluacion(id, tipo);
+	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Subtype Codes
+	 * 
+	 * @throws Exception
+	 */
 	public void writeSubtypeCodes() throws Exception {
 		try {
 			// 1 -> Suministros
@@ -271,6 +365,12 @@ public class Parser {
 	        e.printStackTrace();
 	     }
 	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE CPV
+	 * 
+	 * @throws Exception
+	 */
 	public void writeCPV() throws Exception {
 		try {
 			int code = 0;
@@ -316,6 +416,12 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Country Identification Code
+	 * 
+	 * @throws Exception
+	 */
 	public void writeCountryIdentificationCode() throws Exception {
 		try {
 			String code = "", nombre = "";
@@ -353,6 +459,12 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Country Subentity Code
+	 * 
+	 * @throws Exception
+	 */
 	public void writeCountrySubentityCode() throws Exception {
 		try {
 			String code = "", nombre = "";
@@ -390,6 +502,12 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Procedure Code
+	 * 
+	 * @throws Exception
+	 */
 	public void writeProcedureCode() throws Exception{
 		try {
 			int code = 0;
@@ -428,6 +546,12 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Contracting System Type Code
+	 * 
+	 * @throws Exception
+	 */
 	public void writeContractingSystemTypeCode() throws Exception{
 		try {
 			int code = 0;
@@ -466,6 +590,12 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Urgency Code
+	 * 
+	 * @throws Exception
+	 */
 	public void writeUrgencyCode() throws Exception{
 		try {
 			int code = 0;
@@ -504,6 +634,12 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Submission Method Code
+	 * 
+	 * @throws Exception
+	 */
 	public void writeSubmissionMethodCode() throws Exception{
 		try {
 			int code = 0; 
@@ -542,6 +678,12 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Language
+	 * 
+	 * @throws Exception
+	 */
 	public void writeLanguage() throws Exception{
 		try {
 			String code = "", nombre = "";
@@ -579,6 +721,12 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Procurement Legislation
+	 * 
+	 * @throws Exception
+	 */
 	public void writeProcurementLegislation() throws Exception{
 		try {
 			String code = "", nombre = "";
@@ -616,6 +764,12 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Contracting Party Type Code
+	 * 
+	 * @throws Exception
+	 */
 	public void writeContractingPartyTypeCode() throws Exception {
 		try {
 			String code = "", nombre = "";
@@ -653,18 +807,12 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeModosId() throws Exception {
-		ConexionSQL con = new ConexionSQL();
-		int modosid = 1;
-		String descripcion = "Automático";
-		
-		// Escribimos en la BD
-		con.writeModosId(modosid, descripcion);
-		
-		modosid = 2;
-		descripcion = "Manual";
-		con.writeModosId(modosid, descripcion);
-	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Contract Folder Status Code
+	 * 
+	 * @throws Exception
+	 */
 	public void writeContractFolderStatusCode() throws Exception{
 		try {
 			String code = "", nombre = "";
@@ -708,6 +856,12 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}	
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Type Code
+	 * 
+	 * @throws Exception
+	 */
 	public void writeTypeCode() throws Exception{
 		try {
 			int code = 0;
@@ -747,34 +901,12 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeTipoPliego() throws Exception{
-		ConexionSQL con = new ConexionSQL();
-		int id = 1;
-		String tipo = "Administrativo";
-		con.writeTipoPliego(id, tipo);
-		
-		id = 2;
-		tipo = "Técnico";
-		con.writeTipoPliego(id, tipo);
-		
-		id = 3;
-		tipo = "Adicional";
-		con.writeTipoPliego(id, tipo);
-	}
-	public void writeTipoPlazo() throws Exception{
-		ConexionSQL con = new ConexionSQL();
-		int id = 1;
-		String tipo = "Pliegos";
-		con.writeTipoPlazo(id, tipo);
-		
-		id = 2;
-		tipo = "Oferta";
-		con.writeTipoPlazo(id, tipo);
-		
-		id = 3;
-		tipo = "Solicitudes";
-		con.writeTipoPlazo(id, tipo);
-	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Funding Program Code
+	 * 
+	 * @throws Exception
+	 */
 	public void writeFundingProgramCode() throws Exception{
 		try {
 			String code = "";
@@ -813,6 +945,12 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Guarantee Type Code
+	 * 
+	 * @throws Exception
+	 */
 	public void writeGuaranteeTypeCode() throws Exception{
 		try {
 			int code = 0;
@@ -854,6 +992,12 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Required Business Profile Code
+	 * 
+	 * @throws Exception
+	 */
 	public void writeRequiredBusinessProfileCode() throws Exception{
 		try {
 			String code = "";
@@ -892,6 +1036,12 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Declaration Type Code
+	 * 
+	 * @throws Exception
+	 */
 	public void writeDeclarationTypeCode() throws Exception{
 		try {
 			int code = 0;
@@ -930,6 +1080,12 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Technical Capability Type Code
+	 * 
+	 * @throws Exception
+	 */
 	public void writeTechnicalCapabilityTypeCode() throws Exception{
 		try {
 			String code = "";
@@ -968,6 +1124,12 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Financial Capability Type Code
+	 * 
+	 * @throws Exception
+	 */
 	public void writeFinancialCapabilityTypeCode() throws Exception{
 		try {
 			String code = "";
@@ -1006,16 +1168,12 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
-	public void writeTipoEvaluacion() throws Exception{
-		ConexionSQL con = new ConexionSQL();
-		int id = 1;
-		String tipo = "Técnica";
-		con.writeTipoEvaluacion(id, tipo);
-		
-		id = 2;
-		tipo = "Económica-Financiera";
-		con.writeTipoEvaluacion(id, tipo);
-	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Tender Result Code
+	 * 
+	 * @throws Exception
+	 */
 	public void writeTenderResultCode() throws Exception{
 		try {
 			int code = 0;
@@ -1054,6 +1212,12 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Reason Code
+	 * 
+	 * @throws Exception
+	 */
 	public void writeReasonCode() throws Exception{
 		try {
 			String code = "";
@@ -1092,6 +1256,12 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Notice Type Code
+	 * 
+	 * @throws Exception
+	 */
 	public void writeNoticeTypeCode() throws Exception{
 		try {
 			String code = "";
@@ -1130,6 +1300,12 @@ public class Parser {
 	        e.printStackTrace();
 	    }
 	}
+	
+	/**
+	 * Escribe en la BD los datos de CODICE Document Type Code
+	 * 
+	 * @throws Exception
+	 */
 	public void writeDocumentTypeCode() throws Exception{
 		try {
 			String code = "";

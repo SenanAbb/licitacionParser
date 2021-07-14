@@ -6,8 +6,7 @@ import java.util.Date;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  *		durationMeasure: double [0..1]
  *		durationMeasureUnitCode: String [0..1]
  *		startDate: Date [0..1]
@@ -16,9 +15,14 @@ import org.w3c.dom.Element;
 public class PlannedPeriod {
 	private double durationMeasure;
 	private Date startDate, endDate;
-	// Atributos
 	private String durationMeasureUnitCode;
 	
+	/**
+	 * Lee los atributos (las etiquitas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param pPeriod El cac:PlannedPeriod que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element pPeriod, int POS_UNICO_ELEMENTO) {
 		Element start = (Element) pPeriod.getElementsByTagName("cbc:StartDate").item(POS_UNICO_ELEMENTO);
 		Element end = (Element) pPeriod.getElementsByTagName("cbc:EndDate").item(POS_UNICO_ELEMENTO);
@@ -58,18 +62,6 @@ public class PlannedPeriod {
 			this.durationMeasure = -1;
 		}	
 	}
-	
-	public void print(){
-		System.out.print("*** PLANNED PERIOD ***\n" +
-				"---> Duration Measure: " + durationMeasure + " " + durationMeasureUnitCode + "\n" +
-				"---> Start Date: " + startDate + "\n" +
-				"---> End Date: " + endDate + "\n" +
-				"--------------------------------\n");
-	}
-	
-	/*************************/
-	/** GETTERS AND SETTERS **/
-	/*************************/
 	
 	public double getDurationMeasure() {
 		return durationMeasure;

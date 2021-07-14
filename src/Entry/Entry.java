@@ -4,10 +4,9 @@ import java.sql.Timestamp;
 
 import org.w3c.dom.Element;
 
-import ContractFolderStatus.ContractFolderStatus;
+import contractFolderStatus.ContractFolderStatus;
 
-/**
- * @params
+/*
  *		id: String[1]
  *		link: String[1]
  *		summary: String[1]
@@ -16,10 +15,16 @@ import ContractFolderStatus.ContractFolderStatus;
  *		cfs: ContractFolderStatus[1]
  */
 public class Entry {
-	private String id, id_num, link, summary, title;
+	private String id_num, link, summary, title;
 	private Timestamp updated;
 	private ContractFolderStatus cfs;
 	
+	/**
+	 * Lee la etiqueta cac-place-ext:ContractFolderStatus del documento
+	 * 
+	 * @param entry El cac:entry que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readContractFolderStatus(Element entry, int POS_UNICO_ELEMENTO){
 		this.cfs = null;
 		
@@ -49,35 +54,13 @@ public class Entry {
 		}
 	}
 	
-	public void print(){
-		System.out.print("---------------- ENTRY " + id_num + "----------------\n" + 
-						 "Link: " + link + "\n" + 
-						 "Summary: " + summary + "\n" + 
-						 "Title: " + title + "\n" + 
-						 "Updated: " + updated + "\n");
-		System.out.print("===============================================================\n");
-		cfs.print();
-	}
-	
-	/******************/
-	/** CONSTRUCTORS **/
-	/******************/
-	
-	
 	public Entry(String id, String id_num, String link, String summary, String title, Timestamp updated) {
-		this.id = id;
 		this.id_num = id_num;
 		this.link = link;
 		this.summary = summary;
 		this.title = title;
 		this.updated = updated;
 	}
-	
-	
-	/*************************/
-	/** GETTERS AND SETTERS **/
-	/*************************/
-
 
 	public String getId() {
 		return id_num;

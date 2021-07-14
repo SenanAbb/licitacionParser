@@ -8,8 +8,7 @@ import utils.PartyIdentification;
 import utils.PartyName;
 import utils.PostalAddress;
 
-/**
- * @params
+/*
  * 		websiteURI: String[0..1]
  * 		buyerProfileURIID: String[0..1]
  * 		partyName: PartyName[1]
@@ -18,15 +17,20 @@ import utils.PostalAddress;
  * 		postalAddress: PostalAddress[0..1]
  */
 public class Party {
-	private String websiteURI, buyerProfileURIID;
+	private String websiteURI;
 	private PartyName partyName;
 	private PartyIdentification[] partyIdentificationList;
 	private Contact contact;
 	private PostalAddress postalAddress;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param p El cac:Party que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element p, int POS_UNICO_ELEMENTO){
 		this.websiteURI = null;
-		this.buyerProfileURIID = null;
 		this.partyName = null;
 		this.partyIdentificationList = null;
 		this.contact = null;
@@ -41,7 +45,7 @@ public class Party {
 		/* Buyer Profile URI ID */
 		Element bpUID = (Element) p.getElementsByTagName("cbc:BuyerProfileURIID").item(POS_UNICO_ELEMENTO);
 		if (bpUID != null){
-			this.buyerProfileURIID = bpUID.getTextContent();
+			bpUID.getTextContent();
 		}
 		
 		/* Party Name */
@@ -82,22 +86,6 @@ public class Party {
 			this.postalAddress = new PostalAddress();
 			this.postalAddress.readAttributes(pa, POS_UNICO_ELEMENTO, false);
 		}
-	}
-	
-	public void print(){
-		System.out.print("*** PARTY ***\n" +
-						 "---> Website URI: " + websiteURI + "\n" + 
-						 "---> Buyer Profile URI ID: " + buyerProfileURIID + "\n" +
-						 "--------------------------------\n");
-		partyName.print();
-		System.out.print("**** PARTY IDENTIFICATION ****\n");
-		for (PartyIdentification p : partyIdentificationList){
-			p.print();
-		}
-		System.out.print("--------------------------------\n");
-		contact.print();
-		postalAddress.print();
-		System.out.print("--------------------------------\n");
 	}
 
 	public PartyIdentification[] getPartyIdentificationList() {

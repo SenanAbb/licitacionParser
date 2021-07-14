@@ -2,8 +2,7 @@ package utils;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  *		addressFormatCode: int [0..1]/[1]
  *		cityName: String [0..1]/[1]	
  *		postalZone: String [0..1]/[1]
@@ -16,6 +15,13 @@ public class PostalAddress {
 	private String cityName, postalZone;
 	private Country country;
 	
+	/**
+	 * Lee los atributos (las etiquitas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param pa El cac:PostalAddress que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 * @param obligatorio Dependiendo de la tabla, los campos serán obligatorios o no, esta variable define esta condición
+	 */
 	// Obligatorio nos dice si los campos AddressLine, CityName, PostalZone y Country debes ser o no obligatorios
 	public void readAttributes(Element pa, int POS_UNICO_ELEMENTO, boolean obligatorio) {
 		this.addressFormatCode = 0;
@@ -37,6 +43,12 @@ public class PostalAddress {
 		}
 	}
 	
+	/**
+	 * Lee los atributos (las etiquitas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param pa El cac:PostalAddress que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	private void readAttributesNoObligatorio(Element pa, int POS_UNICO_ELEMENTO){
 		/* City Name */
 		Element cn = (Element) pa.getElementsByTagName("cbc:CityName").item(POS_UNICO_ELEMENTO);
@@ -65,6 +77,12 @@ public class PostalAddress {
 		}
 	}
 	
+	/**
+	 * Lee los atributos (las etiquitas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param pa El cac:PostalAddress que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	private void readAttributesObligatorio(Element pa, int POS_UNICO_ELEMENTO){
 		/* City Name */
 		Element cn = (Element) pa.getElementsByTagName("cbc:CityName").item(POS_UNICO_ELEMENTO);
@@ -99,16 +117,6 @@ public class PostalAddress {
 		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: Postal Address -> COUNTRY no existe\n");
 		}
-	}
-	
-	public void print() {
-		System.out.print("**** POSTAL ADDRESS ****\n" +
-				"----> Address Format Code: " + addressFormatCode + "\n" +
-				"----> City Name: " + cityName + "\n" +
-				"----> Postal Zone: " + postalZone + "\n");
-				addressLine.print();
-				country.print();
-		System.out.print("--------------------------------\n");
 	}
 	
 	public AddressLine getAddressLine(){

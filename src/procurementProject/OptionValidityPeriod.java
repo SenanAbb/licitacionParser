@@ -2,13 +2,18 @@ package procurementProject;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  * 		descrtiption: String [0..1]
  */
 public class OptionValidityPeriod {
 	private String description;
 	
+	/**
+	 * Lee los atributos (las etiquitas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param ovp El cac:OptionValidityPeriod que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element ovp, int POS_UNICO_ELEMENTO) {
 		this.description = null;
 		
@@ -16,12 +21,6 @@ public class OptionValidityPeriod {
 		if (description != null){
 			this.description = description.getTextContent().trim();
 		}
-	}
-	
-	public void print() {
-		System.out.print("**** OPTION VALIDITY PERIOD ****\n" +
-				"----> Options Description: " + description + "\n" +
-				"--------------------------------\n");
 	}
 	
 	public String getDescription() {

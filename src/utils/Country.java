@@ -1,20 +1,20 @@
 package utils;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import org.w3c.dom.Element;
 
-import com.mysql.cj.jdbc.CallableStatement;
-
-/**
- * @params
+/*
  * 		idenfiticationCode: String [1]
  * 		name: String [0..1]
  */
 public class Country {
 	private String identificationCode, name;
 	
+	/**
+	 * Lee los atributos (las etiquitas <cbc:...>) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param country El <cac:Country> que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element country, int POS_UNICO_ELEMENTO) {
 		this.identificationCode = null;
 		this.name = null;
@@ -30,12 +30,6 @@ public class Country {
 		if (countryName != null){
 			this.name = countryName.getTextContent();
 		}
-	}
-	
-	public void print() {
-		System.out.print("**** COUNTRY ****\n" +
-				"----> Identification Code: " + identificationCode + "\n" +
-				"----> Name: " + name + "\n");
 	}
 
 	public String getIdentificationCode() {

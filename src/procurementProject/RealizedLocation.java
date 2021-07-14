@@ -4,8 +4,7 @@ import org.w3c.dom.Element;
 
 import utils.Address;
 
-/**
- * @params
+/*
  *		countrySubentity: String [0..1]
  *		countrySubentityCode: String [0..1]
  *		address: Address [0..1]
@@ -14,6 +13,12 @@ public class RealizedLocation {
 	private String countrySubentity, countrySubentityCode;
 	private Address address;
 	
+	/**
+	 * Lee los atributos (las etiquitas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param rl El cac:RealizedLocation que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element rl, int POS_UNICO_ELEMENTO) {
 		this.countrySubentity = null;
 		this.countrySubentityCode = null;
@@ -35,18 +40,6 @@ public class RealizedLocation {
 			this.address = new Address();
 			this.address.readAttributes(address, POS_UNICO_ELEMENTO);
 		}
-	}
-	
-	public void print(){
-		System.out.print("*** REALIZED LOCATION ***\n" +
-			"---> Country Subentity: " + countrySubentity + "\n" +
-			"---> Country Subentity Code: " + countrySubentityCode + "\n");
-		if (address != null){
-			address.print();
-		}else{
-			System.out.print("----> Address: null\n");
-		}
-		System.out.print("--------------------------------\n");
 	}	
 	
 	public Address getAddress(){

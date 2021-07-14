@@ -2,8 +2,7 @@ package procurementProject;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  *		optionsDescription: String [0..1]
  *		optionValidityPeriod: OptionValidityPeriod [0..1]
  */
@@ -11,6 +10,12 @@ public class ContractExtension {
 	private String optionsDescription;
 	private OptionValidityPeriod optionValidityPeriod;
 	
+	/**
+	 * Lee los atributos (las etiquitas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param ce El cac:ContractExtension que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element ce, int POS_UNICO_ELEMENTO) {
 		this.optionsDescription = null;
 		this.optionValidityPeriod = null;
@@ -24,16 +29,6 @@ public class ContractExtension {
 		if (ovp != null){
 			this.optionValidityPeriod = new OptionValidityPeriod();
 			this.optionValidityPeriod.readAttributes(ovp, POS_UNICO_ELEMENTO);
-		}
-	}
-	
-	public void print(){
-		System.out.print("*** CONTRACT EXTENSION ***\n" +
-						 "---> Options Description: " + optionsDescription + "\n");
-		if (optionValidityPeriod != null){
-			optionValidityPeriod.print();
-		}else{
-			System.out.print("**** OPTION VALIDITY PERIOD: null ****\n");
 		}
 	}
 

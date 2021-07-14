@@ -22,10 +22,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import parser.Parser;
+
 import com.mysql.cj.jdbc.CallableStatement;
 
-import Conexion.ConexionSQL;
-import Parser.Parser;
+import conexion.ConexionSQL;
 
 public class main {
 //	private static final int MODO_AUTOMATICO = 1; 
@@ -87,8 +88,6 @@ public class main {
 			System.out.println("URL: " + url.toString());
 			System.out.println("ATOM UPDATE: " + atom_update);
 			
-			logMemoria();
-			
 			Parser p = new Parser();
 			
 			System.out.print("\tLEYENDO ENTRYS (");
@@ -116,6 +115,12 @@ public class main {
 		/// ENDWHILE
 	}
 	
+	/** 
+	 * Crea un nuevo registro Feeds en la BD
+	 * 
+	 * @param URL La URL desde la que se lee el archivo ATOM
+	 * @throws Exception
+	 */
 	private static void createFeeds(String URL) throws Exception{
 		ConexionSQL sql = new ConexionSQL();
 		Connection conn = sql.conectarMySQL();
@@ -151,15 +156,11 @@ public class main {
 		}
 	}
 	
-	private static void logMemoria(){
-		int dataSize = 1024*1024;
-		
-		System.out.println("\t[MÁXIMA]: " + Runtime.getRuntime().maxMemory()/dataSize + "MB");
-		System.out.println("\t[TOTAL]: " + Runtime.getRuntime().totalMemory()/dataSize + "MB");
-		System.out.println("\t[LIBRE]: " + Runtime.getRuntime().freeMemory()/dataSize + "MB");
-		System.out.println("\t[USADA]: " + (Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/dataSize + "MB");
-	}
-	
+	/**
+	 * Lee los links <next> y <self> del documento ATOM
+	 * 
+	 * @param document El documento desde el que leer los datos
+	 */
 	private static void readLinks(Document document){
 		try {
 			// Recogemos primero el ID, para poder modificarlo despues
@@ -188,6 +189,11 @@ public class main {
 		}
 	}
 	
+	/**
+	 * Lee la fecha de actualización del documento, el campo <updated>
+	 * 
+	 * @param document El documento desde el que leer los datos
+	 */
 	private static void readUpdateDate(Document document){
 		try {
 			//Buscamos la lista de nodos en la raíz (feed) con la etiqueta "updated"
@@ -208,6 +214,12 @@ public class main {
 		}
 	}
 	
+	/**
+	 * Define la fecha límite de lectura para finalizar la ejecución
+	 * 
+	 * @param primera_lectura Si se trata o no de la primera ejecución del programa
+	 * @throws Exception
+	 */
 	private static void setFechaLimite(boolean primera_lectura) throws Exception{
 		if (!primera_lectura){
 			ConexionSQL conn = new ConexionSQL();
@@ -227,6 +239,12 @@ public class main {
 		}
 	}
 	
+	/**
+	 * Accede a la BD y mira si se trata de la primera ejecución del programa
+	 * 
+	 * @return Si es la primera ejecución del programa o no
+	 * @throws Exception
+	 */
 	private static boolean esPrimeraLectura() throws Exception{
 		boolean primera_lectura = false;
 		
@@ -241,6 +259,11 @@ public class main {
 		return primera_lectura;
 	}
 	
+	/**
+	 * Crea un registro IDS en la BD
+	 * 
+	 * @throws Exception
+	 */
 	private static void createIds() throws Exception{
 		ConexionSQL sql = new ConexionSQL();
 		Connection conn = sql.conectarMySQL();
@@ -274,6 +297,12 @@ public class main {
 		}
 	}
 	
+	/**
+	 * Método para rellenar todas las tablas CODICE de la BD
+	 * 
+	 * @param p El parser que se encarga de la lectura de los documentos
+	 * @throws Exception
+	 */
 	private static void rellenar(Parser p) throws Exception{
 		// Rellenar las tablas TypeCode
 		System.out.println("ModosID"); p.writeModosId();
@@ -303,91 +332,5 @@ public class main {
 		System.out.println("ReasonCode"); p.writeReasonCode();
 		System.out.println("NoticeTypeCode"); p.writeNoticeTypeCode();
 		System.out.println("DocumentTypeCode"); p.writeDocumentTypeCode();
-	}
-	private static void leerDirectorio(boolean primera_lectura) throws Exception {
-		ArrayList<String> exp = new ArrayList<String>();
-		//exp.add("PDT.-3.9/19");
-		exp.add("PDT.-3.8/19");
-		
-		/* PARSER DE DIRECTORIO */
-		String path = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/Licitaciones 20-21/PRUEBAS_LOTES2/";
-		String[] files = null;
-		
-		File f = new File(path);
-		File[] listado = f.listFiles();
-		
-		Parser p = new Parser();
-		
-		p.createIds();
-		p.createFeeds(path);
-		try {
-			p.setFechaLimite(primera_lectura);
-		} catch (ParseException e) {e.printStackTrace();}
-		
-		if (listado == null || listado.length == 0) {
-		    System.out.println("No hay elementos dentro de la carpeta actual");
-		}else {
-		    for (int i=0; i< listado.length; i++) {
-		    	String sub_path = path.concat(listado[i].getName());
-		    	
-		    	if (!listado[i].isDirectory()){
-		    		System.out.println("==============");
-                	System.out.println(sub_path);
-                	System.out.println("==============");
-                	File file = new File(sub_path);
-                	p.setURL(file);
-                	p.readEntries(primera_lectura, null);           
-		    	}else{
-		    		System.out.println("----> " + listado[i].getName() + " <-----");
-		    		files = getFiles(sub_path);
-		    		if ( files != null ) {
-		                int size = files.length;
-		                for ( int j = 0; j < size; j ++ ) {
-		                	System.out.println("==============");
-		                	System.out.println("ARCHIVO Nº " + (j+1) + " DE " + size);
-		                	System.out.println(files[j]);
-		                	System.out.println("==============");
-		                	File file = new File(files[j]);
-		                	p.setURL(file);
-		                	p.readEntries(primera_lectura, null);
-		                }
-		            }
-		    	}
-		    }
-		}
-	}
-	private static void leerArchivo(boolean primera_lectura) throws Exception{
-		/** PARSER DE UN SOLO ARCHIVO */
-		String URL = "C:/Users/senan/OneDrive/Escritorio/LicitacionParser/LicitacionParser/Licitaciones 20-21/PRUEBAS/2.atom";
-		//String URL = "Licitaciones 20-21/2020_12/licitacionesPerfilesContratanteCompleto3_20201230_181906_1";
-		ArrayList<String> exp = new ArrayList<String>();
-		exp.add("PDT.-3.9/19");
-		exp.add("PDT.-3.8/19");
-		
-		Parser p = new Parser();
-		p.setURL(new File(URL));
-		p.createIds();
-		p.readEntries(primera_lectura, null);
-	}
-	private static String[] getFiles(String path) {
-		String[] arr_res = null;
-
-        File f = new File(path);
-        if ( f.isDirectory( )) {
-            List<String> res   = new ArrayList<>();
-            File[] arr_content = f.listFiles();
-
-            int size = arr_content.length;
-
-            for ( int i = 0; i < size; i ++ ) {
-                if ( arr_content[ i ].isFile( ))
-                res.add( arr_content[ i ].toString( ));
-            }
-
-            arr_res = res.toArray(new String[0]);
-        } else {
-        	System.err.println( "¡ Path NO válido !" );
-        }
-        return arr_res;
 	}
 }

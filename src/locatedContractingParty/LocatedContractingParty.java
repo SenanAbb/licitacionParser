@@ -2,8 +2,7 @@ package locatedContractingParty;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  * 		contractingPartyTypeCode: int [1]
  * 		parentLocatedParty: ParentLocatedParty [0..1]
  * 		party: Party [1]
@@ -13,9 +12,12 @@ public class LocatedContractingParty {
 	private ParentLocatedParty parentLocatedParty;
 	private Party party;
 	
-	// ID de la base de datos
-	int located_contracting_party;
-	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param lcp El cac:LocatedContractingParty que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element lcp, int POS_UNICO_ELEMENTO){
 		this.contractingPartyTypeCode = -1;
 		
@@ -27,6 +29,12 @@ public class LocatedContractingParty {
 		}
 	}
 	
+	/**
+	 * Lee el ParentLocatedParty del documento
+	 * 
+	 * @param lcp El cac:LocatedContractingParty que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readParentLocatedParty(Element lcp, int POS_UNICO_ELEMENTO){
 		this.parentLocatedParty = null;
 		
@@ -37,6 +45,12 @@ public class LocatedContractingParty {
 		}
 	}
 	
+	/**
+	 * Lee el Party del documento
+	 * 
+	 * @param lcp El cac:LocatedContractingParty que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readParty(Element lcp, int POS_UNICO_ELEMENTO){
 		this.party = null;
 		
@@ -47,27 +61,6 @@ public class LocatedContractingParty {
 		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: ContractFolderStatus -> LocatedContractingParty -> PARTY no existe\n");
 		}
-	}
-	
-	public void print(){
-		System.out.print("** LOCATED CONTRACTING PARTY **\n" +
-						 "--> Contracting Party Type Code: " + contractingPartyTypeCode + "\n"+
-						 "--------------------------------\n");
-		
-		if (parentLocatedParty != null){
-			parentLocatedParty.print();
-		}else{
-			System.out.print("*** PARENT LOCATED PARTY: null ***\n" + 
-					"--------------------------------\n");
-		}
-		
-		if (party != null){
-			party.print();
-		}else{
-			System.out.print("*** PARTY: null ***\n" + 
-					"--------------------------------\n");
-		}
-		System.out.print("===============================================================\n");
 	}
 
 	public Party getParty(){

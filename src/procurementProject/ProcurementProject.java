@@ -3,8 +3,7 @@ package procurementProject;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-/**
- * @params
+/*
  *		name: String [1]
  *		typeCode: int [0..1]
  *		subTypeCode: int [0..1]
@@ -23,18 +22,18 @@ public class ProcurementProject {
 	private RealizedLocation realizedLocation;
 	private ContractExtension contractExtension;
 	
+	/**
+	 * Lee los atributos (las etiquitas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param pp El cac:ProcurementProject que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element pp, int POS_UNICO_ELEMENTO){
-		//Inicializamos todas las variables que deberá contener el ProcurementProject
 		this.name = null;
 		this.typeCode = 0;
 		this.subTypeCode = 0;
 		
 		Element nameNode = null, typeCodeNode = null, subTypeCodeNode = null;
-		
-		/* 
-			-> Si los de cardinal 1 faltan, lanzamos un mensaje de error
-			-> Si los de cardinal [0..1] o [0..*] faltan, se pone a null dentro de la clase padre
-		*/
 		
 		// Compruebo la existencia del Name, si no existe se queda a null y mandamos mensaje
 		nameNode = (Element) pp.getElementsByTagName("cbc:Name").item(POS_UNICO_ELEMENTO);
@@ -57,6 +56,12 @@ public class ProcurementProject {
 		}
 	}
 	
+	/**
+	 * Lee el BudgetAmount del documento
+	 * 
+	 * @param pp El cac:ProcurementProject que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readBudgetAmount(Element pp, int POS_UNICO_ELEMENTO){
 		this.budgetAmount = null;
 		
@@ -70,6 +75,12 @@ public class ProcurementProject {
 		}
 	}
 	
+	/**
+	 * Lee el RequiredCommodityClassification del documento
+	 * 
+	 * @param pp El cac:ProcurementProject que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readRequiredCommodityClassification(Element pp, int POS_UNICO_ELEMENTO){
 		this.requiredCommodityClassificationList = null;
 		
@@ -90,6 +101,12 @@ public class ProcurementProject {
 		}
 	}
 
+	/**
+	 * Lee el PlannedPeriod del documento
+	 * 
+	 * @param pp El cac:ProcurementProject que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readPlannedPeriod(Element pp, int POS_UNICO_ELEMENTO){
 		this.plannedPeriod = new PlannedPeriod();
 		
@@ -101,6 +118,12 @@ public class ProcurementProject {
 		}
 	}
 
+	/**
+	 * Lee el RealizedLocation del documento
+	 * 
+	 * @param pp El cac:ProcurementProject que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readRealizedLocation(Element pp, int POS_UNICO_ELEMENTO){
 		this.realizedLocation = null;
 		
@@ -114,6 +137,12 @@ public class ProcurementProject {
 		}
 	}
 	
+	/**
+	 * Lee el ContractExtension del documento
+	 * 
+	 * @param pp El cac:ProcurementProject que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readContractExtension(Element pp, int POS_UNICO_ELEMENTO){
 		this.contractExtension = null;
 		
@@ -124,54 +153,6 @@ public class ProcurementProject {
 		}
 	}
 	
-	public void print(){
-		System.out.print("** PROCUREMENT PROJECT **\n" +
-				"--> Name: " + name + "\n" +
-				"--> TypeCode: " + typeCode + "\n" +
-				"--> SubTypeCode: " + subTypeCode + "\n" +
-				"--------------------------------\n");
-		
-		if (budgetAmount != null){
-			budgetAmount.print();
-		}else{
-			System.out.print("*** BUDGET AMOUNT: null ***\n" +
-							 "--------------------------------\n");
-		}
-		
-		if (plannedPeriod.getStartDate() != null ||
-				plannedPeriod.getEndDate() != null || 
-				plannedPeriod.getDurationMeasure() != 0.0){
-			plannedPeriod.print();
-		}else{
-			System.out.print("*** PLANNED PERIOD: no existen medidores ***\n" +
-							 "--------------------------------\n");
-		}
-		
-		if (requiredCommodityClassificationList != null){
-			for (RequiredCommodityClassification rcc : requiredCommodityClassificationList){
-				rcc.print();
-			}
-		}else{
-			System.out.print("*** REQUIRED COMMODITY CLASSIFICATION: null ***\n" +
-							 "--------------------------------\n");
-		}
-		
-		if (realizedLocation != null){
-			realizedLocation.print();
-		}else{
-			System.out.print("*** REALIZED LOCATION: null ***\n" +
-							 "--------------------------------\n");
-		}
-		
-		if (contractExtension != null){
-			contractExtension.print();
-		}else{
-			System.out.print("*** CONTRACT EXTENSION: null ***\n" +
-							 "--------------------------------\n");
-		}
-		System.out.print("===============================================================\n");
-	}
-
 	public String getName(){
 		return name;
 	}
