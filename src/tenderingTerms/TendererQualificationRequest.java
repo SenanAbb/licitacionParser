@@ -7,8 +7,7 @@ import java.util.Date;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-/**
- * @params
+/*
  *		securityConditions: String[0..1]
  *		securityClearanceLimitDate: Date[0..1]
  *		personalSituation: String[0..1]
@@ -26,6 +25,12 @@ public class TendererQualificationRequest {
 	private TechnicalEvaluationCriteria[] technicalEvaluationCriteriaList;
 	private RequiredBusinessClassificationScheme requiredBusinessClassificationScheme;
 
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param tqr El cac:TenderQualificationRequest que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element tqr, int POS_UNICO_ELEMENTO) {
 		this.securityConditions = null;
 		this.personalSituation = null;
@@ -66,6 +71,12 @@ public class TendererQualificationRequest {
 		}
 	}
 	
+	/**
+	 * Lee el cac:SpecificTendererRequirement del documento
+	 * 
+	 * @param tqr El cac:TenderQualificationRequest que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readSpecificTendererRequirement(Element tqr, int POS_UNICO_ELEMENTO){
 		this.specificTendererRequirementList = null;
 		
@@ -84,6 +95,12 @@ public class TendererQualificationRequest {
 		}
 	}
 	
+	/**
+	 * Lee el cac:FinancialEvaluationCriteria del documento
+	 * 
+	 * @param tqr El cac:TenderQualificationRequest que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readFinancialEvaluationCriteria(Element tqr, int POS_UNICO_ELEMENTO){
 		this.financialEvaluationCriteriaList = null;
 		
@@ -102,6 +119,12 @@ public class TendererQualificationRequest {
 		}
 	}
 	
+	/**
+	 * Lee el cac:TechnicalEvaluationCriteria del documento
+	 * 
+	 * @param tqr El cac:TenderQualificationRequest que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readTechnicalEvaluationCriteria(Element tqr, int POS_UNICO_ELEMENTO){
 		this.technicalEvaluationCriteriaList = null;
 		
@@ -112,14 +135,20 @@ public class TendererQualificationRequest {
 			for (int i = 0; i < tecNodeList.getLength(); i++){
 				TechnicalEvaluationCriteria tec = new TechnicalEvaluationCriteria();
 				
-				Element ftrElement = (Element) tecNodeList.item(i);
-				tec.readAttributes(ftrElement, POS_UNICO_ELEMENTO);
+				Element tecElement = (Element) tecNodeList.item(i);
+				tec.readAttributes(tecElement, POS_UNICO_ELEMENTO);
 				
 				this.technicalEvaluationCriteriaList[i] = tec;
 			}
 		}
 	}
 
+	/**
+	 * Lee el cac:RequiredBusinessClassificationScheme del documento
+	 * 
+	 * @param tqr El cac:TenderQualificationRequest que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readRequiredBusinessClassificationScheme(Element tqr, int POS_UNICO_ELEMENTO){
 		this.requiredBusinessClassificationScheme = null;
 		
@@ -132,52 +161,6 @@ public class TendererQualificationRequest {
 		}
 	}
 	
-	public void print(){
-		/* ATTRIBUTES */
-		System.out.print("*** TENDERER QUALIFICATION REQUEST ***\n" +
-						 "--> Security Conditions: " + securityConditions + "\n" +
-						 "--> Personal Situation: " + personalSituation + "\n" +
-						 "--> Description: " + description + "\n" +
-						 "--> Secutiry Clearance Limit Date: " + securityClearanceLimitDate + "\n" +
-						 "--------------------------------\n");
-		
-		/* SPECIFIC TENDERER REQUIREMENT */
-		if(specificTendererRequirementList != null){
-			for (SpecificTendererRequirement str : specificTendererRequirementList){
-				str.print();
-			}
-		}else{
-			System.out.print("**** SPECIFIC TENDERER REQUIREMENT: null ****\n");
-		}
-		
-		/* FINANCIAL EVALUATION CRITERIA */
-		if(financialEvaluationCriteriaList != null){
-			for (FinancialEvaluationCriteria fec : financialEvaluationCriteriaList){
-				fec.print();
-			}
-		}else{
-			System.out.print("**** FINANCIAL EVALUATION CRITERIA: null ****\n");
-		}
-		
-		/* TECHNICAL EVALUATION CRITERIA */
-		if(technicalEvaluationCriteriaList != null){
-			for (TechnicalEvaluationCriteria tec : technicalEvaluationCriteriaList){
-				tec.print();
-			}
-		}else{
-			System.out.print("**** TECHNICAL EVALUATION CRITERIA: null ****\n");
-		}
-		
-		/* REQUIRED BUSINESS CLASSIFICATION SCHEME */
-		if(requiredBusinessClassificationScheme != null){
-			requiredBusinessClassificationScheme.print();
-		}else{
-			System.out.print("**** REQUIRED BUSINESS CLASSIFICATION SCHEME: null ****\n");
-		}
-		
-		System.out.print("--------------------------------\n");
-	}
-
 	public String getPersonalSituation() {
 		return personalSituation;
 	}

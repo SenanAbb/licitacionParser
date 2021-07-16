@@ -10,9 +10,9 @@ public class Country {
 	private String identificationCode, name;
 	
 	/**
-	 * Lee los atributos (las etiquitas <cbc:...>) del documento correspondiente a las variables de esta clase
+	 * Lee los atributos (las etiquitas cbc:...) del documento correspondiente a las variables de esta clase
 	 * 
-	 * @param country El <cac:Country> que contiene la información
+	 * @param country El cac:Country que contiene la información
 	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
 	 */
 	public void readAttributes(Element country, int POS_UNICO_ELEMENTO) {

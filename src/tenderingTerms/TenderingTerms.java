@@ -5,8 +5,7 @@ import org.w3c.dom.NodeList;
 
 import utils.DocumentAvailabilityPeriod;
 
-/**
- * @params
+/*
  * 		requiredCurriculaIndicator: bool[0..1]
  * 		variantConstraintIndicator: bool[0..1;
  * 		priceRevisionFormulaDescription: String[0..1]
@@ -43,6 +42,12 @@ public class TenderingTerms {
 	private TenderPreparation[] tenderPreparationList;
 	private Language[] languageList;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param tt El cac:TenderingTerms que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element tt, int POS_UNICO_ELEMENTO) {
 		this.priceRevisionFormulaDescription = null;
 		this.fundingProgram = null;
@@ -79,6 +84,12 @@ public class TenderingTerms {
 		}
 	}
 	
+	/**
+	 * Lee el cac:AllowedSubcontractTerms del documento
+	 * 
+	 * @param tt El cac:TenderingTerms que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAllowedSubcontractTerms(Element tt, int POS_UNICO_ELEMENTO){
 		this.allowedSubcontractTerms = null;
 		
@@ -89,6 +100,12 @@ public class TenderingTerms {
 		}
 	}
 	
+	/**
+	 * Lee el cac:ProcurementLegislationDocumentReference del documento
+	 * 
+	 * @param tt El cac:TenderingTerms que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readProcurementLegislationDocumentReference(Element tt, int POS_UNICO_ELEMENTO){
 		this.procurementLegislationDocumentReference = null;
 		
@@ -99,6 +116,12 @@ public class TenderingTerms {
 		}
 	}
 	
+	/**
+	 * Lee el cac:RequiredFinancialGuarantee del documento
+	 * 
+	 * @param tt El cac:TenderingTerms que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readRequiredFinancialGuarantee(Element tt, int POS_UNICO_ELEMENTO){
 		this.requiredFinancialGuaranteeList = null;
 		
@@ -117,6 +140,12 @@ public class TenderingTerms {
 		}
 	}
 	
+	/**
+	 * Lee el cac:AwardingTerms del documento
+	 * 
+	 * @param tt El cac:TenderingTerms que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAwardingTerms(Element tt, int POS_UNICO_ELEMENTO){
 		this.awardingTerms = null;
 		
@@ -127,6 +156,12 @@ public class TenderingTerms {
 		}
 	}
 	
+	/**
+	 * Lee el cac:TendererQualificationRequest del documento
+	 * 
+	 * @param tt El cac:TenderingTerms que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readTendererQualificationRequest(Element tt, int POS_UNICO_ELEMENTO){
 		this.tendererQualificationRequest = null;
 		
@@ -142,6 +177,12 @@ public class TenderingTerms {
 		}
 	}
 	
+	/**
+	 * Lee el cac:DocumentProviderParty del documento
+	 * 
+	 * @param tt El cac:TenderingTerms que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readDocumentProviderParty(Element tt, int POS_UNICO_ELEMENTO){
 		this.documentProviderParty = null;
 		
@@ -155,6 +196,12 @@ public class TenderingTerms {
 		}
 	}
 	
+	/**
+	 * Lee el cac:DocumentAvailabilityPeriod del documento
+	 * 
+	 * @param tt El cac:TenderingTerms que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readDocumentAvailabilityPeriod(Element tt, int POS_UNICO_ELEMENTO){
 		this.documentAvailabilityPeriod = null;
 		
@@ -165,6 +212,12 @@ public class TenderingTerms {
 		}
 	}
 	
+	/**
+	 * Lee el cac:TenderRecipientParty del documento
+	 * 
+	 * @param tt El cac:TenderingTerms que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readTenderRecipientParty(Element tt, int POS_UNICO_ELEMENTO){
 		this.tenderRecipientParty = null;
 		
@@ -178,6 +231,12 @@ public class TenderingTerms {
 		}
 	}
 	
+	/**
+	 * Lee el cac:AdditionalInformationParty del documento
+	 * 
+	 * @param tt El cac:TenderingTerms que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAdditionalInformationParty(Element tt, int POS_UNICO_ELEMENTO){
 		this.additionalInformationParty = null;
 		
@@ -191,6 +250,12 @@ public class TenderingTerms {
 		}
 	}
 	
+	/**
+	 * Lee el cac:AppealTerms del documento
+	 * 
+	 * @param tt El cac:TenderingTerms que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAppealTerms(Element tt, int POS_UNICO_ELEMENTO){
 		this.appealTerms = null;
 		
@@ -205,24 +270,36 @@ public class TenderingTerms {
 		}
 	}
 	
+	/**
+	 * Lee el cac:TenderPreparation del documento
+	 * 
+	 * @param tt El cac:TenderingTerms que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readTenderPreparation(Element tt, int POS_UNICO_ELEMENTO){
 		this.tenderPreparationList = null;
 		
-		NodeList tplNodeList = tt.getElementsByTagName("cac:TenderPreparation");
-		if (tplNodeList.getLength() > 0){
-			this.tenderPreparationList = new TenderPreparation[tplNodeList.getLength()];
+		NodeList tpNodeList = tt.getElementsByTagName("cac:TenderPreparation");
+		if (tpNodeList.getLength() > 0){
+			this.tenderPreparationList = new TenderPreparation[tpNodeList.getLength()];
 			
-			for(int i = 0; i < tplNodeList.getLength(); i++){
-				TenderPreparation tpl = new TenderPreparation();
+			for(int i = 0; i < tpNodeList.getLength(); i++){
+				TenderPreparation tp = new TenderPreparation();
 				
-				Element tplElement = (Element) tplNodeList.item(i);
-				tpl.readAttributes(tplElement, POS_UNICO_ELEMENTO);
+				Element tpElement = (Element) tpNodeList.item(i);
+				tp.readAttributes(tpElement, POS_UNICO_ELEMENTO);
 				
-				this.tenderPreparationList[i] = tpl;
+				this.tenderPreparationList[i] = tp;
 			}
 		}
 	}
 	
+	/**
+	 * Lee el cac:Language del documento
+	 * 
+	 * @param tt El cac:TenderingTerms que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readLanguage(Element tt, int POS_UNICO_ELEMENTO){
 		this.languageList = null;
 		
@@ -241,118 +318,6 @@ public class TenderingTerms {
 		}
 	}
 	
-	public void print(){
-		/* ATTRIBUTES */
-		System.out.print("** TENDERING TERMS **\n" +
-				"--> Required Curricula Indicator: " + requiredCurriculaIndicator + "\n" +
-				"--> Variant Curricula Indicator: " + variantConstraintIndicator + "\n" +
-				"--> Price Revision Formula Indicator: " + priceRevisionFormulaDescription + "\n" +
-				"--------------------------------\n");
-		
-		/* ALLOWED SUBCONTRACTS TERMS */
-		if(allowedSubcontractTerms != null){
-			allowedSubcontractTerms.print();
-		}else{
-			System.out.print("*** ALLOWED SUBCONTRACT TERMS: null ***\n" +
-					 		 "--------------------------------\n");
-		}
-		
-		/* PROCUREMENT LEG. DOC. REFERENCE */
-		if(procurementLegislationDocumentReference != null){
-			procurementLegislationDocumentReference.print();
-		}else{
-			System.out.print("*** PROCUREMENT LEGISL. DOC. REFERENCE: null ***\n" +
-					 		 "--------------------------------\n");
-		}
-		
-		/* REQUIRED FINANCIAL GUARANTEE */
-		if (requiredFinancialGuaranteeList != null){
-			for (RequiredFinancialGuarantee rfg : requiredFinancialGuaranteeList){
-				rfg.print();
-			}
-		}else{
-			System.out.print("*** REQUIRED FINANCIAL GUARANTEE: null ***\n" +
-							 "--------------------------------\n");
-		}
-		
-		/* AWARDING TERMS */
-		if(awardingTerms != null){
-			awardingTerms.print();
-		}else{
-			System.out.print("*** AWARDING TERMS: null ***\n" +
-					 		 "--------------------------------\n");
-		}
-		
-		/* TENDERER QUALIFICATION REQUEST */
-		if(tendererQualificationRequest != null){
-			tendererQualificationRequest.print();
-		}else{
-			System.out.print("*** TENDERER QUALIFICATION REQUEST: null ***\n" +
-			 		 		 "--------------------------------\n");
-		}
-		
-		/* DOCUMENT PROVIDER PARTY */
-		if(documentProviderParty != null){
-			documentProviderParty.print();
-		}else{
-			System.out.print("*** DOCUMENT PROVIDER PARTY: null ***\n" +
-	 		 		 		 "--------------------------------\n");
-		}	
-		
-		/* DOCUMENT AVAILABILITY PERIOD */
-		if(documentAvailabilityPeriod != null){
-			documentAvailabilityPeriod.print();
-		}else{
-			System.out.print("*** DOCUMENT AVAILABILITY PERIOD: null ***\n" +
-	 		 		 		 "--------------------------------\n");
-		}
-		
-		/* TENDER RECIPIENT PARTY */
-		if(tenderRecipientParty != null){
-			tenderRecipientParty.print();
-		}else{
-			System.out.print("*** TENDER RECIPIENT PARTY: null ***\n" +
-	 		 		 		 "--------------------------------\n");
-		}	
-		
-		/* ADDITIONAL INFORMATION PARTY */
-		if(additionalInformationParty != null){
-			additionalInformationParty.print();
-		}else{
-			System.out.print("*** ADDITIONAL INFORMATION PARTY: null ***\n" +
-	 		 		 		 "--------------------------------\n");
-		}
-		
-		/* APPEAL TERMS */
-		if(appealTerms != null){
-			appealTerms.print();
-		}else{
-			System.out.print("*** APPEAL TERMS: null ***\n" +
-					 		 "--------------------------------\n");
-		}
-		
-		/* TENDER PREPARATION */
-		if(tenderPreparationList != null){
-			for (TenderPreparation tp : tenderPreparationList){
-				tp.print();
-			}
-		}else{
-			System.out.print("*** TENDER PREPARATION: null ***\n" +
-							 "--------------------------------\n");
-		}
-		
-		/* LANGUAGE */
-		if(languageList != null){
-			for (Language l : languageList){
-				l.print();
-			}
-		}else{
-			System.out.print("*** LANGUAGE: null ***\n" +
-							 "--------------------------------\n");
-		}
-		System.out.print("===============================================================\n");
-	}
-
 	public ProcurementLegislationDocumentReference getProcurementLegislationDocumenteReference() {
 		return procurementLegislationDocumentReference;
 	}

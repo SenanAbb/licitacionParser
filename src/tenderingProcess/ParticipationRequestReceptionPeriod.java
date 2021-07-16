@@ -7,8 +7,7 @@ import java.util.Date;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  * 		endDate: Date[0..1]
  *		endTime: Time[0..1]
  *		description: String[0..1]
@@ -18,6 +17,12 @@ public class ParticipationRequestReceptionPeriod {
 	private Time endTime;
 	private String description;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param prrp El cac:ParticipationRequestReceptionPeriod que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element prrp, int POS_UNICO_ELEMENTO) {
 		this.endDate = null;
 		this.endTime = null;
@@ -56,14 +61,6 @@ public class ParticipationRequestReceptionPeriod {
 		if (description != null){
 			this.description = description.getTextContent().trim();
 		}
-	}
-	
-	public void print(){
-		System.out.print("*** PARTICIPATION REQUEST RECEPTION PERIOD ***\n" +
-						 "---> End Date: " + endDate + "\n" +
-						 "---> End Time: " + endTime + "\n" +
-						 "---> Description: " + description + "\n" +
-						 "--------------------------------\n");
 	}
 
 	public java.sql.Date getEndDate() {

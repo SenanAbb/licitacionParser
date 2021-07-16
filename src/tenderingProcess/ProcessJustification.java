@@ -2,8 +2,7 @@ package tenderingProcess;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  *		reasonCode: int[0..1]
  *		description: String[0..1]
  */
@@ -11,6 +10,12 @@ public class ProcessJustification {
 	private String reasonCode;
 	private String description;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param pj El cac:ProcessJustification que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element pj, int POS_UNICO_ELEMENTO) {
 		this.reasonCode = null;
 		this.description = null;
@@ -24,13 +29,6 @@ public class ProcessJustification {
 		if (desc != null){
 			this.description = desc.getTextContent();
 		}
-	}
-
-	public void print(){
-		System.out.print("*** PROCESS JUSTIFICATION ***\n" +
-						 "---> Reason Code: " + reasonCode + "\n" +
-						 "---> Description: " + description + "\n" +
-						 "--------------------------------\n");
 	}
 
 	public String getReasonCode() {

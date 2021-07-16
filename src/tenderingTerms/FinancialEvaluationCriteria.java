@@ -2,8 +2,7 @@ package tenderingTerms;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  *		evaluationCriteriaTypeCode: int[1]
  *		description: String[0..1]
  *		thresholdQuantity: int[0..1]
@@ -13,6 +12,12 @@ public class FinancialEvaluationCriteria {
 	private double thresholdQuantity;
 	private String description;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param ftr El cac:FinancialEvaluationCriteria que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element ftr, int POS_UNICO_ELEMENTO) {
 		this.evaluationCriteriaTypeCode = null;
 		this.thresholdQuantity = -1;
@@ -37,14 +42,6 @@ public class FinancialEvaluationCriteria {
 		if (description != null){
 			this.description = description.getTextContent();
 		}
-	}
-	
-	public void print(){
-		System.out.print("**** FINANCIAL EVALUATION CRITERIA ****\n" +
-						 "----> Evaluation Criteria Type Code: " + evaluationCriteriaTypeCode + "\n" +
-						 "----> Threshold Quantity: " + thresholdQuantity + "\n" +
-						 "----> Description: " + description + "\n" +
-						 "--------------------------------\n");
 	}
 
 	public String getEvaluationCriteriaTypeCode() {

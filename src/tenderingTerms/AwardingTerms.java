@@ -3,13 +3,18 @@ package tenderingTerms;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-/**
- * @params
+/*
  * 		awardingCriteriaList: AwardingCriteria[] [0..*]
  */
 public class AwardingTerms {
 	private AwardingCriteria[] awardingCriteriaList;
 	
+	/**
+	 * Lee el cac:AwardingCriteria del documento
+	 * 
+	 * @param at El cac:AwardingTerms que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAwardingCriteria(Element at, int POS_UNICO_ELEMENTO){
 		this.awardingCriteriaList = null;
 		
@@ -26,13 +31,6 @@ public class AwardingTerms {
 				this.awardingCriteriaList[i] = ac;
 			}
 		}		
-	}
-	
-	public void print(){
-		System.out.print("*** AWARDING TERMS ***\n");
-		for(AwardingCriteria ac : awardingCriteriaList){
-			ac.print();
-		}
 	}
 
 	public AwardingCriteria[] getAwardingCriteriaList() {

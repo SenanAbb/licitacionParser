@@ -2,8 +2,7 @@ package tenderingTerms;
 
 import org.w3c.dom.Element;
 
-/** 
- * @params 
+/*
  * 		guaranteeTypeCode: int[1]
  *		amountRate: double[0..1]
  *		liabilityAmount: double[0..1]
@@ -13,6 +12,12 @@ public class RequiredFinancialGuarantee {
 	private double amountRate, liabilityAmount;
 	private String liabilityAmountCurrencyID;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param rfg El cac:RequiredFinancialGuarantee que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element rfg, int POS_UNICO_ELEMENTO) {
 		this.guaranteeTypeCode = -1;
 		this.amountRate = -1;
@@ -39,14 +44,6 @@ public class RequiredFinancialGuarantee {
 			this.liabilityAmount = Double.parseDouble(lr.getTextContent());
 			this.liabilityAmountCurrencyID = lr.getAttributes().getNamedItem("currencyID").getTextContent();
 		}	
-	}
-
-	public void print(){
-		System.out.print("*** REQUIRED FINANCIAL GUARANTEE ***\n" +
-						 "---> Guarantee Type Code: " + guaranteeTypeCode + "\n" +
-						 "---> Amount Rate: " + amountRate + "\n" +
-						 "---> Liability Amount: " + liabilityAmount + "\n" +
-					 	 "--------------------------------\n");
 	}
 
 	public int getGuaranteeTypeCode() {

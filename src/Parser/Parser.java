@@ -16,8 +16,7 @@ import org.w3c.dom.NodeList;
 import conexion.ConexionSQL;
 import Entry.Entry;
 
-/**
- * @params
+/*
  * 		const POS_UNICO_ELEMENTO: int[1]
  * 		NIF: String[1]
  *		ULR: File[1]
@@ -147,7 +146,7 @@ public class Parser {
 	/**
 	 * Setea la URL del documento actual
 	 * 
-	 * @param selfLink Campo <self> correspondiente a la URL del documento actual
+	 * @param selfLink Campo cbc:self correspondiente a la URL del documento actual
 	 */
 	public void setSelfLink(String selfLink) {
 		this.selfLink = selfLink;

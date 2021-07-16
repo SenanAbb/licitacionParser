@@ -2,8 +2,7 @@ package tenderingProcess;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  * 		limitationDescription: String[0..1]
  * 		expectedQuantity: int[0..1]
  *		maximumQuantity: int[0..1]
@@ -13,6 +12,12 @@ public class EconomicOperatorShortList {
 	private String limitationDescription;
 	private int expectedQuantity, maximumQuantity, minimumQuantity;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param eosl El cac:EconomicOperatorShortList que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element eosl, int POS_UNICO_ELEMENTO) {
 		this.limitationDescription = null;
 		this.expectedQuantity = -1;
@@ -42,14 +47,5 @@ public class EconomicOperatorShortList {
 		if (maxq != null){
 			this.maximumQuantity = Integer.parseInt(maxq.getTextContent());
 		}
-	}
-
-	public void print(){
-		System.out.print("*** ECONOMIC OPERATOR SHORT LIST ***\n" +
-						 "---> Limitation Description: " + limitationDescription + "\n" +
-						 "---> Expected Quantity: " + expectedQuantity + "\n" +
-						 "---> Minimum Quantity: " + minimumQuantity + "\n" +
-						 "---> Maximum Quantity: " + maximumQuantity + "\n" +
-						 "--------------------------------\n");
 	}
 }

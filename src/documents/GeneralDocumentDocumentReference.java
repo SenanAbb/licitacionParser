@@ -2,8 +2,7 @@ package documents;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  * 		id: String[1]
  *		attachment: Attachment[1]
  */
@@ -11,6 +10,12 @@ public class GeneralDocumentDocumentReference {
 	private String id;
 	private Attachment attachment;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param gddr El cac:GeneralDocumentDocumentReference que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element gddr, int POS_UNICO_ELEMENTO){
 		this.id = null;
 		
@@ -22,6 +27,12 @@ public class GeneralDocumentDocumentReference {
 		}
 	}
 	
+	/**
+	 * Lee el cac:Attachment del documento
+	 * 
+	 * @param gddr El cac:GeneralDocumentDocumentReference que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttachment(Element gddr, int POS_UNICO_ELEMENTO){
 		this.attachment = null;
 		
@@ -32,12 +43,6 @@ public class GeneralDocumentDocumentReference {
 		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: GeneralDocument -> GeneralDocumentDoumentReference -> ATTACHMENT no existe\n");
 		}
-	}
-	
-	public void print(){
-		System.out.print("*** GENERAL DOCUMENT DOCUMENT REFERENCE ***\n" +
-						 "---> ID: " + id + "\n");
-		attachment.print();
 	}
 
 	public String getId() {

@@ -2,8 +2,7 @@ package tenderingTerms;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  *		name: String[0..1]
  *		codeValue: String[0..1]
  *		description: String[0..1]
@@ -11,6 +10,12 @@ import org.w3c.dom.Element;
 public class ClassificationCategory {
 	private String name, codeValue, description;
 
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param cc El cac:ClassificationCategory que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element cc, int POS_UNICO_ELEMENTO) {
 		this.name = null;
 		this.codeValue = null;
@@ -35,14 +40,6 @@ public class ClassificationCategory {
 		}
 	}
 	
-	public void print(){
-		System.out.print("***** CLASSIFICATION CATEGORY *****\n" +
-						 "----->Name: " + name + "\n" +
-						 "----->Code Value: " + codeValue + "\n" +
-						 "----->Description: " + description + "\n" +
-						 "--------------------------------\n");
-	}
-
 	public String getCodeValue() {
 		return codeValue;
 	}

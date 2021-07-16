@@ -6,8 +6,7 @@ import java.util.Date;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  *		id: String [0..1]
  *		issueDate: Date [0..1]
  */
@@ -15,6 +14,12 @@ public class Contract {
 	private String id;
 	private Date issueDate;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param contract El cac:Contract que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element contract, int POS_UNICO_ELEMENTO) {
 		this.id = null;
 		this.issueDate = null;
@@ -35,13 +40,6 @@ public class Contract {
 			}
 			this.issueDate = issueDate;
 		}
-	}
-	
-	public void print(){
-		System.out.print("*** CONTRACT " + id + "***\n" +
-				"---> ID: " + id + "\n" +
-				"---> Issue Date: " + issueDate + "\n" +
-				"--------------------------------\n");
 	}
 
 	public String getId() {

@@ -6,8 +6,7 @@ import utils.Contact;
 import utils.PartyName;
 import utils.PostalAddress;
 
-/**
- * @params
+/*
  * 		websiteURI: String[0..1]
  * 		partyName: PartyName[1]
  * 		postalAddress: PostalAddress[1]
@@ -28,6 +27,12 @@ public class AppealReceiverParty {
 		}
 	}
 
+	/**
+	 * Lee el cac:PartyName del documento
+	 * 
+	 * @param arp El cac:AppealReceiverParty que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readPartyName(Element arp, int POS_UNICO_ELEMENTO) {
 		this.partyName = null;
 		
@@ -40,6 +45,12 @@ public class AppealReceiverParty {
 		}
 	}
 
+	/**
+	 * Lee el cac:PostalAddress del documento
+	 * 
+	 * @param arp El cac:AppealReceiverParty que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readPostalAddress(Element arp, int POS_UNICO_ELEMENTO) {
 		this.postalAddress = null;
 		
@@ -52,6 +63,12 @@ public class AppealReceiverParty {
 		}
 	}
 
+	/**
+	 * Lee el cac:Contact del documento
+	 * 
+	 * @param arp El cac:AppealReceiverParty que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readContact(Element arp, int POS_UNICO_ELEMENTO){
 		this.contact = null;
 		
@@ -59,36 +76,6 @@ public class AppealReceiverParty {
 		if (contact != null){
 			this.contact = new Contact();
 			this.contact.readAttributes(contact, POS_UNICO_ELEMENTO);
-		}
-	}
-	
-	public void print(){
-		/* ATTRIBUTES */
-		System.out.print("**** APPEAL RECEIVER PARTY ****\n" +
-						 "----> WebsiteURI: " + websiteURI + "\n");
-		
-		/* PARTY NAME */
-		if(partyName != null){
-			partyName.print();
-		}else{
-			System.out.println("**** PARTY NAME: null ****\n" +
-							"--------------------------------\n");
-		}
-		
-		/* POSTAL ADDRESS*/
-		if(postalAddress != null){
-			postalAddress.print();
-		}else{
-			System.out.println("**** POSTAL ADDRESS: null ****\n" +
-							"--------------------------------\n");
-		}
-		
-		/* CONTACT */
-		if(contact != null){
-			contact.print();
-		}else{
-			System.out.println("**** CONTACT: null ****\n" +
-							"--------------------------------\n");
 		}
 	}
 }

@@ -48,8 +48,7 @@ public class main {
 		// utilizados y definidos por el Parser. Esto se hace para evitar un OutOfMemoryException, es decir, que el Heap
 		// de la MV de Java se quede sin memoria y podamos leer ininterrumpidamente.
 		
-		// EL RECOLECTOR DE BASURA pasará cada vez completemos una vuelta del bucle. Aunque deba pasar automáticamente, 
-		// se hará una llamada de forma manual para asegurar su ejecución.
+		// EL RECOLECTOR DE BASURA pasará cada vez completemos una vuelta del bucle. 
 		
 		// Comprobamos si es primera lectura o no
 		primera_lectura = esPrimeraLectura();

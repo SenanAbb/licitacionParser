@@ -5,8 +5,7 @@ import org.w3c.dom.NodeList;
 
 import utils.DocumentAvailabilityPeriod;
 
-/**
- * @params
+/*
  * 		procedureCode: int[1]
  * 		contractingSystemCode: int[0..1]
  *		urgencyCode: int[0..1]
@@ -37,6 +36,12 @@ public class TenderingProcess {
 	private ParticipationRequestReceptionPeriod participationRequestReceptionPeriod;
 	private DocumentAvailabilityPeriod documentAvailabilityPeriod;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param tp El cac:TenderingProcess que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element tp, int POS_UNICO_ELEMENTO){
 		this.procedureCode = -1;
 		this.contractingSystemCode = -1;
@@ -106,16 +111,28 @@ public class TenderingProcess {
 		}
 	}
 
+	/**
+	 * Lee el cac:AuctionTerms del documento
+	 * 
+	 * @param tp El cac:TenderingProcess que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAuctionTerms(Element tp, int POS_UNICO_ELEMENTO) {
 		this.auctionTerms = null;
 		
 		Element at = (Element) tp.getElementsByTagName("cac:AuctionTerms").item(POS_UNICO_ELEMENTO);
 		if (at != null){
 			this.auctionTerms = new AuctionTerms();
-			this.auctionTerms.readAttributes(tp, POS_UNICO_ELEMENTO);
+			this.auctionTerms.readAttributes(at, POS_UNICO_ELEMENTO);
 		}
 	}
 	
+	/**
+	 * Lee el cac:TenderSubmissionDeadlinePeriod del documento
+	 * 
+	 * @param tp El cac:TenderingProcess que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readTenderSubmissionDeadlinePeriod(Element tp, int POS_UNICO_ELEMENTO){
 		this.tenderSubmissionDeadlinePeriod = null;
 		
@@ -126,6 +143,12 @@ public class TenderingProcess {
 		}
 	}
 	
+	/**
+	 * Lee el cac:OpenTenderEvent del documento
+	 * 
+	 * @param tp El cac:TenderingProcess que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readOpenTenderEvent(Element tp, int POS_UNICO_ELEMENTO){
 		this.openTenderEventList = null;
 		
@@ -145,6 +168,12 @@ public class TenderingProcess {
 		}
 	}
 	
+	/**
+	 * Lee el cac:EconomicOperatorShortList del documento
+	 * 
+	 * @param tp El cac:TenderingProcess que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readEconomicOperatorShortList(Element tp, int POS_UNICO_ELEMENTO){
 		this.economicOperatorShortList = null;
 		
@@ -155,6 +184,12 @@ public class TenderingProcess {
 		}
 	}
 	
+	/**
+	 * Lee el cac:ProcessJustification del documento
+	 * 
+	 * @param tp El cac:TenderingProcess que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readProcessJustification(Element tp, int POS_UNICO_ELEMENTO){
 		this.processJustification = null;
 		
@@ -165,6 +200,12 @@ public class TenderingProcess {
 		}
 	}
 	
+	/**
+	 * Lee el cac:ParticipationRequestReceptionPeriod del documento
+	 * 
+	 * @param tp El cac:TenderingProcess que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readParticipationRequestReceptionPeriod(Element tp, int POS_UNICO_ELEMENTO){
 		this.participationRequestReceptionPeriod = null;
 		
@@ -175,6 +216,12 @@ public class TenderingProcess {
 		}
 	}
 	
+	/**
+	 * Lee el cac:DocumentAvailabilityPeriod del documento
+	 * 
+	 * @param tp El cac:TenderingProcess que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readDocumentAvailabilityPeriod(Element tp, int POS_UNICO_ELEMENTO){
 		this.documentAvailabilityPeriod = null;
 		
@@ -185,81 +232,6 @@ public class TenderingProcess {
 		}
 	}
 	
-	public void print(){
-		/* ATTRIBUTES */
-		System.out.print("** TENDERING PROCESS **\n" +
-				"--> Procedure Code: " + procedureCode + "\n" +
-				"--> Contracting System Code: " + contractingSystemCode + "\n" +
-				"--> Urgency Code: " + urgencyCode + "\n" +
-				"--> Submission Method Code: " + submissionMethodCode + "\n" +
-				"--> Maximum Lot Presentation Quantity: " + maximumLotPresentationQuantity + "\n" +
-				"--> Maximum Tenderer Aw. Lots Quantity: " + maximumTendererAwardedLotsQuantity + "\n" +
-				"--> Part Presentation Code: " + partPresentationCode + "\n" +
-				"--> Lots Combination Contracting Auth. Rights: " + lotsCombinationContractingAuthorityRights + "\n" +
-				"--> Over Threshold Indicator: " + overThresholdIndicator + "\n" +
-				"--------------------------------\n");
-		
-		/* AUCTION TERMS */
-		if (auctionTerms != null){
-			auctionTerms.print();
-		}else{
-			System.out.print("*** AUCTION TERMS: null ***\n" +
-							 "--------------------------------\n");
-		}
-		
-		/* TENDER SUBMISSION DEADLINE PERIOD */
-		if (tenderSubmissionDeadlinePeriod != null){
-			tenderSubmissionDeadlinePeriod.print();
-		}else{
-			System.out.print("*** TENDER SUBMISSION DEADLINE PERIOD: null ***\n" +
-					 		 "--------------------------------\n");
-		}
-		
-		/* OPEN TENDER EVENT */
-		if (openTenderEventList != null){
-			for (OpenTenderEvent o : openTenderEventList){
-				o.print();
-			}
-		}else{
-			System.out.print("*** OPEN TENDER EVENT: null ***\n" +
-							 "--------------------------------\n");
-		}
-		
-		/* ECONOMIC OPERATOR SHORT LIST */
-		if (economicOperatorShortList != null){
-			economicOperatorShortList.print();
-		}else{
-			System.out.print("*** ECONOMIC OPERATOR SHORT LIST: null ***\n" +
-					 		 "--------------------------------\n");
-		}
-		
-		/* PROCESS JUSTIFICATION */
-		if (processJustification != null){
-			processJustification.print();
-		}else{
-			System.out.print("*** PROCESS JUSTIFICATION: null ***\n" +
-			 		 		 "--------------------------------\n");
-		}	
-		
-		/* PARTICIPATION REQUEST RECEPTION PERIOD */
-		if (participationRequestReceptionPeriod != null){
-			participationRequestReceptionPeriod.print();
-		}else{
-			System.out.print("*** PARTICIPATION REQUEST RECEPTION PERIOD: null ***\n" +
-					 		 "--------------------------------\n");
-		}
-		
-		/* DOCUMENT AVAILABILITY PERIOD */
-		if(documentAvailabilityPeriod != null){
-			documentAvailabilityPeriod.print();
-		}else{
-			System.out.print("*** DOCUMENT AVAILABILITY PERIOD: null ***\n" +
-	 		 		 		 "--------------------------------\n");
-		}
-		
-		System.out.print("===============================================================\n");
-	}
-
 	public int getProcedureCode() {
 		return procedureCode;
 	}

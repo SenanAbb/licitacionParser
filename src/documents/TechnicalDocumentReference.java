@@ -2,8 +2,7 @@ package documents;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  *		id: String[0..1]
  *		attachment: Attachment[1]
  */
@@ -11,6 +10,12 @@ public class TechnicalDocumentReference {
 	private String id;
 	private Attachment attachment;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param tdr El cac:TechnicalDocumentReference que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element tdr, int POS_UNICO_ELEMENTO){
 		this.id = null;
 		
@@ -20,6 +25,12 @@ public class TechnicalDocumentReference {
 		}
 	}
 	
+	/**
+	 * Lee el cac:Attachment del documento
+	 * 
+	 * @param tdr El cac:TechnicalDocumentReference que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttachment(Element tdr, int POS_UNICO_ELEMENTO){
 		this.attachment = null;
 		
@@ -30,14 +41,6 @@ public class TechnicalDocumentReference {
 		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: ContractFolderStatus -> TechnicalDocumentReference -> ATTACHMENT no existe\n");
 		}
-	}
-	
-	public void print() {
-		System.out.print("** TECHNICAL DOCUMENT REFERENCE **\n" +
-						 "--> ID: " + id + "\n" +
-						 "--------------------------------\n");
-		attachment.print();
-		System.out.print("===============================================================\n");
 	}
 
 	public String getId() {

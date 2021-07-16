@@ -36,6 +36,9 @@ import tenderingTerms.TenderingTerms;
 
 public class ContractFolderStatus {
 	private String contractFolderID, contractFolderStatusCode;
+	/**
+	 * LocatedContractingParty
+	 */
 	private LocatedContractingParty locatedContractingParty;
 	private ProcurementProject procurementProject;
 	private ProcurementProjectLot[] procurementProjectLotList;

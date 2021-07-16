@@ -7,8 +7,7 @@ import java.text.SimpleDateFormat;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  * 		typeCode: int[1]
  * 		identificationID: String[0..1]
  * 		description: String[0..1]
@@ -23,6 +22,12 @@ public class OpenTenderEvent {
 	private Time ocurrenceTime;
 	private OcurrenceLocation ocurrenceLocation;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param ote El cac:OpenTenderEvent que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element ote, int POS_UNICO_ELEMENTO){
 		this.typeCode = -1;
 		this.identificationID = null;
@@ -79,6 +84,12 @@ public class OpenTenderEvent {
 		}
 	}
 
+	/**
+	 * Lee el cac:OcurrenceLocation del documento
+	 * 
+	 * @param ote El cac:OpenTenderEvent que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readOcurrenceLocation(Element ote, int POS_UNICO_ELEMENTO) {
 		this.ocurrenceLocation = null;
 		
@@ -90,16 +101,5 @@ public class OpenTenderEvent {
 		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: TenderingProcess -> OpenTenderEvent -> OCURRENCE LOCATION no existe\n");
 		}
-	}
-	
-	public void print(){
-		System.out.print("*** OPEN TENDER EVENT ***\n" +
-						 "---> Type Code: " + typeCode + "\n" +
-						 "---> Identification ID: " + identificationID + "\n" +
-						 "---> Description: " + description + "\n" +
-						 "---> Ocurrence Date: " + ocurrenceDate + "\n" +
-						 "---> Ocurrence Time: " + ocurrenceTime + "\n");
-						 this.ocurrenceLocation.print();
-		System.out.print("--------------------------------\n");
 	}
 }

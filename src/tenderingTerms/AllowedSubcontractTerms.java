@@ -2,8 +2,7 @@ package tenderingTerms;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  * 		description: String[0..1]
  * 		amount: boolean[0..1]
  *		rate: double[0..1]
@@ -17,6 +16,12 @@ public class AllowedSubcontractTerms {
 	private double rate, minimumRate, maximumRate;
 	private int subcontractTerms;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param ast El cac:AllowedSubcontractTerms que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element ast, int POS_UNICO_ELEMENTO) {
 		this.description = null;
 		this.rate = -1;
@@ -59,17 +64,6 @@ public class AllowedSubcontractTerms {
 		if (maxRate != null){
 			this.maximumRate = Double.parseDouble(maxRate.getTextContent());
 		}
-	}
-	
-	public void print(){
-		System.out.print("*** ALLOWED SUBCONTRACT TERMS ***\n" +
-						 "---> Description: " + description + "\n" +
-						 "---> Amount: " + amount + "\n" +
-						 "---> Subcontract Terms: " + subcontractTerms + "\n" +
-						 "---> Rate: " + rate + "\n" +
-						 "---> Minimum Rate: " + minimumRate + "\n" +
-						 "---> Maximum Rate: " + maximumRate + "\n" +
-						 "--------------------------------\n");
 	}
 
 	public String getDescription() {

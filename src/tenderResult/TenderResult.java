@@ -7,8 +7,7 @@ import java.util.Date;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-/**
- * @params
+/*
  * 		resultCode: int [1]
  * 		description: String[0..1]
  * 		awardDate: String[1]
@@ -35,6 +34,12 @@ public class TenderResult {
 	private WinningParty winningParty;
 	private SubcontractTerms subcontractTerms;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param tr El cac:TenderResult que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element tr, int POS_UNICO_ELEMENTO){
 		this.resultCode = -1;
 		this.description = null;
@@ -119,6 +124,12 @@ public class TenderResult {
 		}
 	}
 
+	/**
+	 * Lee el cac:Contract del documento
+	 * 
+	 * @param tr El cac:TenderResult que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readContractList(Element tr, int POS_UNICO_ELEMENTO){
 		this.contractList = null;
 		NodeList contractNodeList = tr.getElementsByTagName("cac:Contract");
@@ -137,6 +148,12 @@ public class TenderResult {
 		}
 	}
 	
+	/**
+	 * Lee el cac:WinningParty del documento
+	 * 
+	 * @param tr El cac:TenderResult que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readWinningParty(Element tr, int POS_UNICO_ELEMENTO) {
 		this.winningParty = null;
 		
@@ -148,6 +165,12 @@ public class TenderResult {
 		}
 	}
 	
+	/**
+	 * Lee el cac:AwardedTenderedProject del documento
+	 * 
+	 * @param tr El cac:TenderResult que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAwardedTenderedProject(Element tr, int POS_UNICO_ELEMENTO) {
 		this.awardedTenderedProject = null;
 		
@@ -160,6 +183,12 @@ public class TenderResult {
 		}
 	}
 	
+	/**
+	 * Lee el cac:SubcontractTerms del documento
+	 * 
+	 * @param tr El cac:TenderResult que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readSubcontractTerms(Element tr, int POS_UNICO_ELEMENTO) {
 		this.subcontractTerms = null;
 		
@@ -170,50 +199,6 @@ public class TenderResult {
 		}
 	}
 	
-	public void print(){
-		System.out.print("** TENDER RESULT **\n" +
-				"--> Result Code: " + resultCode + "\n" +
-				"--> Description: " + description + "\n" +
-				"--> Award Date: " + awardDate + "\n" +
-				"--> Start Date: " + startDate + "\n" +
-				"--> Received Tender Quantity: " + receivedTenderQuantity + "\n" +
-				"--> Lower Tender Amount: " + lowerTenderAmount + "\n" +
-				"--> Higher Tender Amount: " + higherTenderAmount + "\n" +
-				"--> SME Awarded Indicator: " + SMEAwardedIndicator + "\n" +
-				"--> Abnormally Low Tenders Indicator: " + abnormallyLowTenderIndicator + "\n" +
-				"--------------------------------\n");
-		if (contractList != null){
-			for (Contract c : contractList){
-				c.print();
-			}
-		}else{
-			System.out.print("*** CONTRACT LIST: null ***\n" + 
-					"--------------------------------\n");
-		}
-		
-		if (winningParty != null){
-			winningParty.print();
-		}else{
-			System.out.print("*** WINNING PARTY: null ***\n" + 
-					"--------------------------------\n");
-		}
-		
-		if (awardedTenderedProject != null){
-			awardedTenderedProject.print();
-		}else{
-			System.out.print("*** AWARDED TENDERED PROJECT: null ***\n" + 
-					"--------------------------------\n");
-		}
-		
-		if (subcontractTerms != null){
-			subcontractTerms.print();
-		}else{
-			System.out.print("*** SUBCONTRACT TERMS: null ***\n" + 
-					"--------------------------------\n");
-		}
-		System.out.print("===============================================================\n");
-	}
-
 	public int getResultCode() {
 		return resultCode;
 	}

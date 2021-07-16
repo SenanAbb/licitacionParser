@@ -2,8 +2,7 @@ package tenderResult;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  *		taxExclusiveAmount: double [1]
  *		taxExclusiveAmountCurrencyID: String [1]
  *		payableAmount: double [1]
@@ -13,6 +12,12 @@ public class LegalMonetaryTotal {
 	private double taxExclusiveAmount, payableAmount;
 	private String taxExclusiveAmountCurrencyID, payableAmountCurrencyID;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param lmt El cac:LegalMonetaryTotal que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element lmt, int POS_UNICO_ELEMENTO) {
 		this.taxExclusiveAmount = -1;
 		this.payableAmount = -1;
@@ -34,11 +39,6 @@ public class LegalMonetaryTotal {
 		} catch (NullPointerException e) {
 			System.err.print("ERROR FATAL: TenderResult -> AwardedTenderedProject -> LegalMonetaryTotal -> PAYABLE AMOUNT no existe\n");
 		}
-	}
-	
-	public void print(){
-		System.out.print("----> Tax Exclusive Amount: " + taxExclusiveAmount + " " + "(" + taxExclusiveAmountCurrencyID + ")\n");
-		System.out.print("----> Tax Exclusive Amount: " + payableAmount + " " + "(" + payableAmountCurrencyID + ")\n");
 	}
 	
 	public double getTaxExclusiveAmount() {

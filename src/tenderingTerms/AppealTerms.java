@@ -2,8 +2,7 @@ package tenderingTerms;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  * 		appealInformationParty: AppealInformationParty[0..1]
  * 		appealReceiverParty: AppealReceiverParty[0..1]
  * 		presentationPeriod: PresentationPeriod[0..1]
@@ -15,6 +14,12 @@ public class AppealTerms {
 	private PresentationPeriod presentationPeriod;
 	private MediationParty mediationParty;
 
+	/**
+	 * Lee el cac:AppealInformationParty del documento
+	 * 
+	 * @param at El cac:AppealTerms que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAppealInformationParty(Element at, int POS_UNICO_ELEMENTO) {
 		this.appealInformationParty = null;
 		
@@ -29,6 +34,12 @@ public class AppealTerms {
 		}
 	}
 	
+	/**
+	 * Lee el cac:AppealReceiverParty del documento
+	 * 
+	 * @param at El cac:AppealTerms que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAppealReceiverParty(Element at, int POS_UNICO_ELEMENTO) {
 		this.appealReceiverParty= null;
 		
@@ -43,6 +54,12 @@ public class AppealTerms {
 		}
 	}
 
+	/**
+	 * Lee el cac:PresentationPeriod del documento
+	 * 
+	 * @param at El cac:AppealTerms que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readPresentationPeriod(Element at, int POS_UNICO_ELEMENTO) {
 		this.presentationPeriod = null;
 		
@@ -53,6 +70,12 @@ public class AppealTerms {
 		}
 	}
 
+	/**
+	 * Lee el cac:MediationParty del documento
+	 * 
+	 * @param at El cac:AppealTerms que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readMediationParty(Element at, int POS_UNICO_ELEMENTO) {
 		this.mediationParty= null;
 		
@@ -65,39 +88,5 @@ public class AppealTerms {
 			this.mediationParty.readPostalAddress(mp, POS_UNICO_ELEMENTO);
 			this.mediationParty.readContact(mp, POS_UNICO_ELEMENTO);
 		}
-	}
-
-	public void print(){
-		System.out.print("*** APPEAL TERMS ***\n");
-		
-		/* APPEAL INFORMATION PARTY */
-		if(appealInformationParty != null){
-			appealInformationParty.print();
-		}else{
-			System.out.print("**** APPEAL INFORMATION PARTY: null ****");
-		}
-		
-		/* APPEAL RECEIVER PARTY */
-		if(appealReceiverParty != null){
-			appealReceiverParty.print();
-		}else{
-			System.out.print("**** APPEAL RECEIVER PARTY: null ****");
-		}
-		
-		/* PRESENTATION PERIOD */
-		if(presentationPeriod != null){
-			presentationPeriod.print();
-		}else{
-			System.out.print("**** PRESENTATION PERIOD: null ****");
-		}
-		
-		/* MEDIATION PARTY */
-		if(mediationParty != null){
-			mediationParty.print();
-		}else{
-			System.out.print("**** MEDIATION PARTY: null ****");
-		}
-		
-		System.out.print("--------------------------------\n");
 	}
 }

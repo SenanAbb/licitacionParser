@@ -2,8 +2,7 @@ package documents;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  * 		URI: String[0..1]
  * 		documentHash: String[0..1]
  *		fileName: String[0..1]
@@ -11,6 +10,12 @@ import org.w3c.dom.Element;
 public class ExternalReference {
 	private String URI, documentHash, fileName;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param er El cac:ExternalReference que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element er, int POS_UNICO_ELEMENTO) {
 		this.URI = null;
 		this.documentHash = null;
@@ -33,13 +38,6 @@ public class ExternalReference {
 		if (fn != null){
 			this.fileName = fn.getTextContent();
 		}
-	}
-
-	public void print(){
-		System.out.print("**** EXTERNAL REFERENCE ****\n" +
-						 "----> URI: " + URI + "\n" +
-						 "----> Document HASH: " + documentHash + "\n" +
-						 "----> File Name: " + fileName + "\n");
 	}
 
 	public String getURI() {

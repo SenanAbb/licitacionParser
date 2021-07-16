@@ -6,8 +6,7 @@ import org.w3c.dom.NodeList;
 import utils.PartyIdentification;
 import utils.PartyName;
 
-/**
- * @author senan
+/*
  *		partyIdentificationList: PartyIdentification[] [1..3]
  *		partyName: PartyName [1]
  */
@@ -15,6 +14,12 @@ public class WinningParty {
 	private PartyIdentification[] partyIdentificationList;
 	private PartyName partyName;
 	
+	/**
+	 * Lee el cac:PartyIdentification del documento
+	 * 
+	 * @param wp El cac:WinningParty que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readPartyIdentificationList(Element wp, int POS_UNICO_ELEMENTO){
 		this.partyIdentificationList = null;
 		
@@ -34,6 +39,12 @@ public class WinningParty {
 		}
 	}
 	
+	/**
+	 * Lee el cac:PartyName del documento
+	 * 
+	 * @param wp El cac:WinningParty que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readPartyName(Element wp, int POS_UNICO_ELEMENTO){
 		this.partyName = null;
 		
@@ -44,14 +55,6 @@ public class WinningParty {
 		} catch (NullPointerException e) {
 			System.err.print("ERROR FATAL: TenderResult -> WinningParty -> PARTY NAME no existe\n");
 		}
-	}
-	
-	public void print(){
-		System.out.print("*** WINNING PARTY ***\n");
-		for (PartyIdentification p : partyIdentificationList){
-			p.print();
-		}
-		partyName.print();
 	}
 
 	public PartyIdentification[] getPartyIdentificationList() {

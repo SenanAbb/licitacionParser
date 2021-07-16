@@ -6,8 +6,7 @@ import java.util.Date;
 
 import org.w3c.dom.Element;
 
-/**
- * @params	
+/*	
  *		startDate: Date [0..1]
  *		endDate: Date [0..1]
  *		description: String [0..1]
@@ -16,6 +15,12 @@ public class ContractFormalizationPeriod {
 	private Date startDate, endDate;
 	private String description;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param cfp El cac:ContractFormalizationPeriod que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element cfp, int POS_UNICO_ELEMENTO) {
 		this.startDate = null;
 		this.endDate = null;
@@ -49,12 +54,5 @@ public class ContractFormalizationPeriod {
 		if (description != null){
 			this.description = description.getTextContent();
 		}
-	}
-	
-	public void print() {
-		System.out.print("**** CONTRACT FORMALIZATION PERIOD ****\n" + 
-				 "----> Start Date: " + startDate + "\n" +
-				 "----> End Date: " + endDate + "\n" +
-				 "----> Description Date: " + description + "\n");
 	}
 }

@@ -3,8 +3,7 @@ package documents;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-/**
- * @params
+/*
  *		noticeTypeCode: String[1]
  *		additionalPublicationStatus: AdditionalPublicationStatus[0..1]
  */
@@ -12,6 +11,12 @@ public class ValidNoticeInfo {
 	private String noticeTypeCode;
 	private AdditionalPublicationStatus[] additionalPublicationStatusList;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param vni El cac:ValidNoticeInfo que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element vni, int POS_UNICO_ELEMENTO){
 		this.noticeTypeCode = null;
 		
@@ -23,6 +28,12 @@ public class ValidNoticeInfo {
 		}
 	}
 	
+	/**
+	 * Lee el cac:AdditionalPublicationStatus del documento
+	 * 
+	 * @param vni El cac:ValidNoticeInfo que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAdditionalPublicationStatus(Element vni, int POS_UNICO_ELEMENTO){
 		this.additionalPublicationStatusList = null;
 		
@@ -43,19 +54,9 @@ public class ValidNoticeInfo {
 		}
 	}
 	
-	public void print(){
-		System.out.print("** VALID NOTICE INFO **\n" +
-						 "---> Notice Type Code: " + noticeTypeCode + "\n" +
-						 "--------------------------------\n");
-		//additionalPublicationStatus.print();
-		System.out.print("===============================================================\n");
-	}
-
-	
 	public String getNoticeTypeCode() {
 		return noticeTypeCode;
 	}
-
 	
 	public AdditionalPublicationStatus[] getAdditionalPublicationStatusList() {
 		return additionalPublicationStatusList;

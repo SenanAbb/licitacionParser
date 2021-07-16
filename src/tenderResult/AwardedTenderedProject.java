@@ -3,8 +3,7 @@ package tenderResult;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-/**
- * @params
+/*
  * 		legalMonetaryTotalList: LegalMonetaryTotal[] [0..*]
  *		contractFormalizationPeriod: ContractFormalizationPeriod [0..1]
  */
@@ -13,6 +12,12 @@ public class AwardedTenderedProject {
 	private LegalMonetaryTotal[] legalMonetaryTotalList;
 	private ContractFormalizationPeriod contractFormalizationPeriod;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param atp El cac:AwardedTenderedProject que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element atp, int POS_UNICO_ELEMENTO){
 		procurementProjectLotID = null;
 		
@@ -22,6 +27,12 @@ public class AwardedTenderedProject {
 		}
 	}
 	
+	/**
+	 * Lee el cac:LegalMonetaryTotal del documento
+	 * 
+	 * @param atp El cac:AwardedTenderedProject que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readLegalMoneratyTotalList(Element atp, int POS_UNICO_ELEMENTO) {
 		legalMonetaryTotalList = null;
 		
@@ -37,6 +48,12 @@ public class AwardedTenderedProject {
 		}
 	}
 	
+	/**
+	 * Lee el cac:ContractFormalizationPeriod del documento
+	 * 
+	 * @param atp El cac:AwardedTenderedProject que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readContractFormalizationPeriod(Element atp, int POS_UNICO_ELEMENTO) {
 		contractFormalizationPeriod = null;
 		
@@ -46,27 +63,6 @@ public class AwardedTenderedProject {
 			
 			contractFormalizationPeriod.readAttributes(cfp, POS_UNICO_ELEMENTO);
 		}
-	}
-	
-	public void print(){
-		System.out.print("*** AWARDED TENDERED PROJECT ***\n");
-//				"--> Procurement Project Lot ID: " + procurementProjectLotID + "\n" +
-		
-		if (legalMonetaryTotalList != null){
-			System.out.print("**** LEGAL MONETARY TOTAL ****\n");
-			for (LegalMonetaryTotal l : legalMonetaryTotalList){
-				l.print();
-			}
-		}else{
-			System.out.print("**** LEGAL MONETARY TOTAL: null ****\n");
-		}
-		
-		if (contractFormalizationPeriod != null){
-			contractFormalizationPeriod.print();
-		}else{
-			System.out.print("**** CONTRACT FORMALIZATION PERIOD: null ****\n");
-		}
-		System.out.print("--------------------------------\n");
 	}
 
 	public LegalMonetaryTotal[] getLegalMonetaryTotalList() {

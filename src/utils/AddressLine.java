@@ -14,9 +14,9 @@ public class AddressLine {
 	private String line;
 
 	/**
-	 * Lee los atributos (las etiquitas <cbc:...>) del documento correspondiente a las variables de esta clase
+	 * Lee los atributos (las etiquitas cbc:...) del documento correspondiente a las variables de esta clase
 	 * 
-	 * @param al El <cac:AddressLine> que contiene la información
+	 * @param al El cac:AddressLine que contiene la información
 	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
 	 */
 	public void readAttributes(Element al, int POS_UNICO_ELEMENTO) {

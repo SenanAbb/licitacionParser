@@ -3,8 +3,7 @@ package documents;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-/**
- * @params
+/*
  *		publicationMediaName: String[0..1]
  *		additionalPublicationDocumentReferenceList: AdditionalPublicationDocumentReference[] [0..*]
  *		additionalPublicationRequestList: AdditionalPublicationRequest[] [0..*]
@@ -14,6 +13,12 @@ public class AdditionalPublicationStatus {
 	private AdditionalPublicationDocumentReference[] additionalPublicationDocumentReferenceList;
 	private AdditionalPublicationRequest[] additionalPublicationRequestList;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param aps El cac:AdditionalPublicationStatus que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element aps, int POS_UNICO_ELEMENTO){
 		this.publicationMediaName = null;
 		
@@ -23,6 +28,12 @@ public class AdditionalPublicationStatus {
 		}
 	}
 	
+	/**
+	 * Lee el cac:AdditionalPublicationDocumentReference del documento
+	 * 
+	 * @param aps El cac:AdditionalPublicationStatus que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAdditionalPublicationDocumentReference(Element aps, int POS_UNICO_ELEMENTO){
 		this.additionalPublicationDocumentReferenceList = null;
 		
@@ -42,6 +53,12 @@ public class AdditionalPublicationStatus {
 		}
 	}
 	
+	/**
+	 * Lee el cac:AdditionalPublicationRequest del documento
+	 * 
+	 * @param aps El cac:AdditionalPublicationStatus que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAdditionalPublicationRequest(Element aps, int POS_UNICO_ELEMENTO){
 		this.additionalPublicationRequestList = null;
 		
@@ -60,38 +77,13 @@ public class AdditionalPublicationStatus {
 		}
 	}
 	
-	public void print(){
-		System.out.print("*** ADDITIONAL PUBLICATION STATUS ***\n" +
-						 "---> Publication Media Name: " + publicationMediaName + "\n" +
-						 "--------------------------------\n");
-		
-		if (additionalPublicationDocumentReferenceList != null){
-			for (AdditionalPublicationDocumentReference a : additionalPublicationDocumentReferenceList){
-				a.print();
-			}
-		}else{
-			System.out.println("**** ADDITIONAL PUBLICATION DOCUMENT REFERENCE: null ****");
-		}
-		
-		if (additionalPublicationRequestList != null){
-			for (AdditionalPublicationRequest a : additionalPublicationRequestList){
-				a.print();
-			}
-		}else{
-			System.out.println("**** ADDITIONAL PUBLICATION REQUEST: null ****");
-		}
-	}
-
-	
 	public String getPublicationMediaName() {
 		return publicationMediaName;
 	}
-
 	
 	public AdditionalPublicationDocumentReference[] getAdditionalPublicationDocumentReferenceList() {
 		return additionalPublicationDocumentReferenceList;
 	}
-
 	
 	public AdditionalPublicationRequest[] getAdditionalPublicationRequestList() {
 		return additionalPublicationRequestList;

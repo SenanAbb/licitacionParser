@@ -5,8 +5,7 @@ import org.w3c.dom.Element;
 import utils.PartyName;
 import utils.PostalAddress;
 
-/**
- * @params
+/*
  * 		websiteURI: String[0..1]
  * 		partyName: PartyName[1]
  * 		postalAddress: PostalAddress[1]
@@ -16,6 +15,12 @@ public class TenderRecipientParty {
 	private PartyName partyName;
 	private PostalAddress postalAddress;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param trp El cac:TenderRecipientParty que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element trp, int POS_UNICO_ELEMENTO) {
 		this.websiteURI = null;
 		
@@ -25,6 +30,12 @@ public class TenderRecipientParty {
 		}
 	}
 
+	/**
+	 * Lee el cac:PartyName del documento
+	 * 
+	 * @param trp El cac:TenderRecipientParty que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readPartyName(Element trp, int POS_UNICO_ELEMENTO) {
 		this.partyName = null;
 		
@@ -37,6 +48,12 @@ public class TenderRecipientParty {
 		}
 	}
 	
+	/**
+	 * Lee el cac:PostalAddress del documento
+	 * 
+	 * @param trp El cac:TenderRecipientParty que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readPostalAddress(Element trp, int POS_UNICO_ELEMENTO) {
 		this.postalAddress = null;
 		
@@ -46,28 +63,6 @@ public class TenderRecipientParty {
 			this.postalAddress.readAttributes(pa, POS_UNICO_ELEMENTO, true);
 		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: TenderingTerms -> TenderRecipientParty -> POSTAL ADDRESS no exsite\n");
-		}
-	}
-	
-	public void print(){
-		/* ATTRIBUTES */
-		System.out.print("*** TENDER RECIPIENT PARTY ***\n" +
-						 "---> WebsiteURI: " + websiteURI + "\n");
-		
-		/* PARTY NAME */
-		if(partyName != null){
-			partyName.print();
-		}else{
-			System.out.println("**** PARTY NAME: null ****\n" +
-							"--------------------------------\n");
-		}
-		
-		/* POSTAL ADDRESS*/
-		if(postalAddress != null){
-			postalAddress.print();
-		}else{
-			System.out.println("**** POSTAL ADDRESS: null ****\n" +
-						"--------------------------------\n");
 		}
 	}
 }

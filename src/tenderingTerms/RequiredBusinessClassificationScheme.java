@@ -3,8 +3,7 @@ package tenderingTerms;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-/**
- * @params
+/*
  * 		ID: String[0..1]
  * 		name: String[0..1]
  * 		agencyName: String[0..1]
@@ -18,6 +17,12 @@ public class RequiredBusinessClassificationScheme {
 	private String ID, name, agencyName, versionID, URI, schemeURI, languageID;
 	private ClassificationCategory[] classificationCategoryList;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param rbcs El cac:RequiredBusinessClassificationScheme que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element rbcs, int POS_UNICO_ELEMENTO) {
 		this.ID = null;
 		this.name = null;
@@ -70,6 +75,12 @@ public class RequiredBusinessClassificationScheme {
 		}
 	}
 
+	/**
+	 * Lee el cac:ClassificationCategory del documento
+	 * 
+	 * @param rbcs El cac:RequiredBusinessClassificationScheme que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readClassificationCategory(Element rbcs, int POS_UNICO_ELEMENTO) {
 		this.classificationCategoryList = null;
 		
@@ -88,25 +99,6 @@ public class RequiredBusinessClassificationScheme {
 		}
 	}
 	
-	public void print(){
-		System.out.print("**** REQUIRED BUSINESS CLASSIFICATION SCHEME ****\n" +
-						 "---->ID: " + ID + "\n" +
-						 "---->Name: " + name + "\n" +
-						 "---->Agency Name: " + agencyName + "\n" +
-						 "---->Version ID: " + versionID + "\n" +
-						 "---->URI: " + URI + "\n" +
-						 "---->Scheme URI: " + schemeURI + "\n" +
-						 "---->Language ID: " + languageID + "\n");
-		
-		if(classificationCategoryList != null){
-			for(ClassificationCategory c : classificationCategoryList){
-				c.print();
-			}
-		}else{
-			System.out.print("***** CLASSIFICATION CATEGORY: null *****\n");
-		}
-	}
-
 	public ClassificationCategory[] getClassificationCategoryList() {
 		return classificationCategoryList;
 	}

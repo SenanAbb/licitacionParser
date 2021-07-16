@@ -6,8 +6,7 @@ import java.util.Date;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  * 		agencyID: String[0..1]
  *		sendDate: Date[0..1]
  */
@@ -15,6 +14,12 @@ public class AdditionalPublicationRequest {
 	private String agencyID;
 	private Date sendDate;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param apr El cac:AdditionalPublicationRequest que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element apr, int POS_UNICO_ELEMENTO){
 		this.agencyID = null;
 		this.sendDate = null;
@@ -35,13 +40,6 @@ public class AdditionalPublicationRequest {
 			}
 			this.sendDate = sendDate;
 		}
-	}
-	
-	public void print(){
-		System.out.print("**** ADDITIONAL PUBLICATION REQUEST ****\n" +
-						 "----> Agency ID: " + agencyID + "\n" + 
-						 "----> Send Date: " + sendDate + "\n" +
-						 "--------------------------------\n");
 	}
 
 	public java.sql.Date getSendDate() {

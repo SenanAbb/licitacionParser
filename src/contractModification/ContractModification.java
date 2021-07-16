@@ -6,8 +6,7 @@ import java.util.Date;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  * 		contractID: String[1]
  * 		ID: String[1]
  *		date: Date[0..1]
@@ -27,6 +26,12 @@ public class ContractModification {
 	private ContractModificationLegalMonetaryTotal contractModificationLegalMonetaryTotal;
 	private FinalLegalMonetaryTotal finalLegalMonetaryTotal;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param cm El cac:ContractModification que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element cm, int POS_UNICO_ELEMENTO) {
 		this.contractID = null;
 		this.ID = -1;
@@ -87,6 +92,12 @@ public class ContractModification {
 		}
 	}
 
+	/**
+	 * Lee el cac:ContractModificationLegalMonetaryTotal del documento
+	 * 
+	 * @param cm El cac:ContractModification que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readContractModificationLegalMonetaryTotal(Element cm, int POS_UNICO_ELEMENTO){
 		this.contractModificationLegalMonetaryTotal = null;
 		
@@ -97,6 +108,12 @@ public class ContractModification {
 		}
 	}
 	
+	/**
+	 * Lee el cac:FinalLegalMonetaryTotal del documento
+	 * 
+	 * @param cm El cac:ContractModification que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readFinalLegalMonetaryTotal(Element cm, int POS_UNICO_ELEMENTO){
 		this.finalLegalMonetaryTotal = null;
 		
@@ -107,71 +124,37 @@ public class ContractModification {
 		}
 	}
 	
-	public void print() {
-		System.out.print("** CONTRACT MODIFICATION **\n" +
-						 "--> Contract ID: " + contractID + "\n" +
-						 "--> ID: " + ID + "\n" +
-						 "--> Note: " + note + "\n" +
-						 "--> Date: " + date + "\n" +
-						 "--> Contract Modification Duration: " + contractModificationDurationMeasure + " " + contractModificationDurationMeasureUnitCode + "\n" +
-						 "--> Final Duration: " + finalDurationMeasure + " " + finalDurationMeasureUnitCode + "\n" +
-						 "--------------------------------\n");
-		
-		if (contractModificationLegalMonetaryTotal != null){
-			contractModificationLegalMonetaryTotal.print();
-		}else{
-			System.out.print("*** CONTRACT MODIFICATION LEGAL MONETARY TOTAL: null ***\n");
-		}
-		
-		if (finalLegalMonetaryTotal != null){
-			finalLegalMonetaryTotal.print();
-		}else{
-			System.out.print("*** FINAL LEGAL MONETARY TOTAL: null ***\n");
-		}
-		
-		System.out.print("===============================================================\n");
-	}
-
-	
 	public String getContractID() {
 		return contractID;
 	}
-
 	
 	public int getID() {
 		return ID;
 	}
-
 	
 	public String getNote() {
 		return note;
 	}
-
 	
 	public int getContractModificationDurationMeasure() {
 		return contractModificationDurationMeasure;
 	}
-
 	
 	public int getFinalDurationMeasure() {
 		return finalDurationMeasure;
 	}
-
 	
 	public String getContractModificationDurationMeasureUnitCode() {
 		return contractModificationDurationMeasureUnitCode;
 	}
-
 	
 	public String getFinalDurationMeasureUnitCode() {
 		return finalDurationMeasureUnitCode;
 	}
-
 	
 	public ContractModificationLegalMonetaryTotal getContractModificationLegalMonetaryTotal() {
 		return contractModificationLegalMonetaryTotal;
 	}
-
 	
 	public FinalLegalMonetaryTotal getFinalLegalMonetaryTotal() {
 		return finalLegalMonetaryTotal;

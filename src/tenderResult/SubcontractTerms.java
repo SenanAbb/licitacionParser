@@ -2,8 +2,7 @@ package tenderResult;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  *		rate: double [0..1]
  *		amount: double [0..1]
  *		description: String [0..1]
@@ -12,6 +11,12 @@ public class SubcontractTerms {
 	private double rate, amount;
 	private String description;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param sct El cac:SubcontractTerms que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element sct, int POS_UNICO_ELEMENTO) {
 		this.rate = -1;
 		this.amount = -1;
@@ -31,13 +36,6 @@ public class SubcontractTerms {
 		if (description != null){
 			this.description = description.getTextContent();
 		}
-	}
-
-	public void print(){
-		System.out.print("*** SUBCONTRACT TERMS ***\n" +
-						 "---> Rate: " + rate + "\n" +
-						 "---> Amount: " + amount + "\n" +
-						 "---> Description: " + description + "\n");
 	}
 
 	public double getRate() {

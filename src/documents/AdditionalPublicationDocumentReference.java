@@ -6,8 +6,7 @@ import java.util.Date;
 
 import org.w3c.dom.Element;
 
-/**
- * @params
+/*
  *		issueDate: Date[0..1]
  *		documentTypeCode: int[0..1]
  *		attachment: Attachment[0..1]
@@ -17,6 +16,12 @@ public class AdditionalPublicationDocumentReference {
 	private String documentTypeCode;
 	private Attachment attachment;
 	
+	/**
+	 * Lee los atributos (las etiquetas cbc:...) del documento correspondiente a las variables de esta clase
+	 * 
+	 * @param apdr El cac:AdditionalPublicationDocumentReference que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttributes(Element apdr, int POS_UNICO_ELEMENTO){
 		this.issueDate = null;
 		this.documentTypeCode = null;
@@ -39,6 +44,12 @@ public class AdditionalPublicationDocumentReference {
 		}
 	}
 	
+	/**
+	 * Lee el cac:Attachment del documento
+	 * 
+	 * @param apdr El cac:AdditionalPublicationDocumentReference que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readAttachment(Element apdr, int POS_UNICO_ELEMENTO){
 		this.attachment = null;
 		
@@ -47,18 +58,6 @@ public class AdditionalPublicationDocumentReference {
 			this.attachment = new Attachment();
 			this.attachment.readExternalReference(att, POS_UNICO_ELEMENTO);
 		}
-	}
-	
-	public void print(){
-		System.out.print("**** ADDITIONAL PUBLICATION DOCUMENT REFERENCE ****\n" +
-				 "----> Issue Date: " + issueDate + "\n" +
-				 "----> Document Type Code: " + documentTypeCode + "\n");
-		if (attachment != null){
-			attachment.print();
-		}else{
-			System.out.print("**** ATTACHMENT: null ****\n");
-		}
-		System.out.print("--------------------------------\n");
 	}
 
 	public String getDocumentTypeCode() {

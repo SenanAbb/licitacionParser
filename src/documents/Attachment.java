@@ -2,13 +2,18 @@ package documents;
 
 import org.w3c.dom.Element;
  
-/** 
-  * @params
+/*
   *		externalReference: ExternalReference[1]
   */
 public class Attachment {
 	private ExternalReference externalReference;
 
+	/**
+	 * Lee el cac:ExternalReference del documento
+	 * 
+	 * @param att El cac:Attachment que contiene la información
+	 * @param POS_UNICO_ELEMENTO Constante que se refiere a la posición del array donde coger un dato
+	 */
 	public void readExternalReference(Element att, int POS_UNICO_ELEMENTO) {
 		this.externalReference = null;
 		
@@ -19,11 +24,6 @@ public class Attachment {
 		}catch (NullPointerException e){
 			System.err.print("ERROR FATAL: Attachment -> EXTERNAL REFERENCE no existe\n");
 		}
-	}
-	
-	public void print(){
-		System.out.print("*** ATTACHMENT ***\n");
-		externalReference.print();
 	}
 	
 	public ExternalReference getExternalReference() {
